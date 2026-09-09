@@ -115,7 +115,7 @@ mbart_configs_wire <- paste(mbart_pairs, collapse = ",")
 mbart_mult_pool <- c(3, 2, 1, 0.75, 0.50)
 .cal_dir <- file.path(projDir, "ess_local", "res")
 # Config-matched calibration file: REQUIRE the exact _nt<ntree>_k<k> tag, same as
-# mBART_analysis.R / mapbart-sim-survival-realcov -- one calibration per control config.
+# mBART_analysis.R / mapbart-sim-survival-single-arm -- one calibration per control config.
 .cal_file_for <- function(nt, k) {
   pat <- sprintf("^ess_calibration_ucmm_%s_.*_%s_nt%d_k%g\\.RData$", tolower(OUTCOME), data_tag, nt, k)
   fs  <- list.files(.cal_dir, pattern = pat, full.names = TRUE)
@@ -124,7 +124,7 @@ mbart_mult_pool <- c(3, 2, 1, 0.75, 0.50)
   fs[order(file.info(fs)$mtime, decreasing = TRUE)][1]
 }
 # Multipliers a calibration supports (interior q-crossing only).  Same rule as
-# mBART_analysis.R's .pick and mapbart-sim-survival-realcov/run_all.R's mbart_mult_from.
+# mBART_analysis.R's .pick and mapbart-sim-survival-single-arm/run_all.R's mbart_mult_from.
 .mult_from <- function(cal) {
   if (is.null(cal)) return(numeric(0))
   av <- Filter(function(m) {
@@ -137,7 +137,7 @@ mbart_mult_pool <- c(3, 2, 1, 0.75, 0.50)
 # the N that config supports (mBART_analysis.R does the per-config s^2 pick).
 # The UNION of supported target Ns across the AVAILABLE configs is what AFTv2
 # sweeps (so AFTv2 runs at every N any config supports) and what labels the
-# plot.  Mirrors mapbart-sim-survival-realcov/run_all.R (ess_mults / ess_target_Ns).
+# plot.  Mirrors mapbart-sim-survival-single-arm/run_all.R (ess_mults / ess_target_Ns).
 .cfg_list <- lapply(strsplit(mbart_pairs, ":"),
                     function(v) list(ntree = as.integer(v[1]), k = as.numeric(v[2])))
 .all_mult <- numeric(0); .all_tn <- integer(0)
@@ -164,7 +164,7 @@ if (!length(mbart_mult)) {
 mbart_nmult_wire <- paste(mbart_mult, collapse = ",")
 
 ## --- AFTv2 power-prior weights (rwd_w): matched effective external-control N --
-## Mirrors mapbart-sim-survival-realcov/run_all.R's aftv2_rwd_w_vals: rwd_w = 1 (full
+## Mirrors mapbart-sim-survival-single-arm/run_all.R's aftv2_rwd_w_vals: rwd_w = 1 (full
 ## borrowing) plus N_target / n_rwd for each finite MAP-BART target N, so AFTv2
 ## is compared at a matched effective external-control sample size.  n_rwd is the
 ## ACTUAL UCMM (external-control) count for this cohort (read from MERGED_FILE),
@@ -187,7 +187,7 @@ cat(sprintf("mapbart-case-study-mm/run_all.R: AFTv2 rwd_w values = %s  (n_UCMM =
 ## Unset -> the default sweep below.  Passed to HierAFT via the HIERAFT_CONFIGS
 ## env var; the same values drive which prior-tagged result files get read.
 hieraft_default <- "0.05,0.5"   # default sweep when HIERAFT_CONFIGS is unset
-                                # (mirrors mapbart-sim-survival-realcov/run_all.R lmv4_prior_vals = c(0.05, 0.5))
+                                # (mirrors mapbart-sim-survival-single-arm/run_all.R lmv4_prior_vals = c(0.05, 0.5))
 .haft_tokens   <- strsplit(Sys.getenv("HIERAFT_CONFIGS", unset = hieraft_default), "[, ]+")[[1]]
 hieraft_priors <- as.numeric(.haft_tokens[nzchar(.haft_tokens)])
 hieraft_priors <- hieraft_priors[!is.na(hieraft_priors)]

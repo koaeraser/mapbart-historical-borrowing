@@ -398,15 +398,15 @@ for (ci in seq_along(cor)) {
     # Save with scenario identifiers
     if (sc == 1 | sc == 2) {
       if (is.null(subsc)) {
-        saveRDS(out, file = paste0(mainDir, "/mapbart-sim-gaussian-realcov/data_v3/data_p",p_obs,"_sc",sc,"_", hypo, if (rwd_frozen) "_fz" else "", "_", iter, ".RData"))
+        saveRDS(out, file = paste0(mainDir, "/mapbart-sim-gaussian-single-arm/data_v3/data_p",p_obs,"_sc",sc,"_", hypo, if (rwd_frozen) "_fz" else "", "_", iter, ".RData"))
       } else {
-        saveRDS(out, file = paste0(mainDir, "/mapbart-sim-gaussian-realcov/data_v3/data_p",p_obs,"_sc",sc,subsc,"_", hypo, if (rwd_frozen) "_fz" else "", "_", iter, ".RData"))
+        saveRDS(out, file = paste0(mainDir, "/mapbart-sim-gaussian-single-arm/data_v3/data_p",p_obs,"_sc",sc,subsc,"_", hypo, if (rwd_frozen) "_fz" else "", "_", iter, ".RData"))
       }
     } else {
       if (is.null(subsc)) {
-        saveRDS(out, file = paste0(mainDir, "/mapbart-sim-gaussian-realcov/data_v3/data_p",p_obs,"_sc",sc,"_cor", c, "_", hypo, if (rwd_frozen) "_fz" else "", "_", iter, ".RData"))
+        saveRDS(out, file = paste0(mainDir, "/mapbart-sim-gaussian-single-arm/data_v3/data_p",p_obs,"_sc",sc,"_cor", c, "_", hypo, if (rwd_frozen) "_fz" else "", "_", iter, ".RData"))
       } else {
-        saveRDS(out, file = paste0(mainDir, "/mapbart-sim-gaussian-realcov/data_v3/data_p",p_obs,"_sc",sc,subsc,"_cor", c, "_", hypo, if (rwd_frozen) "_fz" else "", "_", iter, ".RData"))
+        saveRDS(out, file = paste0(mainDir, "/mapbart-sim-gaussian-single-arm/data_v3/data_p",p_obs,"_sc",sc,subsc,"_cor", c, "_", hypo, if (rwd_frozen) "_fz" else "", "_", iter, ".RData"))
       }
     }
   }
@@ -445,15 +445,15 @@ for (c_test in cor) {
   for (i in 1:niter){
     if (sc_test == 1 | sc_test == 2) {
       if (is.null(subsc_test)) {
-        filepath <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/data_v3/data_p",p_obs,"_sc",sc_test,"_",hypo, if (rwd_frozen) "_fz" else "", "_",i,".RData")
+        filepath <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/data_v3/data_p",p_obs,"_sc",sc_test,"_",hypo, if (rwd_frozen) "_fz" else "", "_",i,".RData")
       } else {
-        filepath <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/data_v3/data_p",p_obs,"_sc",sc_test,subsc_test,"_",hypo, if (rwd_frozen) "_fz" else "", "_",i,".RData")
+        filepath <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/data_v3/data_p",p_obs,"_sc",sc_test,subsc_test,"_",hypo, if (rwd_frozen) "_fz" else "", "_",i,".RData")
       }
     } else {
       if (is.null(subsc_test)) {
-        filepath <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/data_v3/data_p",p_obs,"_sc",sc_test,"_cor",c_test,"_",hypo, if (rwd_frozen) "_fz" else "", "_",i,".RData")
+        filepath <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/data_v3/data_p",p_obs,"_sc",sc_test,"_cor",c_test,"_",hypo, if (rwd_frozen) "_fz" else "", "_",i,".RData")
       } else {
-        filepath <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/data_v3/data_p",p_obs,"_sc",sc_test,subsc_test,"_cor",c_test,"_",hypo, if (rwd_frozen) "_fz" else "", "_",i,".RData")
+        filepath <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/data_v3/data_p",p_obs,"_sc",sc_test,subsc_test,"_cor",c_test,"_",hypo, if (rwd_frozen) "_fz" else "", "_",i,".RData")
       }
     }
 

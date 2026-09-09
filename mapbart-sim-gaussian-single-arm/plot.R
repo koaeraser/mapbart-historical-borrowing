@@ -96,7 +96,7 @@ if (sc == 1 | sc == 2){
 
     # Try to read LMv1 results
     tryCatch({
-      LMv1_res <- readRDS(paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/LMv1_p",p_obs,file_suffix))
+      LMv1_res <- readRDS(paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/LMv1_p",p_obs,file_suffix))
       LMv1_res_ATE <- LMv1_res[, c("c","iteration","bias","sd","rmse","w1distance","w2distance","ci","coverage","tp","fp","tp_calibrated")]
       LMv1_res_sigma <- LMv1_res[, c("c","iteration",
                                 "bias.trt.sigma","sd.trt.sigma","w2distance.trt.sigma",
@@ -117,9 +117,9 @@ if (sc == 1 | sc == 2){
     for (rwd_w_val in lmv2_rwd_w_vals) {
       tryCatch({
         if (subsc == "NULL") {
-          lmv2_file <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/LMv2_p",p_obs,"_sc",sc,"_alternative_w",rwd_w_val,rct_ctrl_tag,".RData")
+          lmv2_file <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/LMv2_p",p_obs,"_sc",sc,"_alternative_w",rwd_w_val,rct_ctrl_tag,".RData")
         } else {
-          lmv2_file <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/LMv2_p",p_obs,"_sc",sc,subsc,"_alternative_w",rwd_w_val,rct_ctrl_tag,".RData")
+          lmv2_file <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/LMv2_p",p_obs,"_sc",sc,subsc,"_alternative_w",rwd_w_val,rct_ctrl_tag,".RData")
         }
         if (file.exists(lmv2_file)) {
           LMv2_res <- readRDS(lmv2_file)
@@ -144,7 +144,7 @@ if (sc == 1 | sc == 2){
 
     # Try to read LMv3 results
     tryCatch({
-      LMv3_res <- readRDS(paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/LMv3_p",p_obs,file_suffix))
+      LMv3_res <- readRDS(paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/LMv3_p",p_obs,file_suffix))
       LMv3_res_ATE <- LMv3_res[, c("c","iteration","bias","sd","rmse","w1distance","w2distance","ci","coverage","tp","fp","tp_calibrated")]
       LMv3_res_sigma <- LMv3_res[, c("c","iteration",
                                     "bias.trt.sigma","sd.trt.sigma","w2distance.trt.sigma",
@@ -166,9 +166,9 @@ if (sc == 1 | sc == 2){
       tryCatch({
         # Construct file path with prior
         if (subsc == "NULL") {
-          lmv4_file <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/HierLM_p",p_obs,"_sc",sc,"_prior",prior_val,"_alternative", rct_ctrl_tag, ".RData")
+          lmv4_file <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/HierLM_p",p_obs,"_sc",sc,"_prior",prior_val,"_alternative", rct_ctrl_tag, ".RData")
         } else {
-          lmv4_file <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/HierLM_p",p_obs,"_sc",sc,subsc,"_prior",prior_val,"_alternative", rct_ctrl_tag, ".RData")
+          lmv4_file <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/HierLM_p",p_obs,"_sc",sc,subsc,"_prior",prior_val,"_alternative", rct_ctrl_tag, ".RData")
         }
 
         if (file.exists(lmv4_file)) {
@@ -196,9 +196,9 @@ if (sc == 1 | sc == 2){
       tryCatch({
         # Construct file path with target N
         if (subsc == "NULL") {
-          map_file <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/MAP_p",p_obs,"_sc",sc,"_N",target_N,"_alternative", rct_ctrl_tag, ".RData")
+          map_file <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/MAP_p",p_obs,"_sc",sc,"_N",target_N,"_alternative", rct_ctrl_tag, ".RData")
         } else {
-          map_file <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/MAP_p",p_obs,"_sc",sc,subsc,"_N",target_N,"_alternative", rct_ctrl_tag, ".RData")
+          map_file <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/MAP_p",p_obs,"_sc",sc,subsc,"_N",target_N,"_alternative", rct_ctrl_tag, ".RData")
         }
 
         if (file.exists(map_file)) {
@@ -224,7 +224,7 @@ if (sc == 1 | sc == 2){
     # Try to read PSCL results (ATE only, no sigma data, may have NA values)
     # Keep all rows including NAs - plotting functions will handle with na.rm = TRUE
     tryCatch({
-      PSCL_res <- readRDS(paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/PSCL_p",p_obs,file_suffix))
+      PSCL_res <- readRDS(paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/PSCL_p",p_obs,file_suffix))
       PSCL_res_ATE <- PSCL_res[, c("c","iteration","bias","sd","rmse","w1distance","w2distance","ci","coverage","tp","fp","tp_calibrated")]
       PSCL_res_ATE$Method <- "PSCL"
       PSCL_res_ATE$SubScenario <- subsc_label
@@ -236,7 +236,7 @@ if (sc == 1 | sc == 2){
     # Try to read BARTv1 / BARTv2 results
     for (bver in c("BARTv1", "BARTv2", "BARTv3")) {
     tryCatch({
-      BART_res <- readRDS(paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/",bver,"_p",p_obs,file_suffix))
+      BART_res <- readRDS(paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/",bver,"_p",p_obs,file_suffix))
       BART_res <- BART_res[BART_res$alpha == 0.95 & BART_res$beta == 2, ]
       BART_res_ATE <- BART_res[, c("c","iteration","bias","sd","rmse","w1distance","w2distance","ci","coverage","tp","fp","tp_calibrated")]
       BART_res_sigma <- BART_res[, c("c","iteration",
@@ -260,9 +260,9 @@ if (sc == 1 | sc == 2){
       tryCatch({
         # Construct file path with control-config tag and target N
         if (subsc == "NULL") {
-          mbart_file <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/MAP-BART_p",p_obs,cf$tag,"_sc",sc,"_N",target_N,"_alternative", rct_ctrl_tag, ".RData")
+          mbart_file <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/MAP-BART_p",p_obs,cf$tag,"_sc",sc,"_N",target_N,"_alternative", rct_ctrl_tag, ".RData")
         } else {
-          mbart_file <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/MAP-BART_p",p_obs,cf$tag,"_sc",sc,subsc,"_N",target_N,"_alternative", rct_ctrl_tag, ".RData")
+          mbart_file <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/MAP-BART_p",p_obs,cf$tag,"_sc",sc,subsc,"_N",target_N,"_alternative", rct_ctrl_tag, ".RData")
         }
 
         if (file.exists(mbart_file)) {
@@ -330,7 +330,7 @@ if (sc == 1 | sc == 2){
 
     for (method_info in methods_list) {
       tryCatch({
-        null_file <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/", method_info$file_prefix, "_p", p_obs, null_file_suffix)
+        null_file <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/", method_info$file_prefix, "_p", p_obs, null_file_suffix)
         if (file.exists(null_file)) {
           null_res <- readRDS(null_file)
 
@@ -358,9 +358,9 @@ if (sc == 1 | sc == 2){
     for (cf in .mb_cfgs) for (target_N in mbart_target_Ns) {
       tryCatch({
         if (subsc == "NULL") {
-          null_file <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/MAP-BART_p", p_obs, cf$tag, "_sc", sc, "_N", target_N, "_null", rct_ctrl_tag, ".RData")
+          null_file <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/MAP-BART_p", p_obs, cf$tag, "_sc", sc, "_N", target_N, "_null", rct_ctrl_tag, ".RData")
         } else {
-          null_file <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/MAP-BART_p", p_obs, cf$tag, "_sc", sc, subsc, "_N", target_N, "_null", rct_ctrl_tag, ".RData")
+          null_file <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/MAP-BART_p", p_obs, cf$tag, "_sc", sc, subsc, "_N", target_N, "_null", rct_ctrl_tag, ".RData")
         }
         if (file.exists(null_file)) {
           null_res <- readRDS(null_file)
@@ -408,7 +408,7 @@ if (sc == 3){
 
       # Try to read LMv1 results
       tryCatch({
-        file_path <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/LMv1_p",p_obs,file_suffix)
+        file_path <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/LMv1_p",p_obs,file_suffix)
         if (file.exists(file_path)) {
           LMv1_res <- readRDS(file_path)
           LMv1_res_ATE <- LMv1_res[, c("c","iteration","bias","sd","rmse","w1distance","w2distance","ci","coverage","tp","fp","tp_calibrated")]
@@ -432,9 +432,9 @@ if (sc == 3){
       for (rwd_w_val in lmv2_rwd_w_vals) {
         tryCatch({
           if (subsc == "NULL") {
-            lmv2_file <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/LMv2_p",p_obs,"_sc",sc,"_cor",cor_val,"_alternative_w",rwd_w_val,rct_ctrl_tag,".RData")
+            lmv2_file <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/LMv2_p",p_obs,"_sc",sc,"_cor",cor_val,"_alternative_w",rwd_w_val,rct_ctrl_tag,".RData")
           } else {
-            lmv2_file <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/LMv2_p",p_obs,"_sc",sc,subsc,"_cor",cor_val,"_alternative_w",rwd_w_val,rct_ctrl_tag,".RData")
+            lmv2_file <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/LMv2_p",p_obs,"_sc",sc,subsc,"_cor",cor_val,"_alternative_w",rwd_w_val,rct_ctrl_tag,".RData")
           }
           if (file.exists(lmv2_file)) {
             LMv2_res <- readRDS(lmv2_file)
@@ -459,7 +459,7 @@ if (sc == 3){
 
       # Try to read LMv3 results
       tryCatch({
-        file_path <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/LMv3_p",p_obs,file_suffix)
+        file_path <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/LMv3_p",p_obs,file_suffix)
         if (file.exists(file_path)) {
           LMv3_res <- readRDS(file_path)
           LMv3_res_ATE <- LMv3_res[, c("c","iteration","bias","sd","rmse","w1distance","w2distance","ci","coverage","tp","fp","tp_calibrated")]
@@ -484,9 +484,9 @@ if (sc == 3){
         tryCatch({
           # Construct file path with prior
           if (subsc == "NULL") {
-            lmv4_file <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/HierLM_p",p_obs,"_sc",sc,"_cor",cor_val,"_prior",prior_val,"_alternative", rct_ctrl_tag, ".RData")
+            lmv4_file <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/HierLM_p",p_obs,"_sc",sc,"_cor",cor_val,"_prior",prior_val,"_alternative", rct_ctrl_tag, ".RData")
           } else {
-            lmv4_file <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/HierLM_p",p_obs,"_sc",sc,subsc,"_cor",cor_val,"_prior",prior_val,"_alternative", rct_ctrl_tag, ".RData")
+            lmv4_file <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/HierLM_p",p_obs,"_sc",sc,subsc,"_cor",cor_val,"_prior",prior_val,"_alternative", rct_ctrl_tag, ".RData")
           }
 
           if (file.exists(lmv4_file)) {
@@ -514,9 +514,9 @@ if (sc == 3){
         tryCatch({
           # Construct file path with target N
           if (subsc == "NULL") {
-            map_file <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/MAP_p",p_obs,"_sc",sc,"_cor",cor_val,"_N",target_N,"_alternative", rct_ctrl_tag, ".RData")
+            map_file <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/MAP_p",p_obs,"_sc",sc,"_cor",cor_val,"_N",target_N,"_alternative", rct_ctrl_tag, ".RData")
           } else {
-            map_file <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/MAP_p",p_obs,"_sc",sc,subsc,"_cor",cor_val,"_N",target_N,"_alternative", rct_ctrl_tag, ".RData")
+            map_file <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/MAP_p",p_obs,"_sc",sc,subsc,"_cor",cor_val,"_N",target_N,"_alternative", rct_ctrl_tag, ".RData")
           }
 
           if (file.exists(map_file)) {
@@ -542,7 +542,7 @@ if (sc == 3){
       # Try to read PSCL results (ATE only, no sigma data, may have NA values)
       # Keep all rows including NAs - plotting functions will handle with na.rm = TRUE
       tryCatch({
-        file_path <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/PSCL_p",p_obs,file_suffix)
+        file_path <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/PSCL_p",p_obs,file_suffix)
         if (file.exists(file_path)) {
           PSCL_res <- readRDS(file_path)
           PSCL_res_ATE <- PSCL_res[, c("c","iteration","bias","sd","rmse","w1distance","w2distance","ci","coverage","tp","fp","tp_calibrated")]
@@ -557,7 +557,7 @@ if (sc == 3){
       # Try to read BARTv1 / BARTv2 results
       for (bver in c("BARTv1", "BARTv2", "BARTv3")) {
       tryCatch({
-        file_path <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/",bver,"_p",p_obs,file_suffix)
+        file_path <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/",bver,"_p",p_obs,file_suffix)
         if (file.exists(file_path)) {
           BART_res <- readRDS(file_path)
           BART_res <- BART_res[BART_res$alpha == 0.95 & BART_res$beta == 2, ]
@@ -584,9 +584,9 @@ if (sc == 3){
         tryCatch({
           # Construct file path with control-config tag and target N
           if (subsc == "NULL") {
-            mbart_file <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/MAP-BART_p",p_obs,cf$tag,"_sc",sc,"_cor",cor_val,"_N",target_N,"_alternative", rct_ctrl_tag, ".RData")
+            mbart_file <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/MAP-BART_p",p_obs,cf$tag,"_sc",sc,"_cor",cor_val,"_N",target_N,"_alternative", rct_ctrl_tag, ".RData")
           } else {
-            mbart_file <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/MAP-BART_p",p_obs,cf$tag,"_sc",sc,subsc,"_cor",cor_val,"_N",target_N,"_alternative", rct_ctrl_tag, ".RData")
+            mbart_file <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/MAP-BART_p",p_obs,cf$tag,"_sc",sc,subsc,"_cor",cor_val,"_N",target_N,"_alternative", rct_ctrl_tag, ".RData")
           }
 
           if (file.exists(mbart_file)) {
@@ -664,7 +664,7 @@ if (sc == 3){
 
       for (method_info in methods_list) {
         tryCatch({
-          null_file <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/", method_info$file_prefix, "_p", p_obs, null_file_suffix)
+          null_file <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/", method_info$file_prefix, "_p", p_obs, null_file_suffix)
           if (file.exists(null_file)) {
             null_res <- readRDS(null_file)
 
@@ -693,9 +693,9 @@ if (sc == 3){
       for (cf in .mb_cfgs) for (target_N in mbart_target_Ns) {
         tryCatch({
           if (subsc == "NULL") {
-            null_file <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/MAP-BART_p", p_obs, cf$tag, "_sc", sc, "_cor", cor_val, "_N", target_N, "_null", rct_ctrl_tag, ".RData")
+            null_file <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/MAP-BART_p", p_obs, cf$tag, "_sc", sc, "_cor", cor_val, "_N", target_N, "_null", rct_ctrl_tag, ".RData")
           } else {
-            null_file <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/MAP-BART_p", p_obs, cf$tag, "_sc", sc, subsc, "_cor", cor_val, "_N", target_N, "_null", rct_ctrl_tag, ".RData")
+            null_file <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/MAP-BART_p", p_obs, cf$tag, "_sc", sc, subsc, "_cor", cor_val, "_N", target_N, "_null", rct_ctrl_tag, ".RData")
           }
           if (file.exists(null_file)) {
             null_res <- readRDS(null_file)
@@ -1033,7 +1033,7 @@ if (sc == 1 | sc ==2){
   total_height <- n_subsc * 15 * n_plots + 10
   total_width <- 18
 
-  ggsave(paste0(file.path(mainDir),"/mapbart-sim-gaussian-realcov/inserts/p",p_obs,"_sc",sc,rct_ctrl_tag,"_all_subsc_results.jpg"),
+  ggsave(paste0(file.path(mainDir),"/mapbart-sim-gaussian-single-arm/inserts/p",p_obs,"_sc",sc,rct_ctrl_tag,"_all_subsc_results.jpg"),
          width = total_width,
          height = total_height,
          final_plot,
@@ -1352,7 +1352,7 @@ if (sc == 3){
   total_height <- n_subsc * 12 * n_plots + 10
   total_width <- 18
 
-  ggsave(paste0(file.path(mainDir),"/mapbart-sim-gaussian-realcov/inserts/p",p_obs,"_sc",sc,rct_ctrl_tag,"_all_subsc_results.jpg"),
+  ggsave(paste0(file.path(mainDir),"/mapbart-sim-gaussian-single-arm/inserts/p",p_obs,"_sc",sc,rct_ctrl_tag,"_all_subsc_results.jpg"),
          width = total_width,
          height = total_height,
          final_plot,

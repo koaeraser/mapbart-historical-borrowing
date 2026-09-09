@@ -5,10 +5,10 @@
 ## sc1
 
 ```bash
-cd /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-realcov/ess_local
+cd /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-single-arm/ess_local
 Rscript gen_one.R --sc 1 --size_option default
 CORES=1 Rscript ess_calibration.R \
-    --data /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-realcov/data_v3/data_p10_n200_sc1E_alternative_1.RData \
+    --data /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-single-arm/data_v3/data_p10_n200_sc1E_alternative_1.RData \
     --outcome n200 --Ntarget 200 --seed 6 --ntree 10 --k 2 \
     --s2-grid "0.0001,0.05,0.06,0.07,0.08,0.09,0.10,0.11,0.12,0.13" \
     --map-model synthetic --beta-prior auto --sigma-ref auto --B 100 --burn 1000 --q 0.95
@@ -19,10 +19,10 @@ Rscript ess_plot_simple.R --scenario n200_nt5_k2_sc1E --out /Users/oliviazhang/D
 ## sc2
 
 ```bash
-cd /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-realcov/ess_local
+cd /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-single-arm/ess_local
 Rscript gen_one.R --sc 2 --size_option default
 CORES=1 Rscript ess_calibration.R \
-    --data /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-realcov/data_v3/data_p10_n200_sc2E_alternative_1.RData \
+    --data /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-single-arm/data_v3/data_p10_n200_sc2E_alternative_1.RData \
     --outcome n200 --Ntarget 200 --seed 6 --ntree 10 --k 2 \
     --s2-grid "0.0001,0.04,0.05,0.06,0.07,0.08,0.09,0.10,0.11,0.12" \
     --map-model synthetic --beta-prior auto --sigma-ref auto --B 100 --burn 1000 --q 0.95
@@ -33,10 +33,10 @@ Rscript ess_plot_simple.R --scenario n200_nt50_k2_sc2E --out /Users/oliviazhang/
 ## sc3
 
 ```bash
-cd /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-realcov/ess_local
+cd /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-single-arm/ess_local
 Rscript gen_one.R --sc 3 --size_option default
 CORES=1 Rscript ess_calibration.R \
-    --data /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-realcov/data_v3/data_p10_n200_sc3E_cor0.7_alternative_1.RData \
+    --data /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-single-arm/data_v3/data_p10_n200_sc3E_cor0.7_alternative_1.RData \
     --outcome n200 --Ntarget 200 --seed 6 --ntree 50 --k 2 \
     --s2-grid "0.0001,0.25" \
     --map-model synthetic --beta-prior auto --sigma-ref auto --B 100 --burn 1000 --q 0.95
@@ -49,10 +49,10 @@ Rscript ess_plot_simple.R --scenario n200_nt10_k2_sc3E_cor0.7 --out /Users/olivi
 ## sc1
 
 ```bash
-cd /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-realcov/ess_local
+cd /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-single-arm/ess_local
 Rscript gen_one.R --sc 1 --size_option small
 CORES=1 Rscript ess_calibration.R \
-    --data /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-realcov/data_v3/data_p10_n30_sc1E_alternative_1.RData \
+    --data /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-single-arm/data_v3/data_p10_n30_sc1E_alternative_1.RData \
     --outcome n30 --Ntarget 30 --seed 6 --ntree 5 --k 2 \
     --s2-grid "0.0001,0.10,0.11,0.15,0.16,0.25,0.26,0.30,0.31,0.38,0.39,0.40,0.41,0.42,0.43,0.44,0.45" \
     --map-model synthetic --beta-prior auto --sigma-ref auto --B 100 --burn 1000 --q 0.95
@@ -63,10 +63,10 @@ Rscript ess_plot_simple.R --scenario n30_nt50_k2_sc1E --out /Users/oliviazhang/D
 ## sc2
 
 ```bash
-cd /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-realcov/ess_local
+cd /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-single-arm/ess_local
 Rscript gen_one.R --sc 2 --size_option small
 CORES=1 Rscript ess_calibration.R \
-    --data /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-realcov/data_v3/data_p10_n30_sc2E_alternative_1.RData \
+    --data /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-single-arm/data_v3/data_p10_n30_sc2E_alternative_1.RData \
     --outcome n30 --Ntarget 30 --seed 6 --ntree 5 --k 2 \
     --s2-grid "0.0001,0.15,0.16,0.25,0.26,0.30,0.31,0.38,0.39,0.40,0.42,0.44" \
     --map-model synthetic --beta-prior auto --sigma-ref auto --B 100 --burn 1000 --q 0.95
@@ -77,10 +77,10 @@ Rscript ess_plot_simple.R --scenario n30_nt50_k2_sc2E --out /Users/oliviazhang/D
 ## sc3
 
 ```bash
-cd /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-realcov/ess_local
+cd /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-single-arm/ess_local
 Rscript gen_one.R --sc 3 --size_option small
 CORES=1 Rscript ess_calibration.R \
-    --data /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-realcov/data_v3/data_p10_n30_sc3E_cor0.7_alternative_1.RData \
+    --data /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-single-arm/data_v3/data_p10_n30_sc3E_cor0.7_alternative_1.RData \
     --outcome n30 --Ntarget 30 --seed 6 --ntree 10 --k 2 \
     --s2-grid "0.0001,0.15,0.16,0.25,0.26,0.30,0.31,0.38,0.39,0.40,0.42,0.44" \
     --map-model synthetic --beta-prior auto --sigma-ref auto --B 100 --burn 1000 --q 0.95

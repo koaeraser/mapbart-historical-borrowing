@@ -28,7 +28,7 @@ seed_rwd  <- get_arg("--seed_rwd", "456")   # matches run_all.R seed_rwd
 if (is.null(sc_arg) || is.null(size_arg))
   stop("usage: Rscript gen_one.R --sc <n> --size_option <default|small> [--subsc <E>] [--seed_rct <123>] [--seed_rwd <456>]")
 
-data_gen <- "/Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-realcov/data_gen_p10_v3.R"
+data_gen <- "/Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-single-arm/data_gen_p10_v3.R"
 
 src <- readLines(data_gen)
 src <- gsub("niter <- 500", "niter <- 1", src)

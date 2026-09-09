@@ -75,7 +75,7 @@ build_rmst_column <- function(sc, subsc = "E") {
                  "bias.trt.rmst.pop","sd.trt.rmst.pop","w2distance.trt.rmst.pop",
                  "bias.ctrl.rmst.pop","sd.ctrl.rmst.pop","w2distance.ctrl.rmst.pop",
                  "bias_subj_rmst","pehe_subj_rmst")
-  resdir <- paste0(mainDir, "/mapbart-sim-survival-realcov/res/")
+  resdir <- paste0(mainDir, "/mapbart-sim-survival-single-arm/res/")
   read_rmst <- function(file, method) {
     if (!file.exists(file)) return(NULL)
     d <- tryCatch(readRDS(file), error = function(e) NULL)
@@ -197,7 +197,7 @@ if (sc == 1 | sc == 2 | sc == 3){
 
     # Try to read AFTv1 results
     tryCatch({
-      AFTv1_res <- readRDS(paste0(mainDir,"/mapbart-sim-survival-realcov/res/AFTv1_p",p_obs,size_suffix,file_suffix))
+      AFTv1_res <- readRDS(paste0(mainDir,"/mapbart-sim-survival-single-arm/res/AFTv1_p",p_obs,size_suffix,file_suffix))
       AFTv1_res_ATE <- AFTv1_res[, c("c","iteration","bias","sd","rmse","w1distance","w2distance","ci","coverage","tp","fp","tp_calibrated")]
       AFTv1_res_sigma <- AFTv1_res[, c("c","iteration",
                                 "bias.trt.sigma","sd.trt.sigma","w2distance.trt.sigma","bias.ctrl.sigma","sd.ctrl.sigma","w2distance.ctrl.sigma",
@@ -215,7 +215,7 @@ if (sc == 1 | sc == 2 | sc == 3){
     # Try to read AFTv2 results for each rwd_w value (files tagged _w<rwd_w>)
     for (rwd_w_val in aftv2_rwd_w_vals) {
       tryCatch({
-        aftv2_file <- sub("\\.RData$", paste0("_w", rwd_w_val, ".RData"), paste0(mainDir,"/mapbart-sim-survival-realcov/res/AFTv2_p",p_obs,size_suffix,file_suffix))
+        aftv2_file <- sub("\\.RData$", paste0("_w", rwd_w_val, ".RData"), paste0(mainDir,"/mapbart-sim-survival-single-arm/res/AFTv2_p",p_obs,size_suffix,file_suffix))
         if (file.exists(aftv2_file)) {
           AFTv2_res <- readRDS(aftv2_file)
           AFTv2_res_ATE <- AFTv2_res[, c("c","iteration","bias","sd","rmse","w1distance","w2distance","ci","coverage","tp","fp","tp_calibrated")]
@@ -237,7 +237,7 @@ if (sc == 1 | sc == 2 | sc == 3){
 
     # Try to read AFTv3 results
     tryCatch({
-      AFTv3_res <- readRDS(paste0(mainDir,"/mapbart-sim-survival-realcov/res/AFTv3_p",p_obs,size_suffix,file_suffix))
+      AFTv3_res <- readRDS(paste0(mainDir,"/mapbart-sim-survival-single-arm/res/AFTv3_p",p_obs,size_suffix,file_suffix))
       AFTv3_res_ATE <- AFTv3_res[, c("c","iteration","bias","sd","rmse","w1distance","w2distance","ci","coverage","tp","fp","tp_calibrated")]
       AFTv3_res_sigma <- AFTv3_res[, c("c","iteration",
                                     "bias.trt.sigma","sd.trt.sigma","w2distance.trt.sigma","bias.ctrl.sigma","sd.ctrl.sigma","w2distance.ctrl.sigma",
@@ -256,7 +256,7 @@ if (sc == 1 | sc == 2 | sc == 3){
     for (prior_val in prior_vals) {
       tryCatch({
         aftv4_file_suffix <- paste0("_sc", sc, subsc, "", .cor_sfx, "_prior", prior_val, "_alternative.RData")
-        file_path <- paste0(mainDir,"/mapbart-sim-survival-realcov/res/HierAFT_p",p_obs,size_suffix,aftv4_file_suffix)
+        file_path <- paste0(mainDir,"/mapbart-sim-survival-single-arm/res/HierAFT_p",p_obs,size_suffix,aftv4_file_suffix)
         if (file.exists(file_path)) {
           HierAFT_res <- readRDS(file_path)
           HierAFT_res_ATE <- HierAFT_res[, c("c","iteration","bias","sd","rmse","w1distance","w2distance","ci","coverage","tp","fp","tp_calibrated")]
@@ -278,7 +278,7 @@ if (sc == 1 | sc == 2 | sc == 3){
     # Try to read BARTv1 / BARTv2 results
     for (bver in c("BARTv1", "BARTv2", "BARTv3")) {
     tryCatch({
-      BART_res <- readRDS(paste0(mainDir,"/mapbart-sim-survival-realcov/res/",bver,"_p",p_obs,size_suffix,file_suffix))
+      BART_res <- readRDS(paste0(mainDir,"/mapbart-sim-survival-single-arm/res/",bver,"_p",p_obs,size_suffix,file_suffix))
       BART_res <- BART_res[BART_res$alpha == 0.95 & BART_res$beta == 2, ]
       BART_res_ATE <- BART_res[, c("c","iteration","bias","sd","rmse","w1distance","w2distance","ci","coverage","tp","fp","tp_calibrated")]
       BART_res_sigma <- BART_res[, c("c","iteration",
@@ -299,7 +299,7 @@ if (sc == 1 | sc == 2 | sc == 3){
     for (cf in .mb_cfgs) for (target_N in mbart_target_Ns) {
       tryCatch({
         mbart_file_suffix <- paste0(cf$tag, "_sc", sc, subsc, "", .cor_sfx, "_N", target_N, "_alternative.RData")
-        file_path <- paste0(mainDir,"/mapbart-sim-survival-realcov/res/MAP-BART_p",p_obs,size_suffix,mbart_file_suffix)
+        file_path <- paste0(mainDir,"/mapbart-sim-survival-single-arm/res/MAP-BART_p",p_obs,size_suffix,mbart_file_suffix)
         if (file.exists(file_path)) {
           MAP_BART_res <- readRDS(file_path)
           MAP_BART_res <- MAP_BART_res[MAP_BART_res$alpha == 0.95 & MAP_BART_res$beta == 2, ]
@@ -359,7 +359,7 @@ if (sc == 1 | sc == 2 | sc == 3){
 
     for (method_info in methods_list) {
       tryCatch({
-        null_file <- paste0(mainDir,"/mapbart-sim-survival-realcov/res/", method_info$file_prefix, "_p", p_obs, size_suffix, null_file_suffix)
+        null_file <- paste0(mainDir,"/mapbart-sim-survival-single-arm/res/", method_info$file_prefix, "_p", p_obs, size_suffix, null_file_suffix)
         if (file.exists(null_file)) {
           null_res <- readRDS(null_file)
 
@@ -387,7 +387,7 @@ if (sc == 1 | sc == 2 | sc == 3){
     for (prior_val in prior_vals) {
       tryCatch({
         aftv4_null_suffix <- paste0("_sc", sc, subsc, .cor_sfx, "_prior", prior_val, "_null.RData")
-        null_file <- paste0(mainDir,"/mapbart-sim-survival-realcov/res/HierAFT_p", p_obs, size_suffix, aftv4_null_suffix)
+        null_file <- paste0(mainDir,"/mapbart-sim-survival-single-arm/res/HierAFT_p", p_obs, size_suffix, aftv4_null_suffix)
         if (file.exists(null_file)) {
           null_res <- readRDS(null_file)
           if ("fp" %in% colnames(null_res)) {
@@ -406,7 +406,7 @@ if (sc == 1 | sc == 2 | sc == 3){
     for (cf in .mb_cfgs) for (target_N in mbart_target_Ns) {
       tryCatch({
         mbart_null_suffix <- paste0(cf$tag, "_sc", sc, subsc, "", .cor_sfx, "_N", target_N, "_null.RData")
-        null_file <- paste0(mainDir,"/mapbart-sim-survival-realcov/res/MAP-BART_p", p_obs, size_suffix, mbart_null_suffix)
+        null_file <- paste0(mainDir,"/mapbart-sim-survival-single-arm/res/MAP-BART_p", p_obs, size_suffix, mbart_null_suffix)
         if (file.exists(null_file)) {
           null_res <- readRDS(null_file)
           null_res <- null_res[null_res$alpha == 0.95 & null_res$beta == 2, ]
@@ -762,7 +762,7 @@ if (sc == 1 | sc == 2 | sc == 3){
   total_height <- if (exists(".heights")) sum(.heights) * n_subsc * 3 + 10 else n_subsc * 15 * n_plots + 10
   total_width <- if (!is.null(rmst_col)) 36 else 18  # double width: median (left) + RMST (right)
 
-  ggsave(paste0(file.path(mainDir),"/mapbart-sim-survival-realcov/inserts/p",p_obs,size_suffix,"_sc",sc,"_all_subsc_results.jpg"),
+  ggsave(paste0(file.path(mainDir),"/mapbart-sim-survival-single-arm/inserts/p",p_obs,size_suffix,"_sc",sc,"_all_subsc_results.jpg"),
          width = total_width,
          height = total_height,
          final_plot,

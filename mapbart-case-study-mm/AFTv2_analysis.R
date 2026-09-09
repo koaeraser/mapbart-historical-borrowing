@@ -153,7 +153,7 @@ w_beta   <- 1.0
 
 # ---------------------------------------------------------------
 # Power-prior weight on the EXTERNAL CONTROL (UCMM) likelihood.
-# Mirrors mapbart-sim-survival-realcov/AFTv2.R's rwd_w: each UCMM control row
+# Mirrors mapbart-sim-survival-single-arm/AFTv2.R's rwd_w: each UCMM control row
 # enters the control-arm likelihood with weight rwd_w, so the effective
 # external-control sample size is ~ rwd_w * n_UCMM.  To match a MAP-BART
 # borrowing target N: rwd_w = N / n_UCMM.  rwd_w = 1 reproduces full

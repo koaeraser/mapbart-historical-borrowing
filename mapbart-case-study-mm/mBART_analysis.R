@@ -174,7 +174,7 @@ N_target_multipliers <- as.numeric(.nmult_env[nzchar(.nmult_env)])
 # each control config reads its OWN ess calibration -- s^2_star depends on
 # tau_theta = (max-min)/(2*k*sqrt(ntree)) and the leaf partial-residual structure,
 # so a config's s^2 is not transferable to another.  Latest by mtime among files
-# for that exact config, or NA.  Mirrors mapbart-sim-survival-realcov/mBART.R pick_prior_for.
+# for that exact config, or NA.  Mirrors mapbart-sim-survival-single-arm/mBART.R pick_prior_for.
 cal_file_for <- function(ctrl_ntree, ctrl_k) {
   pat <- sprintf("^ess_calibration_ucmm_%s_.*_%s_nt%d_k%g\\.RData$",
                  tolower(OUTCOME), data_tag, ctrl_ntree, ctrl_k)
@@ -222,7 +222,7 @@ pick_prior_for <- function(ctrl_ntree, ctrl_k) {
 }
 
 # Run only configs that HAVE a config-matched calibration (unless
-# PRIOR_VAL_OVERRIDE bypasses calibration).  Mirrors mapbart-sim-survival-realcov/mBART.R.
+# PRIOR_VAL_OVERRIDE bypasses calibration).  Mirrors mapbart-sim-survival-single-arm/mBART.R.
 if (!is.finite(.override)) {
   .has_cal <- vapply(control_configs, function(cf) !is.na(cal_file_for(cf$ntree, cf$k)), logical(1))
   if (any(!.has_cal))
@@ -233,7 +233,7 @@ if (!is.finite(.override)) {
   control_configs <- control_configs[.has_cal]
   if (!length(control_configs))
     # No config calibrated -> skip MAP-BART entirely (loop is a no-op below),
-    # rather than hard-stopping.  Mirrors mapbart-sim-survival-realcov/mBART.R.
+    # rather than hard-stopping.  Mirrors mapbart-sim-survival-single-arm/mBART.R.
     warning(sprintf("mBART_analysis.R: no control config has a matching %s/%s ess calibration (ess_calibration_ucmm_%s_*_%s_nt<ntree>_k<k>.RData in %s) -- SKIPPING MAP-BART. Run ess_calibration for the sweep's configs first.",
                     tolower(OUTCOME), data_tag, tolower(OUTCOME), data_tag, .cal_dir))
 }

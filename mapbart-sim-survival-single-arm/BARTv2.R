@@ -8,7 +8,7 @@ library(gtools)
 library(survival)
 library(dplyr)
 
-source(paste0(mainDir, "/mapbart-sim-survival-realcov/rmst_helpers.R"))
+source(paste0(mainDir, "/mapbart-sim-survival-single-arm/rmst_helpers.R"))
 rmst_tau <- 5   # RMST restriction horizon (admin-censoring horizon); additional output
 rmst_control_sigma <- "own"  # control-arm RMST sigma: "trt"|"own"|"adaptive" (own = control's own sigma-hat; avoids inflated trt sigma at small n)
 
@@ -19,9 +19,9 @@ size_suffix <- if (size_option == "small") "_n30" else "_n200"
 sc <- 1
 subsc <- "E"
 # Infer p_obs from any data file in the folder (count columns named X1, X2, ...)
-sample_files <- list.files(file.path(mainDir, "mapbart-sim-survival-realcov", data_folder),
+sample_files <- list.files(file.path(mainDir, "mapbart-sim-survival-single-arm", data_folder),
                            pattern = "^data_.*\\.RData$", full.names = TRUE)
-if (length(sample_files) == 0) stop("No data files found in ", file.path(mainDir, "mapbart-sim-survival-realcov", data_folder))
+if (length(sample_files) == 0) stop("No data files found in ", file.path(mainDir, "mapbart-sim-survival-single-arm", data_folder))
 p_obs <- sum(grepl("^X\\d+$", colnames(readRDS(sample_files[1])$X)))
 hypo <- "alternative"  # "null" or "alternative"
 
@@ -42,7 +42,7 @@ data_prefix <- if (sc == 1 | sc == 2) {
 } else {
   paste0("data_p", p_obs, size_suffix, "_sc", sc, if (!is.null(subsc)) subsc else "", "_cor", cor, "_", hypo, "_")
 }
-niter <- length(Sys.glob(file.path(mainDir, "mapbart-sim-survival-realcov", data_folder, paste0(data_prefix, "*.RData"))))
+niter <- length(Sys.glob(file.path(mainDir, "mapbart-sim-survival-single-arm", data_folder, paste0(data_prefix, "*.RData"))))
 if (niter == 0) stop("No simulated data files found for this scenario")
 
 # Auto-load calibrated threshold when running under alternative
@@ -50,15 +50,15 @@ if (hypo == "alternative") {
   # For sc == 1 or 2: no cor suffix; for sc == 3: include cor suffix
   if (sc == 1 | sc == 2) {
     if (is.null(subsc)) {
-      threshold_file <- paste0(mainDir, "/mapbart-sim-survival-realcov/res/BARTv2_p", p_obs, size_suffix, "_sc", sc, "_threshold.RData")
+      threshold_file <- paste0(mainDir, "/mapbart-sim-survival-single-arm/res/BARTv2_p", p_obs, size_suffix, "_sc", sc, "_threshold.RData")
     } else {
-      threshold_file <- paste0(mainDir, "/mapbart-sim-survival-realcov/res/BARTv2_p", p_obs, size_suffix, "_sc", sc, subsc, "_threshold.RData")
+      threshold_file <- paste0(mainDir, "/mapbart-sim-survival-single-arm/res/BARTv2_p", p_obs, size_suffix, "_sc", sc, subsc, "_threshold.RData")
     }
   } else {
     if (is.null(subsc)) {
-      threshold_file <- paste0(mainDir, "/mapbart-sim-survival-realcov/res/BARTv2_p", p_obs, size_suffix, "_sc", sc, "_cor", cor, "_threshold.RData")
+      threshold_file <- paste0(mainDir, "/mapbart-sim-survival-single-arm/res/BARTv2_p", p_obs, size_suffix, "_sc", sc, "_cor", cor, "_threshold.RData")
     } else {
-      threshold_file <- paste0(mainDir, "/mapbart-sim-survival-realcov/res/BARTv2_p", p_obs, size_suffix, "_sc", sc, subsc, "_cor", cor, "_threshold.RData")
+      threshold_file <- paste0(mainDir, "/mapbart-sim-survival-single-arm/res/BARTv2_p", p_obs, size_suffix, "_sc", sc, subsc, "_cor", cor, "_threshold.RData")
     }
   }
 
@@ -166,30 +166,30 @@ for (which in 1:nrow(alpha_beta)){
         # For sc == 1 or 2: no cor suffix; for sc == 3: include cor suffix
         if (sc == 1 | sc == 2) {
           if (is.null(subsc)) {
-            filename_rct <- paste0(mainDir,"/mapbart-sim-survival-realcov/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,"_",hypo,"_",iter,".RData")
+            filename_rct <- paste0(mainDir,"/mapbart-sim-survival-single-arm/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,"_",hypo,"_",iter,".RData")
           } else {
-            filename_rct <- paste0(mainDir,"/mapbart-sim-survival-realcov/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,subsc,"_",hypo,"_",iter,".RData")
+            filename_rct <- paste0(mainDir,"/mapbart-sim-survival-single-arm/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,subsc,"_",hypo,"_",iter,".RData")
           }
         } else {
           if (is.null(subsc)) {
-            filename_rct <- paste0(mainDir,"/mapbart-sim-survival-realcov/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,"_cor",c,"_",hypo,"_",iter,".RData")
+            filename_rct <- paste0(mainDir,"/mapbart-sim-survival-single-arm/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,"_cor",c,"_",hypo,"_",iter,".RData")
           } else {
-            filename_rct <- paste0(mainDir,"/mapbart-sim-survival-realcov/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,subsc,"_cor",c,"_",hypo,"_",iter,".RData")
+            filename_rct <- paste0(mainDir,"/mapbart-sim-survival-single-arm/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,subsc,"_cor",c,"_",hypo,"_",iter,".RData")
           }
         }
 
         # Construct filename for RWD data (same index as RCT)
         if (sc == 1 | sc == 2) {
           if (is.null(subsc)) {
-            filename_rwd <- paste0(mainDir,"/mapbart-sim-survival-realcov/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,"_",hypo,"_",iter,".RData")
+            filename_rwd <- paste0(mainDir,"/mapbart-sim-survival-single-arm/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,"_",hypo,"_",iter,".RData")
           } else {
-            filename_rwd <- paste0(mainDir,"/mapbart-sim-survival-realcov/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,subsc,"_",hypo,"_",iter,".RData")
+            filename_rwd <- paste0(mainDir,"/mapbart-sim-survival-single-arm/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,subsc,"_",hypo,"_",iter,".RData")
           }
         } else {
           if (is.null(subsc)) {
-            filename_rwd <- paste0(mainDir,"/mapbart-sim-survival-realcov/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,"_cor",c,"_",hypo,"_",iter,".RData")
+            filename_rwd <- paste0(mainDir,"/mapbart-sim-survival-single-arm/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,"_cor",c,"_",hypo,"_",iter,".RData")
           } else {
-            filename_rwd <- paste0(mainDir,"/mapbart-sim-survival-realcov/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,subsc,"_cor",c,"_",hypo,"_",iter,".RData")
+            filename_rwd <- paste0(mainDir,"/mapbart-sim-survival-single-arm/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,subsc,"_cor",c,"_",hypo,"_",iter,".RData")
           }
         }
         
@@ -673,15 +673,15 @@ if (hypo == "null") {
   # For sc == 1 or 2: no cor suffix; for sc == 3: include cor suffix
   if (sc == 1 | sc == 2) {
     if (is.null(subsc)) {
-      threshold_file <- paste0(mainDir, "/mapbart-sim-survival-realcov/res/BARTv2_p", p_obs, size_suffix, "_sc", sc, "_threshold.RData")
+      threshold_file <- paste0(mainDir, "/mapbart-sim-survival-single-arm/res/BARTv2_p", p_obs, size_suffix, "_sc", sc, "_threshold.RData")
     } else {
-      threshold_file <- paste0(mainDir, "/mapbart-sim-survival-realcov/res/BARTv2_p", p_obs, size_suffix, "_sc", sc, subsc, "_threshold.RData")
+      threshold_file <- paste0(mainDir, "/mapbart-sim-survival-single-arm/res/BARTv2_p", p_obs, size_suffix, "_sc", sc, subsc, "_threshold.RData")
     }
   } else {
     if (is.null(subsc)) {
-      threshold_file <- paste0(mainDir, "/mapbart-sim-survival-realcov/res/BARTv2_p", p_obs, size_suffix, "_sc", sc, "_cor", c, "_threshold.RData")
+      threshold_file <- paste0(mainDir, "/mapbart-sim-survival-single-arm/res/BARTv2_p", p_obs, size_suffix, "_sc", sc, "_cor", c, "_threshold.RData")
     } else {
-      threshold_file <- paste0(mainDir, "/mapbart-sim-survival-realcov/res/BARTv2_p", p_obs, size_suffix, "_sc", sc, subsc, "_cor", c, "_threshold.RData")
+      threshold_file <- paste0(mainDir, "/mapbart-sim-survival-single-arm/res/BARTv2_p", p_obs, size_suffix, "_sc", sc, subsc, "_cor", c, "_threshold.RData")
     }
   }
 
@@ -692,15 +692,15 @@ if (hypo == "null") {
 # For sc == 1 or 2: no cor suffix; for sc == 3: include cor suffix
 if (sc == 1 | sc == 2) {
   if (is.null(subsc)) {
-    saveRDS(res, file=paste0(mainDir,"/mapbart-sim-survival-realcov/res/BARTv2_p",p_obs,size_suffix,"_sc",sc,"_",hypo,".RData"))
+    saveRDS(res, file=paste0(mainDir,"/mapbart-sim-survival-single-arm/res/BARTv2_p",p_obs,size_suffix,"_sc",sc,"_",hypo,".RData"))
   } else {
-    saveRDS(res, file=paste0(mainDir,"/mapbart-sim-survival-realcov/res/BARTv2_p",p_obs,size_suffix,"_sc",sc,subsc,"_",hypo,".RData"))
+    saveRDS(res, file=paste0(mainDir,"/mapbart-sim-survival-single-arm/res/BARTv2_p",p_obs,size_suffix,"_sc",sc,subsc,"_",hypo,".RData"))
   }
 } else {
   if (is.null(subsc)) {
-    saveRDS(res, file=paste0(mainDir,"/mapbart-sim-survival-realcov/res/BARTv2_p",p_obs,size_suffix,"_sc",sc,"_cor",c,"_",hypo,".RData"))
+    saveRDS(res, file=paste0(mainDir,"/mapbart-sim-survival-single-arm/res/BARTv2_p",p_obs,size_suffix,"_sc",sc,"_cor",c,"_",hypo,".RData"))
   } else {
-    saveRDS(res, file=paste0(mainDir,"/mapbart-sim-survival-realcov/res/BARTv2_p",p_obs,size_suffix,"_sc",sc,subsc,"_cor",c,"_",hypo,".RData"))
+    saveRDS(res, file=paste0(mainDir,"/mapbart-sim-survival-single-arm/res/BARTv2_p",p_obs,size_suffix,"_sc",sc,subsc,"_cor",c,"_",hypo,".RData"))
   }
 }
 

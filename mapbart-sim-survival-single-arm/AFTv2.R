@@ -4,7 +4,7 @@ library(rstan)
 library(survival)
 library(dplyr)
 
-source(paste0(mainDir, "/mapbart-sim-survival-realcov/rmst_helpers.R"))
+source(paste0(mainDir, "/mapbart-sim-survival-single-arm/rmst_helpers.R"))
 rmst_tau <- 5   # RMST restriction horizon (admin-censoring horizon); additional output
 rmst_control_sigma <- "own"  # control-arm RMST sigma: "trt"|"own"|"adaptive" (own = control's own sigma-hat; avoids inflated trt sigma at small n)
 
@@ -12,19 +12,25 @@ data_folder <- "data_v3"  # Options: "data" or "data_v3"
 size_option <- "default"   # "default" (RCT trt 200) or "small" (RCT trt 30)
 size_suffix <- if (size_option == "small") "_n30" else "_n200"
 
+# Power-prior downweighting of the RWD (external control) likelihood.
+# rwd_w = fractional weight on each RWD observation; effective RWD sample size
+# ~ rwd_w * n_RWD.  To match a MAP-BART borrowing target N: rwd_w = N / n_RWD.
+# rwd_w = 1 reproduces full (unweighted) borrowing.  Output files are tagged _w<rwd_w>.
+#
+# rwd_w_vals is now DERIVED from the ess_plot.R targets tables (the N column),
+# so AFTv2 is compared at the same effective RWD sample sizes MAP-BART borrows.
+# Computed below (rwd_w_block), AFTER the scenario (sc/subsc/cor/size) is set,
+# as a per-scenario union of the target Ns over all control configs.
+n_rwd_nominal <- 300  # approximate RWD control count (n3 from data_gen_p10_v3.R)
+
 sc <- 1
 subsc <- "E"
 # Infer p_obs from any data file in the folder (count columns named X1, X2, ...)
-sample_files <- list.files(file.path(mainDir, "mapbart-sim-survival-realcov", data_folder),
+sample_files <- list.files(file.path(mainDir, "mapbart-sim-survival-single-arm", data_folder),
                            pattern = "^data_.*\\.RData$", full.names = TRUE)
-if (length(sample_files) == 0) stop("No data files found in ", file.path(mainDir, "mapbart-sim-survival-realcov", data_folder))
+if (length(sample_files) == 0) stop("No data files found in ", file.path(mainDir, "mapbart-sim-survival-single-arm", data_folder))
 p_obs <- sum(grepl("^X\\d+$", colnames(readRDS(sample_files[1])$X)))
 hypo <- "alternative"  # "null" or "alternative"
-
-# prior_vals <- c(0.1, 0.25, 0.5, 1.0, 5.0, 10.0)
-# 0.05 = default tight prior; 0.5 = looser prior matching MAP-BART borrowing range.
-# Add calibrated s² from ess_local/ess_calibration.R once available (e.g. c(0.05, <cal>, 0.5)).
-prior_vals <- c(0.05, 0.5)
 
 threshold <- 0.95
 
@@ -37,36 +43,45 @@ if (sc == 3){
   cor <- 0.7
 }
 
+# rwd_w_block: derive rwd_w_vals from the ess_plot.R targets tables.  For THIS
+# scenario (size + sc/subsc/cor), union the N column over every control config's
+# _tab.RData, then rwd_w = N / n_rwd_nominal (plus 1 = full borrowing).  The
+# per-config tables share the same N_target, so the union is the set of target
+# Ns MAP-BART borrows to in this scenario.  Requires ess_plot.R to have run.
+{
+  .cal_dir    <- file.path(mainDir, "mapbart-sim-survival-single-arm", "ess_local", "res")
+  .size_tag   <- sub("^_", "", size_suffix)                     # "n30" / "n200"
+  .sc_cal_tag <- if (sc == 1 | sc == 2)
+      paste0("sc", sc, if (!is.null(subsc)) subsc else "") else
+      paste0("sc", sc, if (!is.null(subsc)) subsc else "", "_cor", cor)
+  .tgt_files  <- list.files(.cal_dir, full.names = TRUE,
+                            pattern = paste0("^ess_calibration_.*_", .size_tag,
+                                             "_nt[0-9]+_k[0-9.]+_", .sc_cal_tag,
+                                             "_tab\\.RData$"))
+  if (length(.tgt_files)) {
+    .Ns <- unique(unlist(lapply(.tgt_files, function(f) as.integer(readRDS(f)$N))))
+    rwd_w_vals <- sort(unique(c(1, round(.Ns / n_rwd_nominal, 4))), decreasing = TRUE)
+    cat(sprintf("AFTv2.R: rwd_w_vals from %d targets table(s) [%s/%s], target N = {%s} -> rwd_w = %s\n",
+                length(.tgt_files), .size_tag, .sc_cal_tag,
+                paste(sort(.Ns, decreasing = TRUE), collapse = ", "),
+                paste(rwd_w_vals, collapse = ", ")))
+  } else {
+    rwd_w_vals <- c(1)
+    warning(sprintf(paste0("AFTv2.R: no scenario/size-matched targets table ",
+                    "(ess_calibration_*_%s_nt<ntree>_k<k>_%s_tab.RData in %s) -- ",
+                    "using rwd_w_vals = 1 (full borrowing only).  Run ess_plot.R first."),
+                    .size_tag, .sc_cal_tag, .cal_dir))
+  }
+}
+
 # Infer niter from the number of simulated data files matching this scenario
 data_prefix <- if (sc == 1 | sc == 2) {
   paste0("data_p", p_obs, size_suffix, "_sc", sc, if (!is.null(subsc)) subsc else "", "_", hypo, "_")
 } else {
   paste0("data_p", p_obs, size_suffix, "_sc", sc, if (!is.null(subsc)) subsc else "", "_cor", cor, "_", hypo, "_")
 }
-niter <- length(Sys.glob(file.path(mainDir, "mapbart-sim-survival-realcov", data_folder, paste0(data_prefix, "*.RData"))))
+niter <- length(Sys.glob(file.path(mainDir, "mapbart-sim-survival-single-arm", data_folder, paste0(data_prefix, "*.RData"))))
 if (niter == 0) stop("No simulated data files found for this scenario")
-
-# Auto-load calibrated threshold when running under alternative
-if (hypo == "alternative") {
-  # For sc == 1 or 2: no cor suffix; for sc == 3: include cor suffix
-  if (sc == 1 | sc == 2) {
-    if (is.null(subsc)) {
-      threshold_file <- paste0(mainDir, "/mapbart-sim-survival-realcov/res/HierAFT_p", p_obs, size_suffix, "_sc", sc, "_threshold.RData")
-    } else {
-      threshold_file <- paste0(mainDir, "/mapbart-sim-survival-realcov/res/HierAFT_p", p_obs, size_suffix, "_sc", sc, subsc, "_threshold.RData")
-    }
-  } else {
-    if (is.null(subsc)) {
-      threshold_file <- paste0(mainDir, "/mapbart-sim-survival-realcov/res/HierAFT_p", p_obs, size_suffix, "_sc", sc, "_cor", cor, "_threshold.RData")
-    } else {
-      threshold_file <- paste0(mainDir, "/mapbart-sim-survival-realcov/res/HierAFT_p", p_obs, size_suffix, "_sc", sc, subsc, "_cor", cor, "_threshold.RData")
-    }
-  }
-
-  if (file.exists(threshold_file)) {
-    threshold <- readRDS(threshold_file)
-  }
-}
 
 # Stan sampling parameters
 n_chains <- 1
@@ -74,113 +89,14 @@ n_iter <- 1600
 n_warmup <- 100
 n_cores <- 3
 
-# Options for mu_alpha and mu_beta
-estimate_mu_alpha <- TRUE
-estimate_mu_beta <- TRUE
-
-# Fixed values for mu_alpha and mu_beta (used when estimate_* = FALSE)
-mu_alpha_fixed <- 0
-mu_beta_fixed <- 0
-
-aft_hierarchical_code <- "
+aft_stan_code <- "
 data {
   int<lower=0> N;           // number of observations
   int<lower=0> P;           // number of predictors
   matrix[N, P] X;           // predictor matrix
   vector[N] y;              // log survival times
   int<lower=0,upper=1> event[N]; // event indicator
-  int<lower=0,upper=1> D[N]; // data source indicator (0=RWD, 1=RCT)
-  vector<lower=0>[2] sigma_scale; // scale parameters for IG prior on sigma2 (1=RWD, 2=RCT)
-  int<lower=0,upper=1> estimate_mu_alpha; // 1 = estimate mu_alpha, 0 = use fixed value
-  int<lower=0,upper=1> estimate_mu_beta;  // 1 = estimate mu_beta, 0 = use fixed value
-  real mu_alpha_fixed; // fixed value for mu_alpha (used when estimate_mu_alpha = 0)
-  real mu_beta_fixed;  // fixed value for mu_beta (used when estimate_mu_beta = 0)
-  real<lower=0> prior;      // prior scale for tau2 ~ inv_gamma(3/2, 3*prior/2)
-}
-
-parameters {
-  vector[2] alpha;          // intercept for each group (1=RWD, 2=RCT)
-  real<lower=0> tau_a2;     // variance for alpha
-  // real<lower=0,upper=2> tau_a;  // SD for alpha (uniform prior)
-  matrix[2, P] beta;        // regression coefficients for each group (row 1=RWD, row 2=RCT)
-  vector<lower=0>[P] tau2;  // predictor-specific variance for beta
-  // vector<lower=0,upper=2>[P] tau;  // predictor-specific SD for beta (uniform prior)
-  vector<lower=0>[2] sigma2; // residual variance for each group (1=RWD, 2=RCT)
-  real mu_alpha;            // hyperprior mean for alpha (estimated or fixed)
-  real mu_beta;             // hyperprior mean for beta (estimated or fixed)
-}
-
-model {
-  vector[N] mu;
-  vector[2] sigma;
-  real tau_a;
-  vector[P] tau;
-
-  if (estimate_mu_alpha == 1) {
-    mu_alpha ~ normal(0, 10);
-  } else {
-    mu_alpha ~ normal(mu_alpha_fixed, 0.0001); 
-  }
-
-  if (estimate_mu_beta == 1) {
-    mu_beta ~ normal(0, 10);
-  } else {
-    mu_beta ~ normal(mu_beta_fixed, 0.0001);
-  }
-
-  tau_a2 ~ inv_gamma(3.0/2.0, 3.0*prior/2.0);
-  tau_a = sqrt(tau_a2);
-  // tau_a ~ uniform(0, 2);
-
-  for (g in 1:2) {
-    alpha[g] ~ normal(mu_alpha, tau_a);
-  }
-
-  for (j in 1:P) {
-    tau2[j] ~ inv_gamma(3.0/2.0, 3.0*prior/2.0);
-    tau[j] = sqrt(tau2[j]);
-    // tau[j] ~ uniform(0, 2);
-  }
-
-  for (g in 1:2) {
-    for (j in 1:P) {
-      beta[g, j] ~ normal(mu_beta, tau[j]);
-    }
-  }
-
-  for (g in 1:2) {
-    sigma2[g] ~ inv_gamma(3.0/2.0, 3.0*sigma_scale[g]/2.0);
-  }
-
-  for (g in 1:2) {
-    sigma[g] = sqrt(sigma2[g]);
-  }
-
-  for (n in 1:N) {
-    int group_idx = D[n] + 1; 
-    mu[n] = alpha[group_idx] + X[n] * beta[group_idx]';
-    if (event[n] == 1) {
-      // Observed event
-      y[n] ~ normal(mu[n], sigma[group_idx]);
-    } else {
-      // Censored observation
-      target += normal_lccdf(y[n] | mu[n], sigma[group_idx]);
-    }
-  }
-}
-"
-
-# Compile Stan model for control (with group-specific structure)
-aft_hierarchical_model <- stan_model(model_code = aft_hierarchical_code)
-
-# Define simpler Stan model for treatment (single group, like AFTv1)
-aft_simple_code <- "
-data {
-  int<lower=0> N;           // number of observations
-  int<lower=0> P;           // number of predictors
-  matrix[N, P] X;           // predictor matrix
-  vector[N] y;              // log survival times
-  int<lower=0,upper=1> event[N]; // event indicator
+  vector<lower=0>[N] wt;    // per-obs likelihood weight (power-prior downweighting of RWD)
   real<lower=0> sigma_scale; // scale parameter for IG prior on sigma2
   real mu_alpha;      // prior mean for intercept (mean of y.train)
   real<lower=0> lambda_alpha;  // std dev for intercept prior (from BART)
@@ -210,85 +126,105 @@ model {
   mu = alpha + X * beta;
 
   // Likelihood for AFT model
+  // power-prior weighted: RWD rows enter with weight wt
   for (n in 1:N) {
     if (event[n] == 1) {
       // Observed event
-      y[n] ~ normal(mu[n], sigma);
+      target += wt[n] * normal_lpdf(y[n] | mu[n], sigma);
     } else {
       // Censored observation
-      target += normal_lccdf(y[n] | mu[n], sigma);
+      target += wt[n] * normal_lccdf(y[n] | mu[n], sigma);
     }
   }
 }
 "
 
-# Compile simpler Stan model for treatment
-aft_simple_model <- stan_model(model_code = aft_simple_code)
+# Compile Stan model once (shared across all rwd_w values)
+aft_model <- stan_model(model_code = aft_stan_code)
 
-for (prior in prior_vals) {
+set.seed(6)
+seed <- sample(1:10000, niter*4, replace = F)
 
-  cat("\n========== Running with prior =", prior, "==========\n")
+for (rwd_w in rwd_w_vals) {
+  cat(sprintf("\n========== Running AFTv2 with rwd_w = %s ==========\n", rwd_w))
+  ee <- 1   # reset so every rwd_w uses the same per-iteration seeds
 
-  set.seed(6)
-  seed <- sample(1:10000, niter*4, replace = F)
-  ee <- 1
-
-  res <- data.frame(
-    dist =  "lognormal",
-    c = cor
-  )
-  res <- res[rep(1:nrow(res), each = niter), ]
-  res$bias <- NA
-  res$sd <- NA
-  res$rmst_tau <- NA
-  res$rmst_true <- NA
-  res$rmst_hat <- NA
-  res$bias_rmst <- NA
-  res$sd_rmst <- NA
-  res$ci_rmst <- NA
-  res$coverage_rmst <- NA
-  res$decision_rmst <- NA
-  res$tp_rmst <- NA
-  res$rmse_rmst <- NA
-  res$w1distance_rmst <- NA
-  res$w2distance_rmst <- NA
-  res$tp_calibrated_rmst <- NA
-  res$bias.trt.rmst.pop <- NA
-  res$sd.trt.rmst.pop <- NA
-  res$w2distance.trt.rmst.pop <- NA
-  res$bias.ctrl.rmst.pop <- NA
-  res$sd.ctrl.rmst.pop <- NA
-  res$w2distance.ctrl.rmst.pop <- NA
-  res$bias_subj_rmst <- NA
-  res$pehe_subj_rmst <- NA
-  res$rmse <- NA
-  res$w1distance <- NA
-  res$w2distance <- NA
-  res$ci <- NA
-  res$coverage <- NA
-  res$tp_calibrated <- NA
-  res$tp <- NA
-  res$fp <- NA
-  res$pehe_subj <- NA
-  res$bias_subj <- NA
-  res$bias.trt.sigma <- NA
-  res$sd.trt.sigma <- NA
-  res$w2distance.trt.sigma <- NA
-  res$bias.trt.median.pop <- NA
-  res$sd.trt.median.pop <- NA
-  res$w2distance.trt.median.pop <- NA
-  res$bias.ctrl.median.pop <- NA
-  res$sd.ctrl.median.pop <- NA
-  res$w2distance.ctrl.median.pop <- NA
-  res$iteration <- rep(1:niter, times = nrow(res) / niter)
-
-  # For threshold calibration under H0
-  if (hypo == "null") {
-    all_decisions <- numeric(niter * length(cor))
-    decision_idx <- 1
+  # Auto-load calibrated threshold when running under alternative
+  threshold <- 0.95
+  if (hypo == "alternative") {
+    if (sc == 1 | sc == 2) {
+      if (is.null(subsc)) {
+        threshold_file <- paste0(mainDir, "/mapbart-sim-survival-single-arm/res/AFTv2_p", p_obs, size_suffix, "_sc", sc, "_w",rwd_w,"_threshold.RData")
+      } else {
+        threshold_file <- paste0(mainDir, "/mapbart-sim-survival-single-arm/res/AFTv2_p", p_obs, size_suffix, "_sc", sc, subsc, "_w",rwd_w,"_threshold.RData")
+      }
+    } else {
+      if (is.null(subsc)) {
+        threshold_file <- paste0(mainDir, "/mapbart-sim-survival-single-arm/res/AFTv2_p", p_obs, size_suffix, "_sc", sc, "_cor", cor, "_w",rwd_w,"_threshold.RData")
+      } else {
+        threshold_file <- paste0(mainDir, "/mapbart-sim-survival-single-arm/res/AFTv2_p", p_obs, size_suffix, "_sc", sc, subsc, "_cor", cor, "_w",rwd_w,"_threshold.RData")
+      }
+    }
+    if (file.exists(threshold_file)) threshold <- readRDS(threshold_file)
   }
 
-  cat("Loaded threshold from H0 run:", threshold)
+res <- data.frame(
+  dist =  "lognormal",
+  c = cor
+)
+res <- res[rep(1:nrow(res), each = niter), ]
+res$bias <- NA
+res$sd <- NA
+res$rmst_tau <- NA
+res$rmst_true <- NA
+res$rmst_hat <- NA
+res$bias_rmst <- NA
+res$sd_rmst <- NA
+res$ci_rmst <- NA
+res$coverage_rmst <- NA
+res$decision_rmst <- NA
+res$tp_rmst <- NA
+res$rmse_rmst <- NA
+res$w1distance_rmst <- NA
+res$w2distance_rmst <- NA
+res$tp_calibrated_rmst <- NA
+res$bias.trt.rmst.pop <- NA
+res$sd.trt.rmst.pop <- NA
+res$w2distance.trt.rmst.pop <- NA
+res$bias.ctrl.rmst.pop <- NA
+res$sd.ctrl.rmst.pop <- NA
+res$w2distance.ctrl.rmst.pop <- NA
+res$bias_subj_rmst <- NA
+res$pehe_subj_rmst <- NA
+res$rmse <- NA
+res$w1distance <- NA
+res$w2distance <- NA
+res$ci <- NA
+res$coverage <- NA
+res$tp_calibrated <- NA 
+res$tp <- NA 
+res$fp <- NA
+res$pehe_subj <- NA
+res$bias_subj <- NA
+res$bias.trt.sigma <- NA
+res$sd.trt.sigma <- NA
+res$w2distance.trt.sigma <- NA
+res$bias.trt.median.pop <- NA
+res$sd.trt.median.pop <- NA
+res$w2distance.trt.median.pop <- NA
+res$bias.ctrl.median.pop <- NA
+res$sd.ctrl.median.pop <- NA
+res$w2distance.ctrl.median.pop <- NA
+res$iteration <- rep(1:niter, times = nrow(res) / niter)
+res$rwd_w <- rwd_w   # power-prior weight on the RWD likelihood (for this run)
+
+# For threshold calibration under H0
+if (hypo == "null") {
+  all_decisions <- numeric(niter * length(cor))
+  decision_idx <- 1
+}
+
+cat("Loaded threshold from H0 run:", threshold)
 
 for (c in cor){
   for (iter in 1:niter){
@@ -302,30 +238,30 @@ for (c in cor){
   # For sc == 1 or 2: no cor suffix; for sc == 3: include cor suffix
   if (sc == 1 | sc == 2) {
     if (is.null(subsc)) {
-      filename_rct <- paste0(mainDir,"/mapbart-sim-survival-realcov/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,"_",hypo,"_",iter,".RData")
+      filename_rct <- paste0(mainDir,"/mapbart-sim-survival-single-arm/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,"_",hypo,"_",iter,".RData")
     } else {
-      filename_rct <- paste0(mainDir,"/mapbart-sim-survival-realcov/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,subsc,"_",hypo,"_",iter,".RData")
+      filename_rct <- paste0(mainDir,"/mapbart-sim-survival-single-arm/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,subsc,"_",hypo,"_",iter,".RData")
     }
   } else {
     if (is.null(subsc)) {
-      filename_rct <- paste0(mainDir,"/mapbart-sim-survival-realcov/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,"_cor",c,"_",hypo,"_",iter,".RData")
+      filename_rct <- paste0(mainDir,"/mapbart-sim-survival-single-arm/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,"_cor",c,"_",hypo,"_",iter,".RData")
     } else {
-      filename_rct <- paste0(mainDir,"/mapbart-sim-survival-realcov/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,subsc,"_cor",c,"_",hypo,"_",iter,".RData")
+      filename_rct <- paste0(mainDir,"/mapbart-sim-survival-single-arm/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,subsc,"_cor",c,"_",hypo,"_",iter,".RData")
     }
   }
 
   # Construct filename for RWD data (same index as RCT)
   if (sc == 1 | sc == 2) {
     if (is.null(subsc)) {
-      filename_rwd <- paste0(mainDir,"/mapbart-sim-survival-realcov/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,"_",hypo,"_",iter,".RData")
+      filename_rwd <- paste0(mainDir,"/mapbart-sim-survival-single-arm/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,"_",hypo,"_",iter,".RData")
     } else {
-      filename_rwd <- paste0(mainDir,"/mapbart-sim-survival-realcov/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,subsc,"_",hypo,"_",iter,".RData")
+      filename_rwd <- paste0(mainDir,"/mapbart-sim-survival-single-arm/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,subsc,"_",hypo,"_",iter,".RData")
     }
   } else {
     if (is.null(subsc)) {
-      filename_rwd <- paste0(mainDir,"/mapbart-sim-survival-realcov/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,"_cor",c,"_",hypo,"_",iter,".RData")
+      filename_rwd <- paste0(mainDir,"/mapbart-sim-survival-single-arm/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,"_cor",c,"_",hypo,"_",iter,".RData")
     } else {
-      filename_rwd <- paste0(mainDir,"/mapbart-sim-survival-realcov/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,subsc,"_cor",c,"_",hypo,"_",iter,".RData")
+      filename_rwd <- paste0(mainDir,"/mapbart-sim-survival-single-arm/",data_folder,"/data_p",p_obs,size_suffix,"_sc",sc,subsc,"_cor",c,"_",hypo,"_",iter,".RData")
     }
   }
 
@@ -349,78 +285,72 @@ for (c in cor){
   data$event <- c(data_rct_full$delta[rct_idx],
                   data_rwd_full$delta[rwd_idx])
 
-  # Center X at the RCT/target (D==1) covariate means (common reference, matching AFT/LM models)
+  # Center X variables based on ALL data (RCT trt + RCT ctrl + RWD ctrl)
   x_means <- colMeans(as.matrix(data$X[data$D == 1, ]))
 
   #------------------------------------------------
   #----------- RCT + Historical Control -----------
   #------------------------------------------------
-  # Pool all control data (Z=0) from both RCT (D=1) and RWD (D=0)
   x_ctrl <- as.matrix(data$X[data$Z == 0, ])
   x_ctrl <- scale(x_ctrl, center = x_means, scale = FALSE)
   y_ctrl <- log(data$Y[data$Z == 0])
   event_ctrl <- data$event[data$Z == 0]
-  d_ctrl <- data$D[data$Z == 0]  # Data source indicator
 
-  # Estimate sigma separately for RWD and RCT groups (BART approach)
+  # Estimate sigma using AFT model (BART approach)
   nu <- 3
   sigquant <- 0.90
   qchi <- qchisq(1 - sigquant, nu)
 
-  # For RWD group (D=0)
-  x_ctrl_rwd <- x_ctrl[d_ctrl == 0, ]
-  y_ctrl_rwd <- y_ctrl[d_ctrl == 0]
-  event_ctrl_rwd <- event_ctrl[d_ctrl == 0]
-  if (length(y_ctrl_rwd) > 0) {
-    aft_fit_rwd <- survreg(Surv(exp(y_ctrl_rwd), event_ctrl_rwd) ~ .,
-                           data = data.frame(x_ctrl_rwd),
-                           dist = "lognormal")
-    sigest_rwd <- aft_fit_rwd$scale
-  } else {
-    # Fallback if no RWD data: use all control data
-    aft_fit_fallback <- survreg(Surv(exp(y_ctrl), event_ctrl) ~ .,
-                                data = data.frame(x_ctrl),
-                                dist = "lognormal")
-    sigest_rwd <- aft_fit_fallback$scale
-  }
-  lambda_rwd <- (sigest_rwd^2 * qchi) / nu
+  aft_fit_ctrl <- survreg(Surv(exp(y_ctrl), event_ctrl) ~ .,
+                          data = data.frame(x_ctrl),
+                          dist = "lognormal")
+  sigest_ctrl <- aft_fit_ctrl$scale
+  lambda_ctrl <- (sigest_ctrl^2 * qchi) / nu
 
-  # For RCT group (D=1)
-  x_ctrl_rct <- x_ctrl[d_ctrl == 1, ]
-  y_ctrl_rct <- y_ctrl[d_ctrl == 1]
-  event_ctrl_rct <- event_ctrl[d_ctrl == 1]
-  if (length(y_ctrl_rct) > 0) {
-    aft_fit_rct <- survreg(Surv(exp(y_ctrl_rct), event_ctrl_rct) ~ .,
-                           data = data.frame(x_ctrl_rct),
-                           dist = "lognormal")
-    sigest_rct <- aft_fit_rct$scale
-  } else {
-    # Fallback if no RCT control data: use all control data
-    aft_fit_fallback <- survreg(Surv(exp(y_ctrl), event_ctrl) ~ .,
-                                data = data.frame(x_ctrl),
-                                dist = "lognormal")
-    sigest_rct <- aft_fit_fallback$scale
-  }
-  lambda_rct <- (sigest_rct^2 * qchi) / nu
+  # Calculate prior variances (consistent with BART)
+  k <- 2.0
+  total_var_ctrl <- (max(y_ctrl) - min(y_ctrl))^2 / (2 * k)^2
 
-  # Prepare data for Stan with hierarchical structure
+  # Distribute variance among parameters
+  # Option 1: Equal weights (each parameter gets equal share)
+  # var_per_param_ctrl <- total_var_ctrl / (ncol(x_ctrl) + 1)
+  # lambda_alpha_ctrl <- sqrt(var_per_param_ctrl)
+  # lambda_beta_ctrl <- sqrt(var_per_param_ctrl)
+
+  # Option 2: More weight on beta (alpha weight = 0.5, each beta weight = 1.0)
+  # w_alpha <- 0.5
+  # w_beta <- 1.0
+  # total_weight_ctrl <- w_alpha + ncol(x_ctrl) * w_beta
+  # var_alpha_ctrl <- total_var_ctrl * w_alpha / total_weight_ctrl
+  # var_beta_ctrl <- total_var_ctrl * w_beta / total_weight_ctrl
+  # lambda_alpha_ctrl <- sqrt(var_alpha_ctrl)
+  # lambda_beta_ctrl <- sqrt(var_beta_ctrl)
+
+  # Option 3: More weight on alpha (alpha weight = 2.0, each beta weight = 1.0)
+  w_alpha <- 2.0
+  w_beta <- 1.0
+  total_weight_ctrl <- w_alpha + ncol(x_ctrl) * w_beta
+  var_alpha_ctrl <- total_var_ctrl * w_alpha / total_weight_ctrl
+  var_beta_ctrl <- total_var_ctrl * w_beta / total_weight_ctrl
+  lambda_alpha_ctrl <- sqrt(var_alpha_ctrl)
+  lambda_beta_ctrl <- sqrt(var_beta_ctrl)
+
+  # Prepare data for Stan
   stan_data_ctrl <- list(
     N = length(y_ctrl),
     P = ncol(x_ctrl),
     X = x_ctrl,
     y = y_ctrl,
     event = event_ctrl,
-    D = d_ctrl,  # Pass data source indicator
-    sigma_scale = c(lambda_rwd, lambda_rct),
-    estimate_mu_alpha = as.integer(estimate_mu_alpha),
-    estimate_mu_beta = as.integer(estimate_mu_beta),
-    mu_alpha_fixed = mu_alpha_fixed,
-    mu_beta_fixed = mu_beta_fixed,
-    prior = prior  # Prior scale for tau2
+    wt = ifelse(data$D[data$Z == 0] == 0, rwd_w, 1.0),  # downweight RWD rows (D==0)
+    sigma_scale = lambda_ctrl,  # Pass scale parameter for IG prior
+    mu_alpha = 0,  # Prior mean for alpha
+    lambda_alpha = lambda_alpha_ctrl,  # BART-style prior std dev for alpha
+    lambda_beta = lambda_beta_ctrl     # BART-style prior std dev for beta
   )
 
-  # Fit hierarchical AFT model for control group
-  fit_ctrl <- sampling(aft_hierarchical_model,
+  # Fit AFT model for control group
+  fit_ctrl <- sampling(aft_model,
                        data = stan_data_ctrl,
                        chains = n_chains,
                        iter = n_iter,
@@ -432,17 +362,17 @@ for (c in cor){
   # Extract posterior samples
   samples_ctrl <- rstan::extract(fit_ctrl)
 
-  # Predict for target population (D=1) using RCT coefficients
+  # Predict for target population (D=1)
   x_test <- as.matrix(data$X[data$D == 1, ])
   x_test <- scale(x_test, center = x_means, scale = FALSE)
 
-  n_samples <- length(samples_ctrl$alpha[,1])
+  n_samples <- length(samples_ctrl$alpha)
   n_test <- nrow(x_test)
 
-  # Generate predictions using RCT group coefficients (group_idx = 2)
+  # Generate predictions
   mu_pred_ctrl <- matrix(NA, n_samples, n_test)
   for (i in 1:n_samples) {
-    mu_pred_ctrl[i, ] <- samples_ctrl$alpha[i, 2] + x_test %*% samples_ctrl$beta[i, 2, ]
+    mu_pred_ctrl[i, ] <- samples_ctrl$alpha[i] + x_test %*% samples_ctrl$beta[i, ]
   }
 
   # S_mix_fun and `lower` are defined here and reused by the treatment-arm root
@@ -462,18 +392,15 @@ for (c in cor){
   x_trt <- scale(x_trt, center = x_means, scale = FALSE)
   y_trt <- log(data$Y[data$Z == 1])
   event_trt <- data$event[data$Z == 1]
-  d_trt <- rep(1, length(y_trt))  # All treatment data from RCT (D=1)
 
-  # Estimate sigma for treatment group using AFT model (BART approach)
-  # All treatment is from RCT (D=1), so we only estimate for RCT group
+  # Estimate sigma using AFT model (BART approach)
   aft_fit_trt <- survreg(Surv(exp(y_trt), event_trt) ~ .,
                          data = data.frame(x_trt),
                          dist = "lognormal")
   sigest_trt <- aft_fit_trt$scale
   lambda_trt <- (sigest_trt^2 * qchi) / nu
 
-  # Calculate prior variance (consistent with BART)
-  k <- 2.0
+  # Calculate prior variances (consistent with BART)
   # Total variance for the mean function in BART
   total_var_trt <- (max(y_trt) - min(y_trt))^2 / (2 * k)^2
 
@@ -493,29 +420,28 @@ for (c in cor){
   # lambda_beta_trt <- sqrt(var_beta_trt)
 
   # Option 3: More weight on alpha (alpha weight = 2.0, each beta weight = 1.0)
-  w_alpha <- 2.0
-  w_beta <- 1.0
   total_weight_trt <- w_alpha + ncol(x_trt) * w_beta
   var_alpha_trt <- total_var_trt * w_alpha / total_weight_trt
   var_beta_trt <- total_var_trt * w_beta / total_weight_trt
   lambda_alpha_trt <- sqrt(var_alpha_trt)
   lambda_beta_trt <- sqrt(var_beta_trt)
 
-  # Prepare data for Stan (simple model, no group structure)
+  # Prepare data for Stan
   stan_data_trt <- list(
     N = length(y_trt),
     P = ncol(x_trt),
     X = x_trt,
     y = y_trt,
     event = event_trt,
-    sigma_scale = lambda_trt,  # Single scale parameter
+    wt = rep(1.0, length(y_trt)),  # RCT treatment arm: full weight
+    sigma_scale = lambda_trt,  # Pass scale parameter for IG prior
     mu_alpha = 0,  # Prior mean for alpha
     lambda_alpha = lambda_alpha_trt,  # BART-style prior std dev for alpha
     lambda_beta = lambda_beta_trt     # BART-style prior std dev for beta
   )
 
-  # Fit simple AFT model for treatment group (like AFTv1)
-  fit_trt <- sampling(aft_simple_model,
+  # Fit AFT model for treatment group
+  fit_trt <- sampling(aft_model,
                       data = stan_data_trt,
                       chains = n_chains,
                       iter = n_iter,
@@ -570,13 +496,12 @@ for (c in cor){
   median_survival_ctrl <- pop_median_draws(mu_pred_ctrl, sig_draw_trt)
   post_samples <- median_survival_trt / median_survival_ctrl    # n_draws
   data_tmp <- readRDS(filename_rct)
-  # Use treat_eff_true for HTE scenarios (correct population median ratio)
   eff <- exp(data_tmp$treat_eff_true)
   eff_star <- exp(data_tmp$treat_eff_star)
 
   # ---- RMST(tau)-ratio (additional output; median-ratio left unchanged) ----
   .rm <- compute_rmst_metrics(mu_pred_trt, sig_draw_trt,
-                              mu_pred_ctrl, sqrt(samples_ctrl$sigma2[, 1]),
+                              mu_pred_ctrl, sqrt(samples_ctrl$sigma2),
                               data_tmp, tau = rmst_tau, threshold = threshold,
                               control_sigma = rmst_control_sigma)
   .sel <- which(res$c==c & res$iteration==iter)
@@ -616,7 +541,7 @@ for (c in cor){
   } else {
     fp <- NA
   }
-  
+
   res[which(res$c==c & res$iteration==iter),
       "bias"] <- bias
   
@@ -646,7 +571,7 @@ for (c in cor){
   
   res[which(res$c==c & res$iteration==iter),
       "fp"] <- fp
-
+  
   #------------------------------------------
   #------ Calculate subject-wise ------------
   #------------------------------------------
@@ -721,18 +646,17 @@ for (c in cor){
   res[which(res$c==c & res$iteration==iter),
       "w2distance.ctrl.median.pop"] <- w2distance_ctrl_median_pop
 
-    print(paste0("Done for iteration ", iter, " cor = ", c))
-  }
+  print(paste0("Done for iteration ", iter, " cor = ", c))
+}
 
-    print(paste0("Done for cor = ", c))
-  }
+  print(paste0("Done for cor = ", c))
+}
 
   # Threshold calibration under null hypothesis
   if (hypo == "null") {
     cat("\n=== Threshold Calibration (H0) ===\n")
     cat("Original threshold: ", threshold, "\n")
 
-    # Grid search for exact type I error = 0.05 (more precise)
     candidate_thresholds <- seq(0.1, 0.999, by = 0.001)
     type1_errors <- sapply(candidate_thresholds, function(thresh) {
       mean(all_decisions > thresh, na.rm = TRUE)
@@ -745,38 +669,36 @@ for (c in cor){
     cat("Selected threshold: ", calibrated_threshold_grid, "\n")
     cat("Actual Type I error: ", actual_type1_error, "\n")
 
-    # Save calibrated threshold for use in alternative hypothesis run
-    # For sc == 1 or 2: no cor suffix; for sc == 3: include cor suffix
     if (sc == 1 | sc == 2) {
       if (is.null(subsc)) {
-        threshold_file <- paste0(mainDir, "/mapbart-sim-survival-realcov/res/HierAFT_p", p_obs, size_suffix, "_sc", sc, "_threshold.RData")
+        threshold_file <- paste0(mainDir, "/mapbart-sim-survival-single-arm/res/AFTv2_p", p_obs, size_suffix, "_sc", sc, "_w",rwd_w,"_threshold.RData")
       } else {
-        threshold_file <- paste0(mainDir, "/mapbart-sim-survival-realcov/res/HierAFT_p", p_obs, size_suffix, "_sc", sc, subsc, "_threshold.RData")
+        threshold_file <- paste0(mainDir, "/mapbart-sim-survival-single-arm/res/AFTv2_p", p_obs, size_suffix, "_sc", sc, subsc, "_w",rwd_w,"_threshold.RData")
       }
     } else {
       if (is.null(subsc)) {
-        threshold_file <- paste0(mainDir, "/mapbart-sim-survival-realcov/res/HierAFT_p", p_obs, size_suffix, "_sc", sc, "_cor", c, "_threshold.RData")
+        threshold_file <- paste0(mainDir, "/mapbart-sim-survival-single-arm/res/AFTv2_p", p_obs, size_suffix, "_sc", sc, "_cor", cor, "_w",rwd_w,"_threshold.RData")
       } else {
-        threshold_file <- paste0(mainDir, "/mapbart-sim-survival-realcov/res/HierAFT_p", p_obs, size_suffix, "_sc", sc, subsc, "_cor", c, "_threshold.RData")
+        threshold_file <- paste0(mainDir, "/mapbart-sim-survival-single-arm/res/AFTv2_p", p_obs, size_suffix, "_sc", sc, subsc, "_cor", cor, "_w",rwd_w,"_threshold.RData")
       }
     }
     saveRDS(calibrated_threshold_grid, file = threshold_file)
   }
 
-  # For sc == 1 or 2: no cor suffix; for sc == 3: include cor suffix
-  # Save results with prior value in filename
+
+# For sc == 1 or 2: no cor suffix; for sc == 3: include cor suffix
   if (sc == 1 | sc == 2) {
     if (is.null(subsc)) {
-      saveRDS(res, file=paste0(mainDir,"/mapbart-sim-survival-realcov/res/HierAFT_p",p_obs,size_suffix,"_sc",sc,"_prior",prior,"_",hypo,".RData"))
+      saveRDS(res, file=paste0(mainDir,"/mapbart-sim-survival-single-arm/res/AFTv2_p",p_obs,size_suffix,"_sc",sc,"_",hypo,"_w",rwd_w,".RData"))
     } else {
-      saveRDS(res, file=paste0(mainDir,"/mapbart-sim-survival-realcov/res/HierAFT_p",p_obs,size_suffix,"_sc",sc,subsc,"_prior",prior,"_",hypo,".RData"))
+      saveRDS(res, file=paste0(mainDir,"/mapbart-sim-survival-single-arm/res/AFTv2_p",p_obs,size_suffix,"_sc",sc,subsc,"_",hypo,"_w",rwd_w,".RData"))
     }
   } else {
     if (is.null(subsc)) {
-      saveRDS(res, file=paste0(mainDir,"/mapbart-sim-survival-realcov/res/HierAFT_p",p_obs,size_suffix,"_sc",sc,"_cor",c,"_prior",prior,"_",hypo,".RData"))
+      saveRDS(res, file=paste0(mainDir,"/mapbart-sim-survival-single-arm/res/AFTv2_p",p_obs,size_suffix,"_sc",sc,"_cor",cor,"_",hypo,"_w",rwd_w,".RData"))
     } else {
-      saveRDS(res, file=paste0(mainDir,"/mapbart-sim-survival-realcov/res/HierAFT_p",p_obs,size_suffix,"_sc",sc,subsc,"_cor",c,"_prior",prior,"_",hypo,".RData"))
+      saveRDS(res, file=paste0(mainDir,"/mapbart-sim-survival-single-arm/res/AFTv2_p",p_obs,size_suffix,"_sc",sc,subsc,"_cor",cor,"_",hypo,"_w",rwd_w,".RData"))
     }
   }
 
-} # End of prior loop
+} # end for (rwd_w in rwd_w_vals)

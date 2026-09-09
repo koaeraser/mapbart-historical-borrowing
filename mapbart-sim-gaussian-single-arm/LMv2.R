@@ -17,9 +17,9 @@ rwd_w_vals <- c(1)
 sc <- 3
 subsc <- "E"
 # Infer p_obs from any data file in the folder (count columns named X1, X2, ...)
-sample_files <- list.files(file.path(mainDir, "mapbart-sim-gaussian-realcov", data_folder),
+sample_files <- list.files(file.path(mainDir, "mapbart-sim-gaussian-single-arm", data_folder),
                            pattern = "^data_.*\\.RData$", full.names = TRUE)
-if (length(sample_files) == 0) stop("No data files found in ", file.path(mainDir, "mapbart-sim-gaussian-realcov", data_folder))
+if (length(sample_files) == 0) stop("No data files found in ", file.path(mainDir, "mapbart-sim-gaussian-single-arm", data_folder))
 p_obs <- sum(grepl("^X\\d+$", colnames(readRDS(sample_files[1])$X)))
 hypo <- "alternative"  # "null" or "alternative"
 
@@ -39,7 +39,7 @@ data_prefix <- if (sc == 1 | sc == 2) {
 } else {
   paste0("data_p", p_obs, "_sc", sc, if (!is.null(subsc)) subsc else "", "_cor", cor, "_", hypo, "_")
 }
-niter <- length(Sys.glob(file.path(mainDir, "mapbart-sim-gaussian-realcov", data_folder, paste0(data_prefix, "*.RData"))))
+niter <- length(Sys.glob(file.path(mainDir, "mapbart-sim-gaussian-single-arm", data_folder, paste0(data_prefix, "*.RData"))))
 if (niter == 0) stop("No simulated data files found for this scenario")
 
 # Stan sampling parameters
@@ -104,15 +104,15 @@ for (rwd_w in rwd_w_vals) {
   if (hypo == "alternative") {
     if (sc == 1 | sc == 2) {
       if (is.null(subsc)) {
-        threshold_file <- paste0(mainDir, "/mapbart-sim-gaussian-realcov/res/LMv2_p", p_obs, "_sc", sc, "_w",rwd_w,rct_ctrl_tag,"_threshold.RData")
+        threshold_file <- paste0(mainDir, "/mapbart-sim-gaussian-single-arm/res/LMv2_p", p_obs, "_sc", sc, "_w",rwd_w,rct_ctrl_tag,"_threshold.RData")
       } else {
-        threshold_file <- paste0(mainDir, "/mapbart-sim-gaussian-realcov/res/LMv2_p", p_obs, "_sc", sc, subsc, "_w",rwd_w,rct_ctrl_tag,"_threshold.RData")
+        threshold_file <- paste0(mainDir, "/mapbart-sim-gaussian-single-arm/res/LMv2_p", p_obs, "_sc", sc, subsc, "_w",rwd_w,rct_ctrl_tag,"_threshold.RData")
       }
     } else {
       if (is.null(subsc)) {
-        threshold_file <- paste0(mainDir, "/mapbart-sim-gaussian-realcov/res/LMv2_p", p_obs, "_sc", sc, "_cor", cor, "_w",rwd_w,rct_ctrl_tag,"_threshold.RData")
+        threshold_file <- paste0(mainDir, "/mapbart-sim-gaussian-single-arm/res/LMv2_p", p_obs, "_sc", sc, "_cor", cor, "_w",rwd_w,rct_ctrl_tag,"_threshold.RData")
       } else {
-        threshold_file <- paste0(mainDir, "/mapbart-sim-gaussian-realcov/res/LMv2_p", p_obs, "_sc", sc, subsc, "_cor", cor, "_w",rwd_w,rct_ctrl_tag,"_threshold.RData")
+        threshold_file <- paste0(mainDir, "/mapbart-sim-gaussian-single-arm/res/LMv2_p", p_obs, "_sc", sc, subsc, "_cor", cor, "_w",rwd_w,rct_ctrl_tag,"_threshold.RData")
       }
     }
     if (file.exists(threshold_file)) threshold <- readRDS(threshold_file)
@@ -169,30 +169,30 @@ for (c in cor){
     # For sc == 1 or 2: no cor suffix; for sc == 3: include cor suffix
     if (sc == 1 | sc == 2) {
       if (is.null(subsc)) {
-        filename_rct <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/",data_folder,"/data_p",p_obs,"_sc",sc,"_",hypo,"_",iter,".RData")
+        filename_rct <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/",data_folder,"/data_p",p_obs,"_sc",sc,"_",hypo,"_",iter,".RData")
       } else {
-        filename_rct <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/",data_folder,"/data_p",p_obs,"_sc",sc,subsc,"_",hypo,"_",iter,".RData")
+        filename_rct <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/",data_folder,"/data_p",p_obs,"_sc",sc,subsc,"_",hypo,"_",iter,".RData")
       }
     } else {
       if (is.null(subsc)) {
-        filename_rct <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/",data_folder,"/data_p",p_obs,"_sc",sc,"_cor",c,"_",hypo,"_",iter,".RData")
+        filename_rct <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/",data_folder,"/data_p",p_obs,"_sc",sc,"_cor",c,"_",hypo,"_",iter,".RData")
       } else {
-        filename_rct <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/",data_folder,"/data_p",p_obs,"_sc",sc,subsc,"_cor",c,"_",hypo,"_",iter,".RData")
+        filename_rct <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/",data_folder,"/data_p",p_obs,"_sc",sc,subsc,"_cor",c,"_",hypo,"_",iter,".RData")
       }
     }
     
     # Construct filename for RWD data (current iteration)
     if (sc == 1 | sc == 2) {
       if (is.null(subsc)) {
-        filename_rwd <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/",data_folder,"/data_p",p_obs,"_sc",sc,"_",hypo,"_",iter,".RData")
+        filename_rwd <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/",data_folder,"/data_p",p_obs,"_sc",sc,"_",hypo,"_",iter,".RData")
       } else {
-        filename_rwd <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/",data_folder,"/data_p",p_obs,"_sc",sc,subsc,"_",hypo,"_",iter,".RData")
+        filename_rwd <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/",data_folder,"/data_p",p_obs,"_sc",sc,subsc,"_",hypo,"_",iter,".RData")
       }
     } else {
       if (is.null(subsc)) {
-        filename_rwd <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/",data_folder,"/data_p",p_obs,"_sc",sc,"_cor",c,"_",hypo,"_",iter,".RData")
+        filename_rwd <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/",data_folder,"/data_p",p_obs,"_sc",sc,"_cor",c,"_",hypo,"_",iter,".RData")
       } else {
-        filename_rwd <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/",data_folder,"/data_p",p_obs,"_sc",sc,subsc,"_cor",c,"_",hypo,"_",iter,".RData")
+        filename_rwd <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/",data_folder,"/data_p",p_obs,"_sc",sc,subsc,"_cor",c,"_",hypo,"_",iter,".RData")
       }
     }
     
@@ -514,15 +514,15 @@ for (c in cor){
 
     if (sc == 1 | sc == 2) {
       if (is.null(subsc)) {
-        threshold_file <- paste0(mainDir, "/mapbart-sim-gaussian-realcov/res/LMv2_p", p_obs, "_sc", sc, "_w",rwd_w,rct_ctrl_tag,"_threshold.RData")
+        threshold_file <- paste0(mainDir, "/mapbart-sim-gaussian-single-arm/res/LMv2_p", p_obs, "_sc", sc, "_w",rwd_w,rct_ctrl_tag,"_threshold.RData")
       } else {
-        threshold_file <- paste0(mainDir, "/mapbart-sim-gaussian-realcov/res/LMv2_p", p_obs, "_sc", sc, subsc, "_w",rwd_w,rct_ctrl_tag,"_threshold.RData")
+        threshold_file <- paste0(mainDir, "/mapbart-sim-gaussian-single-arm/res/LMv2_p", p_obs, "_sc", sc, subsc, "_w",rwd_w,rct_ctrl_tag,"_threshold.RData")
       }
     } else {
       if (is.null(subsc)) {
-        threshold_file <- paste0(mainDir, "/mapbart-sim-gaussian-realcov/res/LMv2_p", p_obs, "_sc", sc, "_cor", cor, "_w",rwd_w,rct_ctrl_tag,"_threshold.RData")
+        threshold_file <- paste0(mainDir, "/mapbart-sim-gaussian-single-arm/res/LMv2_p", p_obs, "_sc", sc, "_cor", cor, "_w",rwd_w,rct_ctrl_tag,"_threshold.RData")
       } else {
-        threshold_file <- paste0(mainDir, "/mapbart-sim-gaussian-realcov/res/LMv2_p", p_obs, "_sc", sc, subsc, "_cor", cor, "_w",rwd_w,rct_ctrl_tag,"_threshold.RData")
+        threshold_file <- paste0(mainDir, "/mapbart-sim-gaussian-single-arm/res/LMv2_p", p_obs, "_sc", sc, subsc, "_cor", cor, "_w",rwd_w,rct_ctrl_tag,"_threshold.RData")
       }
     }
     saveRDS(calibrated_threshold_grid, file = threshold_file)
@@ -531,15 +531,15 @@ for (c in cor){
   # For sc == 1 or 2: no cor suffix; for sc == 3: include cor suffix
   if (sc == 1 | sc == 2) {
     if (is.null(subsc)) {
-      saveRDS(res, file=paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/LMv2_p",p_obs,"_sc",sc,"_",hypo,"_w",rwd_w,rct_ctrl_tag,".RData"))
+      saveRDS(res, file=paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/LMv2_p",p_obs,"_sc",sc,"_",hypo,"_w",rwd_w,rct_ctrl_tag,".RData"))
     } else {
-      saveRDS(res, file=paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/LMv2_p",p_obs,"_sc",sc,subsc,"_",hypo,"_w",rwd_w,rct_ctrl_tag,".RData"))
+      saveRDS(res, file=paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/LMv2_p",p_obs,"_sc",sc,subsc,"_",hypo,"_w",rwd_w,rct_ctrl_tag,".RData"))
     }
   } else {
     if (is.null(subsc)) {
-      saveRDS(res, file=paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/LMv2_p",p_obs,"_sc",sc,"_cor",c,"_",hypo,"_w",rwd_w,rct_ctrl_tag,".RData"))
+      saveRDS(res, file=paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/LMv2_p",p_obs,"_sc",sc,"_cor",c,"_",hypo,"_w",rwd_w,rct_ctrl_tag,".RData"))
     } else {
-      saveRDS(res, file=paste0(mainDir,"/mapbart-sim-gaussian-realcov/res/LMv2_p",p_obs,"_sc",sc,subsc,"_cor",c,"_",hypo,"_w",rwd_w,rct_ctrl_tag,".RData"))
+      saveRDS(res, file=paste0(mainDir,"/mapbart-sim-gaussian-single-arm/res/LMv2_p",p_obs,"_sc",sc,subsc,"_cor",c,"_",hypo,"_w",rwd_w,rct_ctrl_tag,".RData"))
     }
   }
 

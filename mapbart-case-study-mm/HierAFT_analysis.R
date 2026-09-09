@@ -224,7 +224,7 @@ ntree    <- 50    # mirrors mBART's number of trees (for discrepancy calibration
 
 ## --- prior sweep for the discrepancy-variance IG(3/2, 3*prior/2) ----------
 ## HIERAFT_CONFIGS = comma-separated prior values, e.g. "0.05,0.5".
-## Default mirrors mapbart-sim-survival-realcov/run_all.R's lmv4_prior_vals = c(0.05, 0.5).
+## Default mirrors mapbart-sim-survival-single-arm/run_all.R's lmv4_prior_vals = c(0.05, 0.5).
 hieraft_priors <- as.numeric(strsplit(Sys.getenv("HIERAFT_CONFIGS", unset = "0.05,0.5"),
                                       "[, ]+")[[1]])
 hieraft_priors <- hieraft_priors[!is.na(hieraft_priors)]

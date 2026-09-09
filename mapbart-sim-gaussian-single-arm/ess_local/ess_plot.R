@@ -31,9 +31,9 @@ scriptDir <- tryCatch({
   fa <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
   if (length(fa)) dirname(sub("^--file=", "", fa[1]))
   else dirname(sys.frames()[[1]]$ofile)
-}, error = function(e) "/Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-gaussian-realcov/ess_local")
+}, error = function(e) "/Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-gaussian-single-arm/ess_local")
 if (!nzchar(scriptDir) || is.na(scriptDir))
-  scriptDir <- "/Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-gaussian-realcov/ess_local"
+  scriptDir <- "/Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-gaussian-single-arm/ess_local"
 
 ## --- CLI ----------------------------------------------------------------
 

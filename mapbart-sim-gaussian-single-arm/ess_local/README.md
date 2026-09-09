@@ -16,9 +16,9 @@ each config the MAP-BART sweep will use.
 ## sc1
 
 ```bash
-cd /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-gaussian-realcov/ess_local
+cd /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-gaussian-single-arm/ess_local
 CORES=1 Rscript ess_calibration.R \
-    --data /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-gaussian-realcov/data_v3/data_p10_sc1E_alternative_1.RData \
+    --data /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-gaussian-single-arm/data_v3/data_p10_sc1E_alternative_1.RData \
     --Ntarget 200 --seed 6 --ntree 10 --k 2 \
     --s2-grid "0.04,0.05,0.06,0.07,0.08,0.09,0.10,0.11" \
     --map-model synthetic --beta-prior auto --sigma-ref auto --B 100 --burn 1000 --q 0.95
@@ -29,9 +29,9 @@ Rscript ess_plot_simple.R --scenario nt5_k2_sc1E --out /Users/oliviazhang/Deskto
 ## sc2
 
 ```bash
-cd /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-gaussian-realcov/ess_local
+cd /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-gaussian-single-arm/ess_local
 CORES=1 Rscript ess_calibration.R \
-    --data /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-gaussian-realcov/data_v3/data_p10_sc2E_alternative_1.RData \
+    --data /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-gaussian-single-arm/data_v3/data_p10_sc2E_alternative_1.RData \
     --Ntarget 200 --seed 6 --ntree 10 --k 2 \
     --s2-grid "0.04,0.05,0.06,0.07,0.08,0.09,0.10,0.11" \
     --map-model synthetic --beta-prior auto --sigma-ref auto --B 100 --burn 1000 --q 0.95

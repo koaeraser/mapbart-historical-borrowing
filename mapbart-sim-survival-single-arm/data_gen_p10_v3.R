@@ -218,7 +218,7 @@ for (ci in seq_along(cor)) {
   # Per-iteration output path -- SINGLE definition, used for both the save below
   # and the iter-1 skip check, so the two can never drift.
   iter_file <- function(it)
-    paste0(mainDir, "/mapbart-sim-survival-realcov/data_v3/data_p", p_obs, size_suffix,
+    paste0(mainDir, "/mapbart-sim-survival-single-arm/data_v3/data_p", p_obs, size_suffix,
            "_sc", sc, if (!is.null(subsc)) subsc else "",
            if (sc == 1 | sc == 2) "" else paste0("_cor", c),
            "_", hypo, if (rwd_frozen) "_fz" else "", "_", it, ".RData")
@@ -557,15 +557,15 @@ for (c_test in cor) {
   for (i in 1:niter){
     if (sc_test == 1 | sc_test == 2) {
       if (is.null(subsc_test)) {
-        filepath <- paste0(mainDir,"/mapbart-sim-survival-realcov/data_v3/data_p",p_obs,size_suffix,"_sc",sc_test,"_",hypo, if (rwd_frozen) "_fz" else "", "_",i,".RData")
+        filepath <- paste0(mainDir,"/mapbart-sim-survival-single-arm/data_v3/data_p",p_obs,size_suffix,"_sc",sc_test,"_",hypo, if (rwd_frozen) "_fz" else "", "_",i,".RData")
       } else {
-        filepath <- paste0(mainDir,"/mapbart-sim-survival-realcov/data_v3/data_p",p_obs,size_suffix,"_sc",sc_test,subsc_test,"_",hypo, if (rwd_frozen) "_fz" else "", "_",i,".RData")
+        filepath <- paste0(mainDir,"/mapbart-sim-survival-single-arm/data_v3/data_p",p_obs,size_suffix,"_sc",sc_test,subsc_test,"_",hypo, if (rwd_frozen) "_fz" else "", "_",i,".RData")
       }
     } else {
       if (is.null(subsc_test)) {
-        filepath <- paste0(mainDir,"/mapbart-sim-survival-realcov/data_v3/data_p",p_obs,size_suffix,"_sc",sc_test,"_cor",c_test,"_",hypo, if (rwd_frozen) "_fz" else "", "_",i,".RData")
+        filepath <- paste0(mainDir,"/mapbart-sim-survival-single-arm/data_v3/data_p",p_obs,size_suffix,"_sc",sc_test,"_cor",c_test,"_",hypo, if (rwd_frozen) "_fz" else "", "_",i,".RData")
       } else {
-        filepath <- paste0(mainDir,"/mapbart-sim-survival-realcov/data_v3/data_p",p_obs,size_suffix,"_sc",sc_test,subsc_test,"_cor",c_test,"_",hypo, if (rwd_frozen) "_fz" else "", "_",i,".RData")
+        filepath <- paste0(mainDir,"/mapbart-sim-survival-single-arm/data_v3/data_p",p_obs,size_suffix,"_sc",sc_test,subsc_test,"_cor",c_test,"_",hypo, if (rwd_frozen) "_fz" else "", "_",i,".RData")
       }
     }
 

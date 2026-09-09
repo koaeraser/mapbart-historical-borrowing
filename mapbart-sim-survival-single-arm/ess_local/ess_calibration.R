@@ -1,6 +1,6 @@
 ## ess_calibration.R -- Prior ESS calibration for MAP-AFT-BART
 ## (censored log-normal outcome) via AFT-BART partial residuals.
-## Survival counterpart of ../../mapbart-sim-gaussian-realcov/ess_local/ess_calibration.R.
+## Survival counterpart of ../../mapbart-sim-gaussian-single-arm/ess_local/ess_calibration.R.
 ##
 ## There is no vanilla-MAP survival companion (no MAP_surv.R analysis
 ## script exists in mapbart-sim-survival/), so this script runs alone --
@@ -39,7 +39,7 @@
 ##   <numeric>       -- fixed value for every fit.
 ##
 ## Defaults: canonical RWD = first *.RData file (alphabetical) under
-## /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-realcov/data_v3/, D == 0 & Z == 0
+## /Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-single-arm/data_v3/, D == 0 & Z == 0
 ## subset.  Also reads env var CORES (defaults to detectCores() - 1)
 ## for the per-b parallel fan-out in Stage 2.
 
@@ -52,10 +52,10 @@ suppressPackageStartupMessages({
 
 scriptDir <- tryCatch(
   dirname(normalizePath(sys.frames()[[1]]$ofile, mustWork = FALSE)),
-  error = function(e) "/Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-realcov/ess_local"
+  error = function(e) "/Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-single-arm/ess_local"
 )
 if (!nzchar(scriptDir) || is.na(scriptDir))
-  scriptDir <- "/Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-realcov/ess_local"
+  scriptDir <- "/Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-single-arm/ess_local"
 
 ## --- CLI ----------------------------------------------------------------
 
@@ -66,7 +66,7 @@ get_arg <- function(flag, default) {
   args[k + 1]
 }
 
-default_data  <- "/Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-realcov/data_v3"
+default_data  <- "/Users/oliviazhang/Desktop/mapbart-historical-borrowing/mapbart-sim-survival-single-arm/data_v3"
 data_path     <- get_arg("--data",        default_data)
 s2_from       <- as.numeric(get_arg("--s2-from",   0.15))
 s2_to         <- as.numeric(get_arg("--s2-to",     0.55))

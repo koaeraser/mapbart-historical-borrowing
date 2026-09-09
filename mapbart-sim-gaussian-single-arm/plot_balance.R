@@ -37,12 +37,12 @@ for (sc in 1:3) {
         for (hypo in c("null", "alternative")) {
           # Construct filename based on subsc (no cor suffix for sc == 1 or 2)
           if (subsc == "NULL") {
-            filename_rct <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/",data_folder,"/data_p",p_obs,"_sc",sc,"_",hypo,"_",iter_rct,".RData")
-            filename_rwd <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/",data_folder,"/data_p",p_obs,"_sc",sc,"_",hypo,"_",iter_rwd,".RData")
+            filename_rct <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/",data_folder,"/data_p",p_obs,"_sc",sc,"_",hypo,"_",iter_rct,".RData")
+            filename_rwd <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/",data_folder,"/data_p",p_obs,"_sc",sc,"_",hypo,"_",iter_rwd,".RData")
             subsc_label <- "NULL"
           } else {
-            filename_rct <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/",data_folder,"/data_p",p_obs,"_sc",sc,subsc,"_",hypo,"_",iter_rct,".RData")
-            filename_rwd <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/",data_folder,"/data_p",p_obs,"_sc",sc,subsc,"_",hypo,"_",iter_rwd,".RData")
+            filename_rct <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/",data_folder,"/data_p",p_obs,"_sc",sc,subsc,"_",hypo,"_",iter_rct,".RData")
+            filename_rwd <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/",data_folder,"/data_p",p_obs,"_sc",sc,subsc,"_",hypo,"_",iter_rwd,".RData")
             subsc_label <- subsc
           }
 
@@ -102,12 +102,12 @@ for (sc in 1:3) {
         for (hypo in c("null", "alternative")) {
           # Construct filename: data_p10_sc3F_cor0.5_alternative_1.RData
           if (subsc == "NULL") {
-            filename_rct <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/",data_folder,"/data_p",p_obs,"_sc",sc,"_cor",c,"_",hypo,"_",iter_rct,".RData")
-            filename_rwd <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/",data_folder,"/data_p",p_obs,"_sc",sc,"_cor",c,"_",hypo,"_",iter_rwd,".RData")
+            filename_rct <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/",data_folder,"/data_p",p_obs,"_sc",sc,"_cor",c,"_",hypo,"_",iter_rct,".RData")
+            filename_rwd <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/",data_folder,"/data_p",p_obs,"_sc",sc,"_cor",c,"_",hypo,"_",iter_rwd,".RData")
             subsc_label <- "NULL"
           } else {
-            filename_rct <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/",data_folder,"/data_p",p_obs,"_sc",sc,subsc,"_cor",c,"_",hypo,"_",iter_rct,".RData")
-            filename_rwd <- paste0(mainDir,"/mapbart-sim-gaussian-realcov/",data_folder,"/data_p",p_obs,"_sc",sc,subsc,"_cor",c,"_",hypo,"_",iter_rwd,".RData")
+            filename_rct <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/",data_folder,"/data_p",p_obs,"_sc",sc,subsc,"_cor",c,"_",hypo,"_",iter_rct,".RData")
+            filename_rwd <- paste0(mainDir,"/mapbart-sim-gaussian-single-arm/",data_folder,"/data_p",p_obs,"_sc",sc,subsc,"_cor",c,"_",hypo,"_",iter_rwd,".RData")
             subsc_label <- subsc
           }
 
@@ -584,7 +584,7 @@ total_width <- outcome_ncol * 3 + 2  # Scale width with number of columns, +2 fo
 
 # Include data_folder in output filename to distinguish plots from different data sources
 output_suffix <- ifelse(data_folder == "data", "", paste0("_", data_folder))
-ggsave(paste0(file.path(mainDir),"/mapbart-sim-gaussian-realcov/inserts/balance_all_scenarios", output_suffix, ".jpg"),
+ggsave(paste0(file.path(mainDir),"/mapbart-sim-gaussian-single-arm/inserts/balance_all_scenarios", output_suffix, ".jpg"),
        width = total_width,
        height = total_height,
        plot,

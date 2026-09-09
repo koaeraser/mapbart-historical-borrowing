@@ -37,7 +37,7 @@ SKIP_RUN=1 Rscript run_all.R
 
 Notes:
 - `HIERAFT_CONFIGS` is the discrepancy-prior s² sweep (default `0.05,0.5`,
-  matching `mapbart-sim-survival-realcov`).
+  matching `mapbart-sim-survival-single-arm`).
 - AFTv2 is run at a sweep of power-prior weights `rwd_w` (external-control
   downweighting). `run_all.R` derives these automatically from the ESS
   calibration: `rwd_w = 1` (full borrowing) plus `N_target / n_UCMM` for each
