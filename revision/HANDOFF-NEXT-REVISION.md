@@ -8,7 +8,7 @@ The next scientific revision is complete, with two independent method/applied ag
 
 Read first:
 
-1. `05-writing/leaf_prior_clarity.md`, then `05-writing/next_revision_report.md`.
+1. `05-writing/prior_mixture_order.md`, then `05-writing/next_revision_report.md`.
 2. `05-writing/side_review_reconciliation.md` and the unchanged `FULL-PAPER-REVIEW.md`.
 3. `05-writing/critical_revisor_logs/run_20260910_094551/implementation_impact.md`.
 4. Both round ledgers and final sources in that run.
@@ -26,9 +26,9 @@ Current artifacts:
 | Run, baselines, reviews, checks, renders | `05-writing/critical_revisor_logs/run_20260910_094551/` |
 | Git distribution | `../yunxuan-repo/revision/` |
 
-Main text: 7,188 texcount text words including the 227-word abstract; 6,961 excluding it. Separate tables, mathematical-expression counts, headings and captions are excluded.
+Main text: 7,159 texcount text words including the 227-word abstract; 6,932 excluding it. Separate tables, mathematical-expression counts, headings and captions are excluded.
 
-The user's subsequent notation follow-up is complete: equation (2) defines the leaf prior with variance tau_{1-z_hl}^2, theta_hl and the reached-leaf index are explicit, and all-slab/mixed f_1 priors are displayed. Appendix A/B and slide 8 use the same indexing. See `05-writing/leaf_prior_clarity.md` and its separate follow-up run; earlier review snapshots remain unchanged.
+The latest prior-presentation follow-up is complete: equation (2) gives the explicit leaf mixture, followed by one induced pointwise mixture for f_1. The all-spike and all-slab cases are explained in prose, as is the equivalent variance index tau_{1-z_hl}^2. This replaces the separate prior displays on page 5. Appendix A/B and slide 8 retain the equivalent conditional indexed form. Read `05-writing/prior_mixture_order.md`; the earlier leaf-prior clarification and scientific reviews remain historical snapshots.
 
 ## Scientific decisions to preserve
 
@@ -63,7 +63,7 @@ latexmk -pdf -recorder -outdir=build -interaction=nonstopmode -halt-on-error mai
 cp build/main_tracked.pdf main_tracked.pdf
 ```
 
-Compile `main_lrcbart.tex` in the deck folder with latexmk -pdf. Current clean/redline builds have no LaTeX warnings, unresolved references/citations or overfull boxes. Slides retain Metropolis/font substitution warnings, with no overfull boxes or unresolved references. The preceding scientific run contains complete overview inspection; the separate leaf-prior follow-up contains targeted final-page inspection in its visual_qa.md.
+Compile `main_lrcbart.tex` in the deck folder with latexmk -pdf. Current clean/redline builds have no LaTeX warnings, unresolved references/citations or overfull boxes. Slides retain Metropolis/font substitution warnings, with no overfull boxes or unresolved references. The preceding scientific run contains complete overview inspection; the latest prior-mixture-order follow-up contains final clean/tracked overviews and targeted page inspections in its visual_qa.md.
 
 The cumulative redline compares the original pre-Codex baseline in `05-writing/humanize_logs/codex_20260910/` with the current paper. `run_20260910_094551/build_tracked.py` expands text/theory inputs using table placeholders, runs latexdiff with whole-math markup, and restores full red-before/blue-after main Tables 1–2 plus blue new cumulative appendix tables. Old captions retain black text with Before revision labels. Bibliography and typography are current and untracked. Round-specific redlines and clean checkpoints are archived separately. Never overwrite immutable baselines.
 

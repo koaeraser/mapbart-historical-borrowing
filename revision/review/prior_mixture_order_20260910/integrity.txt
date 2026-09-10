@@ -1,0 +1,158 @@
+AUDIT numbers changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.rw7sn7KLwR/numbers.before	2026-09-10 12:33:45
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.rw7sn7KLwR/numbers.after	2026-09-10 12:33:45
+@@ -1,15 +1,15 @@
+- 137 0
++ 139 0
+    5 0,1
+    5 0.5
+    2 0.95
+    1 03
+    2 05
+    2 09
+- 199 1
++ 188 1
+    1 1,1
+    1 1,2
+    5 12
+- 169 2
++ 168 2
+    1 2.1
+    2 2.2
+    1 2.3
+PASS  number_words (no changes)
+PASS  citations
+PASS  labels
+PASS  sections
+FAIL  equations
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.rw7sn7KLwR/equations.before	2026-09-10 12:33:45
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.rw7sn7KLwR/equations.after	2026-09-10 12:33:45
+@@ -4,7 +4,8 @@
+ \end{equation}
+ %%__EQUATION_BOUNDARY__%%
+ \begin{equation}
+-\theta_{h\ell}\given z_{h\ell},\tau_0^2,\tau_1^2\sim\Normal\!\left(0,\tau_{1-z_{h\ell}}^2\right),\qquad z_{h\ell}\given w\iid\Ber(w),
++\theta_{h\ell}\given w,\tau_0^2,\tau_1^2
++\iid w\,\Normal(0,\tau_0^2)+(1-w)\,\Normal(0,\tau_1^2).
+ \label{eq:leafprior}
+ \end{equation}
+ %%__EQUATION_BOUNDARY__%%
+AUDIT inline_math changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.rw7sn7KLwR/inline_math.before	2026-09-10 12:33:45
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.rw7sn7KLwR/inline_math.after	2026-09-10 12:33:45
+@@ -30,6 +30,8 @@
+ $H_f=50$
+ $H_g$
+ $H_g=5$
++$H_g\tau_0^2$
++$H_g\tau_1^2$
+ $H_g\{w\tau_0^2+(1-w)\tau_1^2\}$
+ $I(\bar y)=\E[\theta\given\bar y]-\hat\theta_1=-(1-p)(\rho_1-\rho_0)\bar y$
+ $I(\bar y)\to0$
+@@ -49,7 +51,6 @@
+ $S_0$
+ $S_g$
+ $T_g$
+-$T_g$
+ $T_h$
+ $V$
+ $V$
+@@ -120,6 +121,7 @@
+ $\tau_0^2$
+ $\tau_0^2$
+ $\tau_0^2$
++$\tau_0^2$
+ $\tau_0^2<\tau_1^2$
+ $\tau_0^2\given\cdot\sim\text{scaled-Inv-}\chi^2\bigl(\nu_0+K_0,(\nu_0s_0^2+S_0)/(\nu_0+K_0)\bigr)$
+ $\tau_0^2\sim\text{scaled-Inv-}\chi^2(\nu_0,s_0^2)$
+@@ -128,10 +130,10 @@
+ $\tau_0^2\to0$
+ $\tau_1^2$
+ $\tau_1^2$
++$\tau_1^2$
+ $\tau_1^2-\tau_0^2$
+ $\tau_1^2=(\max y-\min y)^2/(4k^2H_g)$
+-$\tau_{1-z}^2=\tau_0^2$
+-$\tau_{1-z}^2=\tau_1^2$
++$\tau_{1-z_{h\ell}}^2$
+ $\theta\given z\sim\Normal\bigl(\tau_{1-z}^2\bar y_1/(\tau_{1-z}^2+v_1),\ \tau_{1-z}^2v_1/(\tau_{1-z}^2+v_1)\bigr)$
+ $\theta\given\bar y$
+ $\theta\given\theta_0\sim\Normal(\theta_0,1/\tau)$
+@@ -175,18 +177,12 @@
+ $f$
+ $f$
+ $f$
+-$f$
+ $f(x)$
+ $f(x)$
+-$f(x)$
+-$f(x)$
+ $f+g$
+ $f+g$
+ $f_1$
+ $f_1(x)$
+-$f_1(x)$
+-$f_1(x)$
+-$f_1(x)$
+ $f_1(x)=f(x)+\sum_he_h$
+ $f_1(x)=f(x)+g(x)$
+ $f_1=f+g$
+@@ -213,15 +209,20 @@
+ $g$
+ $g$
+ $g(x)$
++$g(x)=\sum_{h=1}^{H_g}\theta_{h,\ell_h(x)}$
+ $g_i=1$
+ $g_i=2$
+ $g_i\in\{1,2\}$
+ $h$
+ $h$
++$h$
+ $i$
+ $j\in\{0,1\}$
+ $k=2$
++$m$
+ $m(x;T_h,\theta_h)$
++$m=0$
++$m=H_g$
+ $n$
+ $n$
+ $n\to\infty$
+@@ -277,20 +278,18 @@
+ $x$
+ $x$
+ $x$
++$x$
+ $x_i\in\mathbb R^p$
+ $y_i$
+ $y_i$
+ $y_i-f(x_i)-D_ig(x_i)$
+ $y_i=\log T_i$
+ $z$
+-$z$
+ $z=0$
+ $z=0$
+ $z=1$
+ $z=1$
+-$z_{h\ell}$
+-$z_{h\ell}=0$
+-$z_{h\ell}=1$
++$z_{h\ell}\given w\iid\Ber(w)$
+ $|\bar y|$
+ $|\bar y|\to\infty$
+ $|d|/\tau_0\to\infty$
+@@ -298,7 +297,4 @@
+ \[\n\mu_g=\sum_{h,\ell}a_{h\ell}\theta_{h\ell},\qquad\nV_g(\mathcal T,z,\tau_0^2)=\sum_{h,\ell}a_{h\ell}^2\n \{z_{h\ell}\tau_0^2+(1-z_{h\ell})\tau_1^2\}.\n\]
+ \[\n\sup_{\bar y}|I(\bar y)|\le\sqrt{2v\max\{\log C,\tfrac12\}},\qquad 1-p\le Ce^{-\kappa\bar y^2},\n\]
+ \[\nd_{1/2}=\Bigl[\frac{2(\tau_0^2+v)(\tau_1^2+v)}{\tau_1^2-\tau_0^2}\Bigl\{\log\frac w{1-w}+\frac12\log\frac{\tau_1^2+v}{\tau_0^2+v}\Bigr\}\Bigr]^{1/2},\n\]
+-\[\nf_1(x)\given f,T_g,\{z_{h,\ell_h(x)}=0\}_{h=1}^{H_g},\tau_1^2\n\sim\Normal\!\left(f(x),H_g\tau_1^2\right).\n\]
+-\[\nf_1(x)\given f,T_g,\{z_{h,\ell_h(x)}=1\}_{h=1}^{H_g},\tau_0^2\n\sim\Normal\!\left(f(x),H_g\tau_0^2\right).\n\]
+-\[\nf_1(x)\given f,T_g,z,\tau_0^2,\tau_1^2\n\sim\Normal\!\left(f(x),\sum_{h=1}^{H_g}\tau_{1-z_{h,\ell_h(x)}}^2\right).\n\]
+-\[\ng(x)=\sum_{h=1}^{H_g}\theta_{h,\ell_h(x)},\qquad f_1(x)=f(x)+g(x).\n\]
++\[\nf_1(x)\given f,T_g,w,\tau_0^2,\tau_1^2\n\sim\sum_{m=0}^{H_g}\binom{H_g}{m}w^m(1-w)^{H_g-m}\n\Normal\!\left(f(x),m\tau_0^2+(H_g-m)\tau_1^2\right),\n\]
+PASS  protected_blocks (no changes)
+PASS  graphics
+PASS  references
+PASS  structure (no changes)
+
+1 hard integrity check(s) failed.

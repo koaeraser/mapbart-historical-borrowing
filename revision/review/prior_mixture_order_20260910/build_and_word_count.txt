@@ -1,0 +1,8 @@
+main_draft: no warnings, undefined references/citations or overfull boxes.
+Output written on build/main_draft.pdf (79 pages, 666826 bytes).
+main_tracked: no warnings, undefined references/citations or overfull boxes.
+Output written on build/main_tracked.pdf (101 pages, 975576 bytes).
+
+3445+35+0 (11/0/296/13) File: 05-writing/sections_1_2.tex
+3714+27+84 (10/2/470/2) File: 05-writing/sections_3_5.tex
+7159+62+84 (21/2/766/15) Total

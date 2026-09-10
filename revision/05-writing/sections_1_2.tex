@@ -76,33 +76,23 @@ y_i=f(x_i)+D_i\,g(x_i)+\varepsilon_i,\qquad \varepsilon_i\sim\Normal(0,\sigma^2_
 \end{equation}
 Here $f(x)$ is the external-control response mean and $f_1(x)=f(x)+g(x)$ is the RCT-control response mean, with a separate residual variance for each source. Both surfaces are estimated jointly.
 
-The pooled surface $f$ is a standard BART ensemble of $H_f=50$ trees with split prior $(\alpha_f,\beta_f)=(0.95,2)$ and leaf prior $\Normal(0,\lambda_f^2)$, with $\lambda_f$ from the range rule. The discrepancy surface $g$ has $H_g=5$ trees with split prior $(\alpha_g,\beta_g)=(0.5,3)$: a tree is a stump a priori with probability one half and rarely deeper than two levels. Let $T_g$ denote these partitions, $\theta_{h\ell}$ the constant discrepancy contribution in leaf $\ell$ of tree $h$, and $\ell_h(x)$ the index of the leaf reached by $x$. Then
-\[
-g(x)=\sum_{h=1}^{H_g}\theta_{h,\ell_h(x)},\qquad f_1(x)=f(x)+g(x).
-\]
-Each leaf has an indicator $z_{h\ell}$ selecting a narrow spike ($z_{h\ell}=1$) or a wider slab ($z_{h\ell}=0$). The commensurate component centers $f_1(x)$ at the external mean $f(x)$: if all reached leaves are in the spike,
-\[
-f_1(x)\given f,T_g,\{z_{h,\ell_h(x)}=1\}_{h=1}^{H_g},\tau_0^2
-\sim\Normal\!\left(f(x),H_g\tau_0^2\right).
-\]
-We express this external-centered prior through discrepancy contributions that are independent given the indicators and scales:
+The pooled surface $f$ is a standard BART ensemble of $H_f=50$ trees with split prior $(\alpha_f,\beta_f)=(0.95,2)$ and leaf prior $\Normal(0,\lambda_f^2)$, with $\lambda_f$ from the range rule. The discrepancy surface $g$ has $H_g=5$ trees with split prior $(\alpha_g,\beta_g)=(0.5,3)$: a tree is a stump a priori with probability one half and rarely deeper than two levels. Let $\theta_{h\ell}$ denote the constant discrepancy contribution in leaf $\ell$ of tree $h$. The leaf contributions have the independent mixture prior
 \begin{equation}
-\theta_{h\ell}\given z_{h\ell},\tau_0^2,\tau_1^2\sim\Normal\!\left(0,\tau_{1-z_{h\ell}}^2\right),\qquad z_{h\ell}\given w\iid\Ber(w),
+\theta_{h\ell}\given w,\tau_0^2,\tau_1^2
+\iid w\,\Normal(0,\tau_0^2)+(1-w)\,\Normal(0,\tau_1^2).
 \label{eq:leafprior}
 \end{equation}
-where $\tau_{1-z}^2=\tau_0^2$ for $z=1$ and $\tau_{1-z}^2=\tau_1^2$ for $z=0$. We set $w\sim\mathrm{Beta}(1,1)$, $\tau_0^2\sim\text{scaled-Inv-}\chi^2(\nu_0,s_0^2)$ with $\nu_0=3$, and $\tau_1^2=(\max y-\min y)^2/(4k^2H_g)$ fixed by the range rule. We require $\tau_0^2<\tau_1^2$ (Assumption A1 of the Web Appendix); the sampler draws $\tau_0^2$ from its conditional truncated to $(0,\tau_1^2)$. The residual variances carry independent inverse-gamma priors. Section~\ref{sec:ess} calibrates the spike scale $\tau_0$ through the full ensemble's effective sample size.
+Equivalently, let $z_{h\ell}\given w\iid\Ber(w)$. Given these indicators and the scales, the leaf contributions are independent normals with mean zero and variance $\tau_{1-z_{h\ell}}^2$: $z=1$ selects the narrow spike $\tau_0^2$ and $z=0$ the wider slab $\tau_1^2$.
 
-A spike leaf shrinks its discrepancy contribution toward zero, drawing $f_1(x)$ toward $f(x)$. A slab leaf instead permits a larger local departure. Conditional on $f$, $T_g$, the indicators and scales, switching one reached leaf from $z=1$ to $z=0$ increases the prior variance of $f_1(x)$ by $\tau_1^2-\tau_0^2$, while its prior mean remains $f(x)$. If all reached leaves are in the slab,
+Let $T_g$ denote the discrepancy partitions and $\ell_h(x)$ the leaf reached by $x$ in tree $h$, so that $g(x)=\sum_{h=1}^{H_g}\theta_{h,\ell_h(x)}$. At a fixed $x$, summing these contributions and integrating their indicators induces the mixture prior
 \[
-f_1(x)\given f,T_g,\{z_{h,\ell_h(x)}=0\}_{h=1}^{H_g},\tau_1^2
-\sim\Normal\!\left(f(x),H_g\tau_1^2\right).
+f_1(x)\given f,T_g,w,\tau_0^2,\tau_1^2
+\sim\sum_{m=0}^{H_g}\binom{H_g}{m}w^m(1-w)^{H_g-m}
+\Normal\!\left(f(x),m\tau_0^2+(H_g-m)\tau_1^2\right),
 \]
-For any configuration $z$, the same indexed notation gives
-\[
-f_1(x)\given f,T_g,z,\tau_0^2,\tau_1^2
-\sim\Normal\!\left(f(x),\sum_{h=1}^{H_g}\tau_{1-z_{h,\ell_h(x)}}^2\right).
-\]
-The slab therefore relaxes commensurability through its larger variance, retaining the external mean as its center. These priors concern the latent control mean; observation variance enters through \eqref{eq:model}.
+where $m$ is the number of reached leaves in the spike. The commensurate component $m=H_g$ has variance $H_g\tau_0^2$; the all-slab component $m=0$ has variance $H_g\tau_1^2$. Switching one reached leaf from $z=1$ to $z=0$ increases the component variance by $\tau_1^2-\tau_0^2$, permitting a larger local departure. Every component remains centered at the external mean $f(x)$. This prior concerns the latent control mean; observation variance enters through \eqref{eq:model}.
+
+We set $w\sim\mathrm{Beta}(1,1)$ and $\tau_0^2\sim\text{scaled-Inv-}\chi^2(\nu_0,s_0^2)$ with $\nu_0=3$. The range rule fixes $\tau_1^2=(\max y-\min y)^2/(4k^2H_g)$. We require $\tau_0^2<\tau_1^2$ (Assumption A1 of the Web Appendix); the sampler draws $\tau_0^2$ from its conditional truncated to $(0,\tau_1^2)$. The residual variances carry independent inverse-gamma priors. Section~\ref{sec:ess} calibrates the spike scale $\tau_0$ through the full ensemble's effective sample size.
 
 \begin{samepage}
 Under an untruncated scale prior, integrating $z$ and $\tau_0^2$ gives the leaf marginal $w\,t_{\nu_0}(\theta;0,s_0^2)+(1-w)\Normal(\theta;0,\tau_1^2)$. The sampler uses the truncated scale prior, whose spike marginal is not exactly Student-$t$.\par

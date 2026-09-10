@@ -1,0 +1,1 @@
+Clean pages 4-6 and tracked pages 7-9 inspected at full-page scale. Leaf mixture precedes the induced f_1 mixture; both fit within margins. Full 79-page clean and 101-page tracked overviews inspected; no new clipping, overlap or missing content detected. Raw build logs are retained locally.

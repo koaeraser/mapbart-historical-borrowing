@@ -1,7 +1,7 @@
 % main_draft.tex : full manuscript assembly for the LRC-BART revision.
 %DIF LATEXDIFF DIFFERENCE FILE
-%DIF DEL /Users/yuanj/Dropbox (Personal)/YuanJi/research/Yunxuan-Zhang/MAP-BART/revision/05-writing/main_tracked_old_flat.tex   Thu Sep 10 10:50:16 2026
-%DIF ADD /Users/yuanj/Dropbox (Personal)/YuanJi/research/Yunxuan-Zhang/MAP-BART/revision/05-writing/main_tracked_new_flat.tex   Thu Sep 10 10:50:16 2026
+%DIF DEL /Users/yuanj/Dropbox (Personal)/YuanJi/research/Yunxuan-Zhang/MAP-BART/revision/05-writing/main_tracked_old_flat.tex   Thu Sep 10 12:33:13 2026
+%DIF ADD /Users/yuanj/Dropbox (Personal)/YuanJi/research/Yunxuan-Zhang/MAP-BART/revision/05-writing/main_tracked_new_flat.tex   Thu Sep 10 12:33:13 2026
 % Compile from 05-writing:  pdflatex -output-directory=build main_draft
 %                           (cd build && bibtex main_draft) ; pdflatex x2
 \documentclass[11pt]{article}
@@ -229,41 +229,31 @@ y_i=f(x_i)+D_i\,g(x_i)+\varepsilon_i,\qquad \varepsilon_i\sim\Normal(0,\sigma^2_
 \DIFdelbegin \DIFdel{so that the RWD controls follow $f$, the RCT controls follow $f_1=f+g$, and the sources keep separate residual variances. }\DIFdelend \DIFaddbegin \DIFadd{Here $f(x)$ is the external-control response mean and $f_1(x)=f(x)+g(x)$ is the RCT-control response mean, with a separate residual variance for each source. Both surfaces are estimated jointly.
 }
 
-\DIFaddend The pooled surface $f$ is a standard BART ensemble of $H_f=50$ trees with \DIFdelbegin \DIFdel{the default }\DIFdelend split prior $(\alpha_f,\beta_f)=(0.95,2)$ and leaf prior $\Normal(0,\lambda_f^2)$\DIFaddbegin \DIFadd{, }\DIFaddend with $\lambda_f$ from the range rule. The discrepancy surface $g$ \DIFdelbegin \DIFdel{is a small, shallow ensemble of }\DIFdelend \DIFaddbegin \DIFadd{has }\DIFaddend $H_g=5$ trees with split prior $(\alpha_g,\beta_g)=(0.5,3)$\DIFdelbegin \DIFdel{, so that a $g$ }\DIFdelend \DIFaddbegin \DIFadd{: a }\DIFaddend tree is a stump a priori with probability one half and rarely deeper than two levels\DIFdelbegin \DIFdel{, and its leaves carry
+\DIFaddend The pooled surface $f$ is a standard BART ensemble of $H_f=50$ trees with \DIFdelbegin \DIFdel{the default }\DIFdelend split prior $(\alpha_f,\beta_f)=(0.95,2)$ and leaf prior $\Normal(0,\lambda_f^2)$\DIFaddbegin \DIFadd{, }\DIFaddend with $\lambda_f$ from the range rule. The discrepancy surface $g$ \DIFdelbegin \DIFdel{is a small, shallow ensemble of }\DIFdelend \DIFaddbegin \DIFadd{has }\DIFaddend $H_g=5$ trees with split prior $(\alpha_g,\beta_g)=(0.5,3)$\DIFdelbegin \DIFdel{, so that a $g$ }\DIFdelend \DIFaddbegin \DIFadd{: a }\DIFaddend tree is a stump a priori with probability one half and rarely deeper than two levels\DIFdelbegin \DIFdel{, }\DIFdelend \DIFaddbegin \DIFadd{. Let $\theta_{h\ell}$ denote the constant discrepancy contribution in leaf $\ell$ of tree $h$. The leaf contributions have the independent mixture prior
+}\begin{equation}
+\DIFadd{\theta_{h\ell}\given w,\tau_0^2,\tau_1^2
+\iid w\,\Normal(0,\tau_0^2)+(1-w)\,\Normal(0,\tau_1^2).
+\label{eq:leafprior}
+}\end{equation}
+\DIFadd{Equivalently, let $z_{h\ell}\given w\iid\Ber(w)$. Given these indicators and the scales, the leaf contributions are independent normals with mean zero and variance $\tau_{1-z_{h\ell}}^2$: $z=1$ selects the narrow spike $\tau_0^2$ }\DIFaddend and \DIFdelbegin \DIFdel{its leaves carry
 }\begin{displaymath}
 \DIFdel{\theta_{h\ell}\given z_{h\ell}\sim z_{h\ell}\,\Normal(0,\tau_0^2)+(1-z_{h\ell})\,\Normal(0,\tau_1^2),\qquad z_{h\ell}\iid\Ber(w),
 %DIFDELCMD < \label{eq:leafprior}%%%
 }\end{displaymath}%DIFAUXCMD
-\DIFdelend \DIFaddbegin \DIFadd{. Let $T_g$ denote these partitions, $\theta_{h\ell}$ the constant discrepancy contribution in leaf $\ell$ of tree $h$, and $\ell_h(x)$ the index of the leaf reached by $x$. Then
-}\[
-\DIFadd{g(x)=\sum_{h=1}^{H_g}\theta_{h,\ell_h(x)},\qquad f_1(x)=f(x)+g(x).
-}\]\DIFaddend
-\DIFdelbegin \DIFdel{with }\DIFdelend \DIFaddbegin \DIFadd{Each leaf has an indicator $z_{h\ell}$ selecting a narrow spike ($z_{h\ell}=1$) or a wider slab ($z_{h\ell}=0$). The commensurate component centers $f_1(x)$ at the external mean $f(x)$: if all reached leaves are in the spike,
-}\[
-\DIFadd{f_1(x)\given f,T_g,\{z_{h,\ell_h(x)}=1\}_{h=1}^{H_g},\tau_0^2
-\sim\Normal\!\left(f(x),H_g\tau_0^2\right).
-}\]
-\DIFadd{We express this external-centered prior through discrepancy contributions that are independent given the indicators and scales:
-}\begin{equation}
-\DIFadd{\theta_{h\ell}\given z_{h\ell},\tau_0^2,\tau_1^2\sim\Normal\!\left(0,\tau_{1-z_{h\ell}}^2\right),\qquad z_{h\ell}\given w\iid\Ber(w),
-\label{eq:leafprior}
-}\end{equation}
-\DIFadd{where $\tau_{1-z}^2=\tau_0^2$ for $z=1$ and $\tau_{1-z}^2=\tau_1^2$ for $z=0$. We set }\DIFaddend $w\sim\mathrm{Beta}(1,1)$, $\tau_0^2\sim\text{scaled-Inv-}\chi^2(\nu_0,s_0^2)$ with $\nu_0=3$, and $\tau_1^2=(\max y-\min y)^2/(4k^2H_g)$ fixed by the range rule\DIFdelbegin \DIFdel{for an $H_g$-tree ensemble}\DIFdelend . We require $\tau_0^2<\tau_1^2$ \DIFdelbegin \DIFdel{, }\DIFdelend \DIFaddbegin \DIFadd{(}\DIFaddend Assumption A1 of the Web Appendix\DIFdelbegin \DIFdel{, and }\DIFdelend \DIFaddbegin \DIFadd{); }\DIFaddend the sampler draws $\tau_0^2$ from its conditional truncated to $(0,\tau_1^2)$. The residual variances carry independent inverse-gamma priors. \DIFdelbegin \DIFdel{The spike, $z=1$, is the commensurate component: the RCT control surface is locally the RWD surface up to a discrepancy of }\DIFdelend \DIFaddbegin \DIFadd{Section~\ref{sec:ess} calibrates the spike }\DIFaddend scale $\tau_0$ \DIFaddbegin \DIFadd{through the full ensemble's effective sample size.
+\DIFdelend \DIFaddbegin \DIFadd{$z=0$ the wider slab $\tau_1^2$.
 }
 
-\DIFadd{A spike leaf shrinks its discrepancy contribution toward zero, drawing $f_1(x)$ toward $f(x)$. A slab leaf instead permits a larger local departure. Conditional on $f$, $T_g$, the indicators and scales, switching one reached leaf from $z=1$ to $z=0$ increases the prior variance of $f_1(x)$ by $\tau_1^2-\tau_0^2$, while its prior mean remains $f(x)$. If all reached leaves are in the slab,
+\DIFadd{Let $T_g$ denote the discrepancy partitions and $\ell_h(x)$ the leaf reached by $x$ in tree $h$, so that $g(x)=\sum_{h=1}^{H_g}\theta_{h,\ell_h(x)}$. At a fixed $x$, summing these contributions and integrating their indicators induces the mixture prior
 }\[
-\DIFadd{f_1(x)\given f,T_g,\{z_{h,\ell_h(x)}=0\}_{h=1}^{H_g},\tau_1^2
-\sim\Normal\!\left(f(x),H_g\tau_1^2\right).
-}\]
-\DIFadd{For any configuration $z$}\DIFaddend , the \DIFdelbegin \DIFdel{scale the effective-sample-size calibration of Section~\ref{sec:ess} sets.
-The slab , $z=0$, is the vague component of the robust MAP prior placed in a leaf of $g$: a free local discrepancy on the outcome scale,
-sized by the range rule. Integrating }\DIFdelend \DIFaddbegin \DIFadd{same indexed notation gives
-}\[
-\DIFadd{f_1(x)\given f,T_g,z,\tau_0^2,\tau_1^2
-\sim\Normal\!\left(f(x),\sum_{h=1}^{H_g}\tau_{1-z_{h,\ell_h(x)}}^2\right).
-}\]
-\DIFadd{The slab therefore relaxes commensurability through its larger variance, retaining the external mean as its center. These priors concern the latent control mean; observation variance enters through \eqref{eq:model}.
+\DIFadd{f_1(x)\given f,T_g,w,\tau_0^2,\tau_1^2
+\sim\sum_{m=0}^{H_g}\binom{H_g}{m}w^m(1-w)^{H_g-m}
+\Normal\!\left(f(x),m\tau_0^2+(H_g-m)\tau_1^2\right),
+}\]\DIFaddend
+\DIFaddbegin \DIFadd{where $m$ is the number of reached leaves in the spike. The commensurate component $m=H_g$ has variance $H_g\tau_0^2$; the all-slab component $m=0$ has variance $H_g\tau_1^2$. Switching one reached leaf from $z=1$ to $z=0$ increases the component variance by $\tau_1^2-\tau_0^2$, permitting a larger local departure. Every component remains centered at the external mean $f(x)$. This prior concerns the latent control mean; observation variance enters through \eqref{eq:model}.
+}
+
+\DIFadd{We set $w\sim\mathrm{Beta}(1,1)$ and $\tau_0^2\sim\text{scaled-Inv-}\chi^2(\nu_0,s_0^2)$ }\DIFaddend with \DIFdelbegin \DIFdel{$w\sim\mathrm{Beta}(1,1)$, $\tau_0^2\sim\text{scaled-Inv-}\chi^2(\nu_0,s_0^2)$ with }\DIFdelend $\nu_0=3$\DIFdelbegin \DIFdel{, and $\tau_1^2=(\max y-\min y)^2/(4k^2H_g)$ fixed by the range rule for an $H_g$-tree ensemble}\DIFdelend \DIFaddbegin \DIFadd{. The range rule fixes $\tau_1^2=(\max y-\min y)^2/(4k^2H_g)$}\DIFaddend . We require $\tau_0^2<\tau_1^2$ \DIFdelbegin \DIFdel{, }\DIFdelend \DIFaddbegin \DIFadd{(}\DIFaddend Assumption A1 of the Web Appendix\DIFdelbegin \DIFdel{, and }\DIFdelend \DIFaddbegin \DIFadd{); }\DIFaddend the sampler draws $\tau_0^2$ from its conditional truncated to $(0,\tau_1^2)$. The residual variances carry independent inverse-gamma priors. \DIFdelbegin \DIFdel{The spike, $z=1$, is the commensurate component: the RCT control surface is locally the RWD surface up to a discrepancy of scale $\tau_0$, the scale the effective-sample-size calibration of }\DIFdelend Section~\ref{sec:ess} \DIFdelbegin \DIFdel{sets. The slab, $z=0$, is the vague component of the robust MAP prior placed in a leaf of $g$: a free local discrepancy on the outcome scale , sized by the range rule.
+Integrating }\DIFdelend \DIFaddbegin \DIFadd{calibrates the spike scale $\tau_0$ through the full ensemble's effective sample size.
 }
 
 \begin{samepage}
