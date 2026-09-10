@@ -18,7 +18,7 @@ Validation:
 
 Read `side_review_reconciliation.md`, `implementation_impact.md`, the two round ledgers, `source_verification.md` and `visual_qa.md` for scope and evidence. The unused exported lrc_ess_prior approximation and outdated roxygen text remain documented code debt. Exact marginal ELIR, changed calibration rules or a changed application adjustment set would require new empirical analyses. The former MAP-AFT-BART sampler remains unavailable; earlier tail differences have no isolated causal attribution.
 
-Author names, order and affiliations remain pending; the empty manuscript author field has not been guessed from slide credits. Independent clinical qualification, full sampler convergence and confirmatory operating characteristics remain outside this work.
+The user has requested that author names, order and affiliations remain blank for now; this is intentional and no clarification is pending. Independent clinical qualification, full sampler convergence and confirmatory operating characteristics remain outside this work.
 
 ## Artifact lineage
 

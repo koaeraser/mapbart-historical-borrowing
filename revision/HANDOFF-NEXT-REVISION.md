@@ -49,7 +49,7 @@ All 304,665 protected files in 01-code, 02-validation and 04-application were ve
 
 The unused exported `lrc_ess_prior` helper still uses the tree-binomial approximation; old roxygen summaries are documentation debt. It is not used to produce the reported results. See implementation_impact.md before changing code or interpreting this helper as corrected.
 
-The original MAP-AFT-BART sampler remains unavailable, so earlier tail differences cannot be assigned to a particular prior, coding or sampler change. Clinical qualification, full-model convergence and confirmatory operating-characteristic work remain outside this revision. The manuscript author field is still empty; an optional question requesting names/order/affiliations received no answer. Do not infer author metadata from slide credits.
+The original MAP-AFT-BART sampler remains unavailable, so earlier tail differences cannot be assigned to a particular prior, coding or sampler change. Clinical qualification, full-model convergence and confirmatory operating-characteristic work remain outside this revision. The user explicitly requested that author names, order and affiliations remain blank for now. This is intentional and is not a pending clarification. Do not infer author metadata from slide credits or ask again unless the user reopens authorship.
 
 Dense simulation tables, their continuation/regional panel and float whitespace remain optional presentation work. Hyperlink borders were hidden. No rows/figures were dropped or redesigned during this round.
 

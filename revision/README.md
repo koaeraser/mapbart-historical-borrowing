@@ -10,7 +10,7 @@ The paper now defines a working variance-based ESS, corrects leaf aggregation an
 
 Yunxuan, please review the corrected scientific definitions and conditional results alongside the producing code, especially the working-ESS interpretation and calibration conventions, the scope of G.6, and the clinical interpretation of the application. The [side-review reconciliation](review/next_revision_20260910/side_review_reconciliation.md) maps all nine findings from the earlier 82-page baseline to the current text.
 
-Two independent agent reviews in each of two rounds found their original major objections resolved, with final minor corrections applied. These are internal AI assessments, not external scientific approval. Author names/order/affiliations remain pending. The [implementation-impact note](review/next_revision_20260910/implementation_impact.md) records the unused prior-ESS helper limitation and which future changes require new fits or an application reanalysis.
+Two independent agent reviews in each of two rounds found their original major objections resolved, with final minor corrections applied. These are internal AI assessments, not external scientific approval. Author names/order/affiliations are intentionally blank at the user's request for now. The [implementation-impact note](review/next_revision_20260910/implementation_impact.md) records the unused prior-ESS helper limitation and which future changes require new fits or an application reanalysis.
 
 ## Contents
 
