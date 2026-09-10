@@ -1,0 +1,70 @@
+AUDIT numbers changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.JHtRGpDBee/numbers.before	2026-09-10 10:55:09
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.JHtRGpDBee/numbers.after	2026-09-10 10:55:09
+@@ -106,7 +106,7 @@
+    1 04
+    3 05
+    2 09
+-  83 1
++  86 1
+    1 1,1
+    1 1,2
+    1 1.00
+@@ -147,7 +147,7 @@
+    1 169
+    1 17
+    1 176,125
+-  71 2
++  72 2
+    2 2.25
+    1 2.3
+    1 2.31
+PASS  number_words (no changes)
+PASS  citations
+PASS  labels
+PASS  sections
+PASS  equations
+AUDIT inline_math changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.JHtRGpDBee/inline_math.before	2026-09-10 10:55:09
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.JHtRGpDBee/inline_math.after	2026-09-10 10:55:09
+@@ -75,6 +75,8 @@
+ $0.9\times$
+ $0<w<1$
+ $1$
++$1-z=0$
++$1-z=1$
+ $1.015$
+ $1.3$
+ $1.4$
+@@ -179,6 +181,7 @@
+ $\theta$
+ $\theta\mid\theta_0\sim\Normal(\theta_0,1/\tau)$
+ $\theta_j\mid\mu,\tau^2\sim\Normal(\mu,\tau^2)$
++$\theta_{h\ell}$
+ $a_0$
+ $a_{h\ell}$
+ $c$
+@@ -207,6 +210,7 @@
+ $g$
+ $g$
+ $g$
++$g$
+ $g(\bx)=f_1(\bx)-f(\bx)$
+ $g(x)$
+ $g=f_1-f$
+@@ -247,6 +251,6 @@
+ \[\n    \boxed{\;y_i=f(\bx_i)+\mathbb{I}\{D_i=1\}\,g(\bx_i)+\varepsilon_i,\qquad \varepsilon_i\sim\Normal(0,\sigma^2_{D_i})\;}\n  \]
+ \[\n    \mathcal B_c(x)=P\bigl(|g(x)|<c\given\text{data}\bigr),\n  \]
+ \[\n    \mathrm{ESS}_0(s_0^2)=\hat\sigma_1^2\,\E_{\tau_0^2}\Bigl[\frac{1}{V_\mu^f+c_gH_g\tau_0^2}\Bigr].\n  \]
+-\[\n    \theta_{h\ell}\mid z_{h\ell}\sim z_{h\ell}\,\Normal(0,\tau_0^2)+(1-z_{h\ell})\,\Normal(0,\tau_1^2),\n    \qquad z_{h\ell}\sim\Ber(w),\quad w\sim\mathrm{Beta}(1,1),\n  \]
++\[\n    \theta_{h\ell}\mid z_{h\ell},\tau_0^2,\tau_1^2\sim\Normal\!\left(0,\tau_{1-z_{h\ell}}^2\right),\n    \qquad z_{h\ell}\mid w\sim\Ber(w),\quad w\sim\mathrm{Beta}(1,1),\n  \]
+ \[\n  \boxed{f_1(\bx)\given f,T_g,\{z_{h,\ell_h(\bx)}=1\}_{h=1}^{H_g},\tau_0^2\n  \sim\Normal\!\left(\underbrace{f(\bx)}_{\text{external mean}},\ H_g\tau_0^2\right).}\n  \]
+ \[g(\bx)\given T_g,\{z_{h,\ell_h(\bx)}=1\}_{h=1}^{H_g},\tau_0^2\n       \sim\Normal(0,H_g\tau_0^2).\]
+PASS  protected_blocks (no changes)
+PASS  graphics
+PASS  references
+PASS  frame_titles (no changes)
+PASS  block_titles (no changes)
+PASS  structure (no changes)
+
+Hard integrity checks passed. Audit deltas and authorized exceptions manually.

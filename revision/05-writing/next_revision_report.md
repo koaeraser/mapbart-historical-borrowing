@@ -1,6 +1,6 @@
 # LRC-BART next revision: completed scientific and editorial round
 
-September 10, 2026. This report supersedes earlier editing-status claims for the current candidate. It does not supersede the archived source or external-review boundaries.
+September 10, 2026. The scientific-round report below records the candidate before the subsequent notation follow-up. Read [the leaf-prior clarification](leaf_prior_clarity.md) for current artifacts: 79-page clean paper, 101-page cumulative redline, 25 slides, and 6,961 main-text words excluding the abstract. The archived scientific reviews and their scope remain unchanged.
 
 The manuscript now defines the implemented variance-based ESS, uses independent leaf-state aggregation, corrects the calibration theorem and its code exceptions, separates support from extrapolation, and replaces G.6 with a scoped constrained prior-density calculation. CAHB is correctly positioned as nonparametric. The single-arm application is descriptive with post-induction ASCT adjustment and an explicit equal-residual-variance prediction assumption; nonlinear survival means are no longer claimed invariant. The external-control mean remains the center of the commensurate component. Slide 6 now labels the all-spike conditioning and explains where its indicators enter.
 

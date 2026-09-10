@@ -1,7 +1,7 @@
 % main_draft.tex : full manuscript assembly for the LRC-BART revision.
 %DIF LATEXDIFF DIFFERENCE FILE
-%DIF DEL /Users/yuanj/Dropbox (Personal)/YuanJi/research/Yunxuan-Zhang/MAP-BART/revision/05-writing/critical_revisor_logs/run_20260910_094551/candidate/05-writing/main_tracked_old_flat.tex   Thu Sep 10 10:22:42 2026
-%DIF ADD /Users/yuanj/Dropbox (Personal)/YuanJi/research/Yunxuan-Zhang/MAP-BART/revision/05-writing/critical_revisor_logs/run_20260910_094551/candidate/05-writing/main_tracked_new_flat.tex   Thu Sep 10 10:22:42 2026
+%DIF DEL /Users/yuanj/Dropbox (Personal)/YuanJi/research/Yunxuan-Zhang/MAP-BART/revision/05-writing/main_tracked_old_flat.tex   Thu Sep 10 10:50:16 2026
+%DIF ADD /Users/yuanj/Dropbox (Personal)/YuanJi/research/Yunxuan-Zhang/MAP-BART/revision/05-writing/main_tracked_new_flat.tex   Thu Sep 10 10:50:16 2026
 % Compile from 05-writing:  pdflatex -output-directory=build main_draft
 %                           (cd build && bibtex main_draft) ; pdflatex x2
 \documentclass[11pt]{article}
@@ -229,19 +229,47 @@ y_i=f(x_i)+D_i\,g(x_i)+\varepsilon_i,\qquad \varepsilon_i\sim\Normal(0,\sigma^2_
 \DIFdelbegin \DIFdel{so that the RWD controls follow $f$, the RCT controls follow $f_1=f+g$, and the sources keep separate residual variances. }\DIFdelend \DIFaddbegin \DIFadd{Here $f(x)$ is the external-control response mean and $f_1(x)=f(x)+g(x)$ is the RCT-control response mean, with a separate residual variance for each source. Both surfaces are estimated jointly.
 }
 
-\DIFaddend The pooled surface $f$ is a standard BART ensemble of $H_f=50$ trees with the default split prior $(\alpha_f,\beta_f)=(0.95,2)$ and leaf prior $\Normal(0,\lambda_f^2)$ with $\lambda_f$ from the range rule. The discrepancy surface $g$ is a small, shallow ensemble of $H_g=5$ trees with split prior $(\alpha_g,\beta_g)=(0.5,3)$, so that a $g$ tree is a stump a priori with probability one half and rarely deeper than two levels, and its leaves \DIFdelbegin \DIFdel{carry
-}\DIFdelend \DIFaddbegin \DIFadd{represent differences from the external-control response mean. The commensurate component centers $f_1(x)$ at $f(x)$. In particular, conditional on $f$, the discrepancy-tree partitions $T_g$ and the spike variance, if all $H_g$ leaves reached by $x$ are in the spike, then
+\DIFaddend The pooled surface $f$ is a standard BART ensemble of $H_f=50$ trees with \DIFdelbegin \DIFdel{the default }\DIFdelend split prior $(\alpha_f,\beta_f)=(0.95,2)$ and leaf prior $\Normal(0,\lambda_f^2)$\DIFaddbegin \DIFadd{, }\DIFaddend with $\lambda_f$ from the range rule. The discrepancy surface $g$ \DIFdelbegin \DIFdel{is a small, shallow ensemble of }\DIFdelend \DIFaddbegin \DIFadd{has }\DIFaddend $H_g=5$ trees with split prior $(\alpha_g,\beta_g)=(0.5,3)$\DIFdelbegin \DIFdel{, so that a $g$ }\DIFdelend \DIFaddbegin \DIFadd{: a }\DIFaddend tree is a stump a priori with probability one half and rarely deeper than two levels\DIFdelbegin \DIFdel{, and its leaves carry
+}\begin{displaymath}
+\DIFdel{\theta_{h\ell}\given z_{h\ell}\sim z_{h\ell}\,\Normal(0,\tau_0^2)+(1-z_{h\ell})\,\Normal(0,\tau_1^2),\qquad z_{h\ell}\iid\Ber(w),
+%DIFDELCMD < \label{eq:leafprior}%%%
+}\end{displaymath}%DIFAUXCMD
+\DIFdelend \DIFaddbegin \DIFadd{. Let $T_g$ denote these partitions, $\theta_{h\ell}$ the constant discrepancy contribution in leaf $\ell$ of tree $h$, and $\ell_h(x)$ the index of the leaf reached by $x$. Then
+}\[
+\DIFadd{g(x)=\sum_{h=1}^{H_g}\theta_{h,\ell_h(x)},\qquad f_1(x)=f(x)+g(x).
+}\]\DIFaddend
+\DIFdelbegin \DIFdel{with }\DIFdelend \DIFaddbegin \DIFadd{Each leaf has an indicator $z_{h\ell}$ selecting a narrow spike ($z_{h\ell}=1$) or a wider slab ($z_{h\ell}=0$). The commensurate component centers $f_1(x)$ at the external mean $f(x)$: if all reached leaves are in the spike,
 }\[
 \DIFadd{f_1(x)\given f,T_g,\{z_{h,\ell_h(x)}=1\}_{h=1}^{H_g},\tau_0^2
 \sim\Normal\!\left(f(x),H_g\tau_0^2\right).
 }\]
-\DIFadd{Thus agreement means that the RCT-control response mean is close to the external-control response mean. We implement this prior with zero-centered leaves for $g(x)=f_1(x)-f(x)$:
-}\DIFaddend \begin{equation}
-\theta_{h\ell}\given z_{h\ell}\sim z_{h\ell}\,\Normal(0,\tau_0^2)+(1-z_{h\ell})\,\Normal(0,\tau_1^2),\qquad z_{h\ell}\iid\Ber(w),
+\DIFadd{We express this external-centered prior through discrepancy contributions that are independent given the indicators and scales:
+}\begin{equation}
+\DIFadd{\theta_{h\ell}\given z_{h\ell},\tau_0^2,\tau_1^2\sim\Normal\!\left(0,\tau_{1-z_{h\ell}}^2\right),\qquad z_{h\ell}\given w\iid\Ber(w),
 \label{eq:leafprior}
-\end{equation}
-with $w\sim\mathrm{Beta}(1,1)$, $\tau_0^2\sim\text{scaled-Inv-}\chi^2(\nu_0,s_0^2)$ with $\nu_0=3$, and $\tau_1^2=(\max y-\min y)^2/(4k^2H_g)$ fixed by the range rule for an $H_g$-tree ensemble. We require $\tau_0^2<\tau_1^2$, Assumption A1 of the Web Appendix, and the sampler draws $\tau_0^2$ from its conditional truncated to $(0,\tau_1^2)$. The residual variances carry independent inverse-gamma priors. The spike, $z=1$, \DIFdelbegin \DIFdel{is the commensurate component: the RCT control surface is locally the RWD surface up to a discrepancy of }\DIFdelend \DIFaddbegin \DIFadd{shrinks an individual discrepancy contribution toward zero and thereby shrinks the RCT response mean toward the external response mean. Section~\ref{sec:ess} calibrates its leaf }\DIFaddend scale $\tau_0$ \DIFdelbegin \DIFdel{, the scale the effective-sample-size calibration of Section~\ref{sec:ess} sets}\DIFdelend \DIFaddbegin \DIFadd{through the effective sample size of the full ensemble}\DIFaddend . The slab, $z=0$, is the vague component of the robust MAP prior placed in a leaf of $g$: a free local discrepancy on the outcome scale, sized by the range rule. \DIFdelbegin \DIFdel{Integrating }\DIFdelend \DIFaddbegin \DIFadd{If the scale prior is left untruncated, integrating }\DIFaddend $z$ and $\tau_0^2$ \DIFdelbegin \DIFdel{, a $g$ leaf has the marginal prior }\DIFdelend \DIFaddbegin \DIFadd{gives the leaf marginal }\DIFaddend $w\,t_{\nu_0}(\theta;0,s_0^2)+(1-w)\Normal(\theta;0,\tau_1^2)$\DIFdelbegin \DIFdel{, and the }\DIFdelend \DIFaddbegin \DIFadd{. The sampler uses the truncated scale prior, for which the spike marginal is not exactly Student-$t$. The }\DIFaddend local discrepancy $g(x)=f_1(x)-f(x)$ \DIFdelbegin \DIFdel{is a sum of }\DIFdelend \DIFaddbegin \DIFadd{sums }\DIFaddend $H_g$ \DIFdelbegin \DIFdel{such draws}\DIFdelend \DIFaddbegin \DIFadd{leaf contributions}\DIFaddend , one per tree. \DIFaddbegin \DIFadd{More generally, conditional on $f$, $T_g$, the reached-leaf indicators and both scales, $f_1(x)$ is normal with mean $f(x)$ and variance $\sum_{h=1}^{H_g}\{z_{h,\ell_h(x)}\tau_0^2+(1-z_{h,\ell_h(x)})\tau_1^2\}$. The slab increases the permitted departure from $f(x)$ while retaining the same prior center. These distributions describe the latent control mean; observation-level residual variance enters through \eqref{eq:model}.
-}\DIFaddend
+}\end{equation}
+\DIFadd{where $\tau_{1-z}^2=\tau_0^2$ for $z=1$ and $\tau_{1-z}^2=\tau_1^2$ for $z=0$. We set }\DIFaddend $w\sim\mathrm{Beta}(1,1)$, $\tau_0^2\sim\text{scaled-Inv-}\chi^2(\nu_0,s_0^2)$ with $\nu_0=3$, and $\tau_1^2=(\max y-\min y)^2/(4k^2H_g)$ fixed by the range rule\DIFdelbegin \DIFdel{for an $H_g$-tree ensemble}\DIFdelend . We require $\tau_0^2<\tau_1^2$ \DIFdelbegin \DIFdel{, }\DIFdelend \DIFaddbegin \DIFadd{(}\DIFaddend Assumption A1 of the Web Appendix\DIFdelbegin \DIFdel{, and }\DIFdelend \DIFaddbegin \DIFadd{); }\DIFaddend the sampler draws $\tau_0^2$ from its conditional truncated to $(0,\tau_1^2)$. The residual variances carry independent inverse-gamma priors. \DIFdelbegin \DIFdel{The spike, $z=1$, is the commensurate component: the RCT control surface is locally the RWD surface up to a discrepancy of }\DIFdelend \DIFaddbegin \DIFadd{Section~\ref{sec:ess} calibrates the spike }\DIFaddend scale $\tau_0$ \DIFaddbegin \DIFadd{through the full ensemble's effective sample size.
+}
+
+\DIFadd{A spike leaf shrinks its discrepancy contribution toward zero, drawing $f_1(x)$ toward $f(x)$. A slab leaf instead permits a larger local departure. Conditional on $f$, $T_g$, the indicators and scales, switching one reached leaf from $z=1$ to $z=0$ increases the prior variance of $f_1(x)$ by $\tau_1^2-\tau_0^2$, while its prior mean remains $f(x)$. If all reached leaves are in the slab,
+}\[
+\DIFadd{f_1(x)\given f,T_g,\{z_{h,\ell_h(x)}=0\}_{h=1}^{H_g},\tau_1^2
+\sim\Normal\!\left(f(x),H_g\tau_1^2\right).
+}\]
+\DIFadd{For any configuration $z$}\DIFaddend , the \DIFdelbegin \DIFdel{scale the effective-sample-size calibration of Section~\ref{sec:ess} sets.
+The slab , $z=0$, is the vague component of the robust MAP prior placed in a leaf of $g$: a free local discrepancy on the outcome scale,
+sized by the range rule. Integrating }\DIFdelend \DIFaddbegin \DIFadd{same indexed notation gives
+}\[
+\DIFadd{f_1(x)\given f,T_g,z,\tau_0^2,\tau_1^2
+\sim\Normal\!\left(f(x),\sum_{h=1}^{H_g}\tau_{1-z_{h,\ell_h(x)}}^2\right).
+}\]
+\DIFadd{The slab therefore relaxes commensurability through its larger variance, retaining the external mean as its center. These priors concern the latent control mean; observation variance enters through \eqref{eq:model}.
+}
+
+\begin{samepage}
+\DIFadd{Under an untruncated scale prior, integrating }\DIFaddend $z$ and $\tau_0^2$ \DIFdelbegin \DIFdel{, a $g$ leaf has the marginal prior }\DIFdelend \DIFaddbegin \DIFadd{gives the leaf marginal }\DIFaddend $w\,t_{\nu_0}(\theta;0,s_0^2)+(1-w)\Normal(\theta;0,\tau_1^2)$\DIFdelbegin \DIFdel{, and the local discrepancy $g(x)=f_1(x)-f(x)$ is a sum of $H_g$ such draws, one per tree.}\DIFdelend \DIFaddbegin \DIFadd{. The sampler uses the truncated scale prior, whose spike marginal is not exactly Student-$t$.}\par
+\end{samepage}
+\DIFaddend
 
 Three special cases place the model among its comparators. With $w=1$ every leaf is in the spike and the model is a commensurate BART (C-BART) with a single commensurability scale $\tau_0^2$; with $w=1$ and $\tau_0^2\to0$ the discrepancy vanishes and the model is BART fitted to the pooled controls (BART-CP); with $w=0$ every leaf is in the slab and $g$ is a free nonparametric source offset regularized by the range rule, the tree analogue of BART with the source indicator as a covariate (BART-PP). LRC-BART with $w$ learned from the data moves between these per leaf.
 
@@ -267,7 +295,7 @@ M_g=\frac{w\,\phi(\bar y_1;0,\tau_0^2+v_1)+(1-w)\,\phi(\bar y_1;0,\tau_1^2+v_1)}
 P(z=1\given\bar y_1)=\frac{w\,\phi(\bar y_1;0,\tau_0^2+v_1)}{w\,\phi(\bar y_1;0,\tau_0^2+v_1)+(1-w)\,\phi(\bar y_1;0,\tau_1^2+v_1)},
 \label{eq:zpost}
 \end{equation}
-then $\theta\given z\sim\Normal\bigl(\tau_z^2\bar y_1/(\tau_z^2+v_1),\ \tau_z^2v_1/(\tau_z^2+v_1)\bigr)$ with $\tau_z^2$ equal to $\tau_0^2$ in the spike and $\tau_1^2$ in the slab. With $K_0$ spike leaves among the $L_g$ leaves of $g$ and $S_0$ the sum of their squared means, the hyperparameters update as $\tau_0^2\given\cdot\sim\text{scaled-Inv-}\chi^2\bigl(\nu_0+K_0,(\nu_0s_0^2+S_0)/(\nu_0+K_0)\bigr)$ truncated to $(0,\tau_1^2)$ and $w\given\cdot\sim\mathrm{Beta}(1+K_0,1+L_g-K_0)$, and the residual variances update from their inverse-gamma conditionals using the residuals $y_i-f(x_i)-D_ig(x_i)$ of each source. \DIFdelbegin \DIFdel{We fix }\DIFdelend \DIFaddbegin \DIFadd{The range rule fixes }\DIFaddend $\tau_1^2$ \DIFdelbegin \DIFdel{by the range rule because slab leaves are few and the slab's job is to be wide}\DIFdelend \DIFaddbegin \DIFadd{on the outcome scale}\DIFaddend . An $f$ leaf \DIFdelbegin \DIFdel{holding only }\DIFdelend \DIFaddbegin \DIFadd{with }\DIFaddend one source is an ordinary BART leaf\DIFdelbegin \DIFdel{, and the }\DIFdelend \DIFaddbegin \DIFadd{. The }\DIFaddend minimum leaf size \DIFdelbegin \DIFdel{of five is enforced on each leaf's own data, pooled }\DIFdelend \DIFaddbegin \DIFadd{is five, using pooled data }\DIFaddend for $f$ and \DIFdelbegin \DIFdel{RCT-only }\DIFdelend \DIFaddbegin \DIFadd{RCT controls }\DIFaddend for $g$. A sweep costs a standard BART on $n_1+n_2$ observations plus a small ensemble on $n_1$.
+then \DIFdelbegin \DIFdel{$\theta\given z\sim\Normal\bigl(\tau_z^2\bar y_1/(\tau_z^2+v_1),\ \tau_z^2v_1/(\tau_z^2+v_1)\bigr)$ with $\tau_z^2$ equal to $\tau_0^2$ in the spike and $\tau_1^2$ in the slab}\DIFdelend \DIFaddbegin \DIFadd{$\theta\given z\sim\Normal\bigl(\tau_{1-z}^2\bar y_1/(\tau_{1-z}^2+v_1),\ \tau_{1-z}^2v_1/(\tau_{1-z}^2+v_1)\bigr)$}\DIFaddend . With $K_0$ spike leaves among the $L_g$ leaves of $g$ and $S_0$ the sum of their squared means, the hyperparameters update as $\tau_0^2\given\cdot\sim\text{scaled-Inv-}\chi^2\bigl(\nu_0+K_0,(\nu_0s_0^2+S_0)/(\nu_0+K_0)\bigr)$ truncated to $(0,\tau_1^2)$ and $w\given\cdot\sim\mathrm{Beta}(1+K_0,1+L_g-K_0)$, and the residual variances update from their inverse-gamma conditionals using the residuals $y_i-f(x_i)-D_ig(x_i)$ of each source. \DIFdelbegin \DIFdel{We fix }\DIFdelend \DIFaddbegin \DIFadd{The range rule fixes }\DIFaddend $\tau_1^2$ \DIFdelbegin \DIFdel{by the range rule because slab leaves are few and the slab's job is to be wide}\DIFdelend \DIFaddbegin \DIFadd{on the outcome scale}\DIFaddend . An $f$ leaf \DIFdelbegin \DIFdel{holding only }\DIFdelend \DIFaddbegin \DIFadd{with }\DIFaddend one source is an ordinary BART leaf\DIFdelbegin \DIFdel{, and the }\DIFdelend \DIFaddbegin \DIFadd{. The }\DIFaddend minimum leaf size \DIFdelbegin \DIFdel{of five is enforced on each leaf's own data, pooled }\DIFdelend \DIFaddbegin \DIFadd{is five, using pooled data }\DIFaddend for $f$ and \DIFdelbegin \DIFdel{RCT-only }\DIFdelend \DIFaddbegin \DIFadd{RCT controls }\DIFaddend for $g$. A sweep costs a standard BART on $n_1+n_2$ observations plus a small ensemble on $n_1$.
 
 For \DIFdelbegin \DIFdel{right-censored survival outcomeswe use the AFT model $\log y_i=f(x_i)+D_ig(x_i)+\varepsilon_i$ with data augmentation}\DIFdelend \DIFaddbegin \DIFadd{survival outcomes, $y_i=\log T_i$ denotes log time}\DIFaddend . At each iteration \DIFdelbegin \DIFdel{a censored subject's log survival time is }\DIFdelend \DIFaddbegin \DIFadd{censored values are }\DIFaddend imputed from $\Normal(f(x_i)+D_ig(x_i),\sigma_{g_i}^2)$ truncated to $(\log C_i,\infty)$, where $C_i$ is the censoring time, and \DIFdelbegin \DIFdel{treated as observed in the }\DIFdelend \DIFaddbegin \DIFadd{used in the subsequent }\DIFaddend tree and parameter updates\DIFdelbegin \DIFdel{that follow; the }\DIFdelend \DIFaddbegin \DIFadd{. The }\DIFaddend treatment-arm AFT-BART \DIFdelbegin \DIFdel{is imputed the same way.
 Nothing else in the sampler changes.
@@ -1117,10 +1145,14 @@ y_i=f(x_i)+D_i\,g(x_i)+\varepsilon_i,\qquad \varepsilon_i\sim\Normal(0,\sigma^2_
 \label{eqA:model}
 \end{equation}
 where $f$ is a standard BART ensemble of $H_f$ trees with leaf prior $\Normal(0,\lambda_f^2)$ and $g$ is an ensemble of $H_g$ trees whose leaves carry the two-component prior
-\begin{equation}
-\theta_{h\ell}\given z_{h\ell}\sim z_{h\ell}\,\Normal(0,\tau_0^2)+(1-z_{h\ell})\,\Normal(0,\tau_1^2),\qquad z_{h\ell}\iid\Ber(w),
+\DIFdelbegin \begin{displaymath}
+\DIFdel{\theta_{h\ell}\given z_{h\ell}\sim z_{h\ell}\,\Normal(0,\tau_0^2)+(1-z_{h\ell})\,\Normal(0,\tau_1^2),\qquad z_{h\ell}\iid\Ber(w),
+%DIFDELCMD < \label{eqA:leafprior}%%%
+}\end{displaymath}%DIFAUXCMD
+\DIFdelend \DIFaddbegin \begin{equation}
+\DIFadd{\theta_{h\ell}\given z_{h\ell},\tau_0^2,\tau_1^2\sim\Normal\!\left(0,\tau_{1-z_{h\ell}}^2\right),\qquad z_{h\ell}\given w\iid\Ber(w),
 \label{eqA:leafprior}
-\end{equation}
+}\end{equation}\DIFaddend
 with $z=1$ the spike (commensurate component) and $z=0$ the slab, $w\sim\mathrm{Beta}(a_w,b_w)$, $\tau_1^2$ fixed by the range rule, and
 \begin{equation}
 \tau_0^2\sim\text{scaled-Inv-}\chi^2(\nu_0,s_0^2)\ \text{truncated to }(0,\tau_1^2),
@@ -1152,22 +1184,34 @@ M_f=\frac{\exp\bigl\{\lambda_f^2B^2/\{2(1+\lambda_f^2A)\}\bigr\}}{(1+\lambda_f^2
 \label{eqA:Mf}
 \end{equation}
 \item (\emph{$g$ leaf.}) Let $r_i=y_i-f(x_i)-g_{-h}(x_i)$ be the partial residuals of the $n_1$ RCT controls routed to a leaf of $g$-tree $h$, with mean $\bar y$. Under the prior \eqref{eqA:leafprior},
-\begin{equation}
-\sum_{z\in\{0,1\}}P(z)\int\prod_i\phi(r_i;\theta,\sigma_1^2)\,\phi(\theta;0,\tau_z^2)\,\dd\theta
+\DIFdelbegin \begin{displaymath}
+\DIFdel{\sum_{z\in\{0,1\}}P(z)\int\prod_i\phi(r_i;\theta,\sigma_1^2)\,\phi(\theta;0,\tau_z^2)\,\dd\theta
+=\Bigl[\prod_i\phi(r_i;0,\sigma_1^2)\Bigr]\,M_g,
+%DIFDELCMD < \label{eqA:Mg}%%%
+}\end{displaymath}%DIFAUXCMD
+\DIFdelend \DIFaddbegin \begin{equation}
+\DIFadd{\sum_{z\in\{0,1\}}P(z)\int\prod_i\phi(r_i;\theta,\sigma_1^2)\,\phi(\theta;0,\tau_{1-z}^2)\,\dd\theta
 =\Bigl[\prod_i\phi(r_i;0,\sigma_1^2)\Bigr]\,M_g,
 \label{eqA:Mg}
-\end{equation}
+}\end{equation}\DIFaddend
 \begin{equation}
 M_g=\frac{w\,\phi(\bar y;0,\tau_0^2+v)+(1-w)\,\phi(\bar y;0,\tau_1^2+v)}{\phi(\bar y;0,v)},
 \label{eq:Mg2}
 \end{equation}
-where $\tau_z^2$ denotes $\tau_0^2$ for $z=1$ and $\tau_1^2$ for $z=0$. A leaf with $n_1=0$ has $M_g=1$.
+where \DIFdelbegin \DIFdel{$\tau_z^2$ denotes }\DIFdelend \DIFaddbegin \DIFadd{the index $1-z$ selects }\DIFaddend $\tau_0^2$ for $z=1$ and $\tau_1^2$ for $z=0$. A leaf with $n_1=0$ has $M_g=1$.
 \item (\emph{Leaf conditionals.}) In a $g$ leaf,
-\begin{equation}
-P(z=1\given\bar y)=\frac{w\,\phi(\bar y;0,\tau_0^2+v)}{w\,\phi(\bar y;0,\tau_0^2+v)+(1-w)\,\phi(\bar y;0,\tau_1^2+v)},\qquad
+\DIFdelbegin \begin{displaymath}
+\DIFdel{P(z=1\given\bar y)=\frac{w\,\phi(\bar y;0,\tau_0^2+v)}{w\,\phi(\bar y;0,\tau_0^2+v)+(1-w)\,\phi(\bar y;0,\tau_1^2+v)},\qquad
 \theta\given z,\bar y\sim\Normal\Bigl(\frac{\tau_z^2}{\tau_z^2+v}\bar y,\ \frac{\tau_z^2v}{\tau_z^2+v}\Bigr),
+%DIFDELCMD < \label{eq:leafcond}%%%
+}\end{displaymath}%DIFAUXCMD
+\DIFdelend \DIFaddbegin \begin{equation}
+\DIFadd{\begin{aligned}
+P(z=1\given\bar y)&=\frac{w\,\phi(\bar y;0,\tau_0^2+v)}{w\,\phi(\bar y;0,\tau_0^2+v)+(1-w)\,\phi(\bar y;0,\tau_1^2+v)},\\
+\theta\given z,\bar y&\sim\Normal\Bigl(\frac{\tau_{1-z}^2}{\tau_{1-z}^2+v}\bar y,\ \frac{\tau_{1-z}^2v}{\tau_{1-z}^2+v}\Bigr).
+\end{aligned}
 \label{eq:leafcond}
-\end{equation}
+}\end{equation}\DIFaddend
 and in an $f$ leaf $\theta\given\cdot\sim\Normal\bigl(\lambda_f^2B/(1+\lambda_f^2A),\ \lambda_f^2/(1+\lambda_f^2A)\bigr)$.
 \end{enumerate}
 \end{lemA}
@@ -1176,9 +1220,14 @@ and in an $f$ leaf $\theta\given\cdot\sim\Normal\bigl(\lambda_f^2B/(1+\lambda_f^
 (a) Expanding $-(r_i-\theta)^2/(2\sigma^2_{g_i})=-r_i^2/(2\sigma^2_{g_i})+r_i\theta/\sigma^2_{g_i}-\theta^2/(2\sigma^2_{g_i})$ and summing over $i$ gives
 $\prod_i\phi(r_i;\theta,\sigma^2_{g_i})=\prod_i\phi(r_i;0,\sigma^2_{g_i})\exp(\theta B-\theta^2A/2)$. Multiplying by $\phi(\theta;0,\lambda_f^2)$ and integrating, the exponent is $-\tfrac12(A+\lambda_f^{-2})\theta^2+B\theta$, a Gaussian integral equal to $(2\pi)^{1/2}(A+\lambda_f^{-2})^{-1/2}\exp\{B^2/(2(A+\lambda_f^{-2}))\}$; dividing by the prior normalizing constant $(2\pi\lambda_f^2)^{1/2}$ gives $M_f$. The conditional of $\theta$ is read off the same quadratic form.
 
-(b) With a single source, (a) gives $\prod_i\phi(r_i;\theta,\sigma_1^2)=\prod_i\phi(r_i;0,\sigma_1^2)\exp\{\theta n\bar y/\sigma_1^2-\theta^2n/(2\sigma_1^2)\}$, and the exponential equals $\phi(\bar y;\theta,v)/\phi(\bar y;0,v)$, since $-\{(\bar y-\theta)^2-\bar y^2\}/(2v)=(2\bar y\theta-\theta^2)n/(2\sigma_1^2)$. Hence the likelihood factors as $\prod_i\phi(r_i;0,\sigma_1^2)\times\phi(\bar y;\theta,v)/\phi(\bar y;0,v)$, the sufficiency of $\bar y$. Integrating $\phi(\bar y;\theta,v)$ against $\phi(\theta;0,\tau_z^2)$ by \eqref{eq:gaussprod} gives $\phi(\bar y;0,\tau_z^2+v)$, and the sum over $z$ with weights $w$ and $1-w$ gives $M_g$. When $n_1=0$ the leaf has no likelihood factor and the integral of the prior is one.
+(b) With a single source, (a) gives $\prod_i\phi(r_i;\theta,\sigma_1^2)=\prod_i\phi(r_i;0,\sigma_1^2)\exp\{\theta n\bar y/\sigma_1^2-\theta^2n/(2\sigma_1^2)\}$, and the exponential equals $\phi(\bar y;\theta,v)/\phi(\bar y;0,v)$, since $-\{(\bar y-\theta)^2-\bar y^2\}/(2v)=(2\bar y\theta-\theta^2)n/(2\sigma_1^2)$. Hence the likelihood factors as $\prod_i\phi(r_i;0,\sigma_1^2)\times\phi(\bar y;\theta,v)/\phi(\bar y;0,v)$, the sufficiency of $\bar y$. Integrating $\phi(\bar y;\theta,v)$ against \DIFdelbegin \DIFdel{$\phi(\theta;0,\tau_z^2)$ }\DIFdelend \DIFaddbegin \DIFadd{$\phi(\theta;0,\tau_{1-z}^2)$ }\DIFaddend by \eqref{eq:gaussprod} gives \DIFdelbegin \DIFdel{$\phi(\bar y;0,\tau_z^2+v)$}\DIFdelend \DIFaddbegin \DIFadd{$\phi(\bar y;0,\tau_{1-z}^2+v)$}\DIFaddend , and the sum over $z$ with weights $w$ and $1-w$ gives $M_g$. When $n_1=0$ the leaf has no likelihood factor and the integral of the prior is one.
 
-(c) By \eqref{eq:gaussprod}, the joint density of $(z,\theta)$ given $\bar y$ is proportional to $P(z)\phi(\bar y;0,\tau_z^2+v)\,\phi(\theta;\tau_z^2\bar y/(\tau_z^2+v),\tau_z^2v/(\tau_z^2+v))$; summing out $\theta$ gives the stated Bernoulli weight and the remaining factor is the stated conditional of $\theta$.
+(c) By \eqref{eq:gaussprod}, the joint density of $(z,\theta)$ given $\bar y$ is proportional to
+\DIFdelbegin \DIFdel{$P(z)\phi(\bar y;0,\tau_z^2+v)\,\phi(\theta;\tau_z^2\bar y/(\tau_z^2+v),\tau_z^2v/(\tau_z^2+v))$; summing }\DIFdelend \DIFaddbegin \[
+\DIFadd{P(z)\phi(\bar y;0,\tau_{1-z}^2+v)\,
+\phi\Bigl(\theta;\frac{\tau_{1-z}^2}{\tau_{1-z}^2+v}\bar y,\frac{\tau_{1-z}^2v}{\tau_{1-z}^2+v}\Bigr).
+}\]
+\DIFadd{Integrating }\DIFaddend out $\theta$ gives the stated Bernoulli weight\DIFdelbegin \DIFdel{and }\DIFdelend \DIFaddbegin \DIFadd{; }\DIFaddend the remaining factor is the \DIFdelbegin \DIFdel{stated conditional }\DIFdelend \DIFaddbegin \DIFadd{conditional density }\DIFaddend of $\theta$.
 \end{proof}
 
 \begin{propA}[The tree moves target the exact posterior]\label{prop:exact}
@@ -1269,10 +1318,14 @@ With $\sigma_1=1.5$, $n=50$, $\tau_0^2=0.001$ (the scale calibrated for $N_{\rm 
 \subsection*{B.2 The estimand level: fixed partitions of the $g$ ensemble}
 
 The estimand is the RCT-standardized control mean $\mu=N^{-1}\sum_{i\le N}f_1(x_i)$ over the $N$ RCT covariate profiles, and $f_1=f+g$, so $\mu=\mu_f+\mu_g$ with $\mu_g=N^{-1}\sum_{i\le N}g(x_i)$. We condition on $f$, on the partitions $\mathcal T=(T_1,\dots,T_{H_g})$ of the $g$ trees, and on $(\sigma_1^2,\tau_0^2,\tau_1^2,w)$; the RWD then enters $\mu_g$ only through the shrinkage of $g$ toward zero. Index the $L_g$ leaves of all $g$ trees by $j$, let $\theta\in\mathbb R^{L_g}$ collect the leaf parameters and $z\in\{0,1\}^{L_g}$ the indicators, and let $r\in\mathbb R^{n_1}$ be the residuals $y_i-f(x_i)$ of the RCT controls. Let $X\in\{0,1\}^{n_1\times L_g}$ be the incidence matrix ($X_{ij}=1$ if control $i$ falls in leaf $j$), so each row of $X$ has exactly $H_g$ ones and $g(x_i)=(X\theta)_i$. Let $a\in\mathbb R^{L_g}$ with $a_j=N_j/N$, $N_j$ the number of estimand profiles in leaf $j$, so $\mu_g=a\tr\theta$, $\|a\|_1=H_g$, and $\|a\|_2^2\le\max_ja_j\sum_ja_j\le H_g$, so $\|a\|_2\le\sqrt{H_g}$. Then
-\begin{equation}
-r\given\theta\sim\Normal(X\theta,\sigma_1^2I),\qquad \theta\given z\sim\Normal(0,D_z),\quad D_z=\mathrm{diag}(\tau^2_{z_j}),\qquad \pi(z)=\prod_jw^{z_j}(1-w)^{1-z_j}.
+\DIFdelbegin \begin{displaymath}
+\DIFdel{r\given\theta\sim\Normal(X\theta,\sigma_1^2I),\qquad \theta\given z\sim\Normal(0,D_z),\quad D_z=\mathrm{diag}(\tau^2_{z_j}),\qquad \pi(z)=\prod_jw^{z_j}(1-w)^{1-z_j}.
+%DIFDELCMD < \label{eq:linform}%%%
+}\end{displaymath}%DIFAUXCMD
+\DIFdelend \DIFaddbegin \begin{equation}
+\DIFadd{r\given\theta\sim\Normal(X\theta,\sigma_1^2I),\qquad \theta\given z\sim\Normal(0,D_z),\quad D_z=\mathrm{diag}(\tau^2_{1-z_j}),\qquad \pi(z)=\prod_jw^{z_j}(1-w)^{1-z_j}.
 \label{eq:linform}
-\end{equation}
+}\end{equation}\DIFaddend
 Standard Gaussian algebra gives, with $V_z=XD_zX\tr+\sigma_1^2I$ and $\Sigma_z=(X\tr X/\sigma_1^2+D_z^{-1})^{-1}$,
 \begin{equation}
 P(z\given r)\propto\pi(z)\,\phi_{n_1}(r;0,V_z),\qquad

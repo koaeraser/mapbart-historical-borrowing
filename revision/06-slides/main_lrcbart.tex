@@ -191,12 +191,12 @@
 \begin{frame}{The leaf prior of the discrepancy ensemble}
   \footnotesize
   The zero-centered mixture is on a leaf contribution to $g=f_1-f$:\par\vspace{-0.5em}
-  Each leaf $(h,\ell)$ carries
+  $\theta_{h\ell}$ is the contribution of leaf $(h,\ell)$ to $g$:
   \[
-    \theta_{h\ell}\mid z_{h\ell}\sim z_{h\ell}\,\Normal(0,\tau_0^2)+(1-z_{h\ell})\,\Normal(0,\tau_1^2),
-    \qquad z_{h\ell}\sim\Ber(w),\quad w\sim\mathrm{Beta}(1,1),
+    \theta_{h\ell}\mid z_{h\ell},\tau_0^2,\tau_1^2\sim\Normal\!\left(0,\tau_{1-z_{h\ell}}^2\right),
+    \qquad z_{h\ell}\mid w\sim\Ber(w),\quad w\sim\mathrm{Beta}(1,1),
   \]
-  with $\tau_0^2\sim\text{scaled-Inv-}\chi^2(\nu_0,s_0^2)$ truncated to $(0,\tau_1^2)$ and $\tau_1^2$ fixed by the range rule.
+  Here $1-z=0$ selects the spike variance; $1-z=1$ selects the slab variance. We use $\tau_0^2\sim\text{scaled-Inv-}\chi^2(\nu_0,s_0^2)$ truncated to $(0,\tau_1^2)$ and $\tau_1^2$ fixed by the range rule.
   \begin{columns}[T,onlytextwidth]
     \column{0.48\textwidth}
       \begin{block}{Spike, $z=1$: the commensurate component}

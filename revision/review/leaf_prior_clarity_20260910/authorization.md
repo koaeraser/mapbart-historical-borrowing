@@ -1,0 +1,7 @@
+# Equation (2) clarification
+
+The user requests an explicit definition of theta_hl and an explanation of z=0 for the RCT control mean f_1. Revise only the model-prior exposition around equation (2); retain all other manuscript sections. Define theta_hl, ell_h(x), and their sum g(x), before using reached-leaf indicators. Preserve equation (2), its label, the all-spike external-centered prior, hyperpriors, scales, truncation and Student-t qualifications. Explicitly derive the all-slab conditional distribution and the variance change for one leaf switching to z=0 from the existing independent-leaf prior. These are authorized explanatory displays, not a model or result change. Numerical code, tables, figures and Appendix A-F remain untouched. Rebuild the clean and original-baseline cumulative tracked PDFs; sync the authorized existing PR.
+
+## User follow-up: indicator-dependent variance index
+
+The user explicitly asks to make the variance index depend on z. Preserve the existing coding z=1 spike and tau_0^2 spike, hence use tau_{1-z}^2. Equation (2) and its Appendix A counterpart may now be rewritten as a conditional normal with this indexed variance. Reconcile the same notation in the main conditional leaf draw, Appendix A integration/conditional formulas, Appendix B covariance D_z, and the slide leaf-prior formula. Preserve every numerical value, prior law, theorem statement and code/result file. Explicit conditioning on the scales and w clarifies the hierarchical form. Keep the latent f_1 center at f and spell out the all-slab case.

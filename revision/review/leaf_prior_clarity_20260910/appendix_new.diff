@@ -1,0 +1,33 @@
+--- baseline/03-theory/appendix_new.tex
++++ current/03-theory/appendix_new.tex
+@@ -39 +39 @@
+-\theta_{h\ell}\given z_{h\ell}\sim z_{h\ell}\,\Normal(0,\tau_0^2)+(1-z_{h\ell})\,\Normal(0,\tau_1^2),\qquad z_{h\ell}\iid\Ber(w),
++\theta_{h\ell}\given z_{h\ell},\tau_0^2,\tau_1^2\sim\Normal\!\left(0,\tau_{1-z_{h\ell}}^2\right),\qquad z_{h\ell}\given w\iid\Ber(w),
+@@ -74 +74 @@
+-\sum_{z\in\{0,1\}}P(z)\int\prod_i\phi(r_i;\theta,\sigma_1^2)\,\phi(\theta;0,\tau_z^2)\,\dd\theta
++\sum_{z\in\{0,1\}}P(z)\int\prod_i\phi(r_i;\theta,\sigma_1^2)\,\phi(\theta;0,\tau_{1-z}^2)\,\dd\theta
+@@ -82 +82 @@
+-where $\tau_z^2$ denotes $\tau_0^2$ for $z=1$ and $\tau_1^2$ for $z=0$. A leaf with $n_1=0$ has $M_g=1$.
++where the index $1-z$ selects $\tau_0^2$ for $z=1$ and $\tau_1^2$ for $z=0$. A leaf with $n_1=0$ has $M_g=1$.
+@@ -85,2 +85,4 @@
+-P(z=1\given\bar y)=\frac{w\,\phi(\bar y;0,\tau_0^2+v)}{w\,\phi(\bar y;0,\tau_0^2+v)+(1-w)\,\phi(\bar y;0,\tau_1^2+v)},\qquad
+-\theta\given z,\bar y\sim\Normal\Bigl(\frac{\tau_z^2}{\tau_z^2+v}\bar y,\ \frac{\tau_z^2v}{\tau_z^2+v}\Bigr),
++\begin{aligned}
++P(z=1\given\bar y)&=\frac{w\,\phi(\bar y;0,\tau_0^2+v)}{w\,\phi(\bar y;0,\tau_0^2+v)+(1-w)\,\phi(\bar y;0,\tau_1^2+v)},\\
++\theta\given z,\bar y&\sim\Normal\Bigl(\frac{\tau_{1-z}^2}{\tau_{1-z}^2+v}\bar y,\ \frac{\tau_{1-z}^2v}{\tau_{1-z}^2+v}\Bigr).
++\end{aligned}
+@@ -97,3 +99,8 @@
+-(b) With a single source, (a) gives $\prod_i\phi(r_i;\theta,\sigma_1^2)=\prod_i\phi(r_i;0,\sigma_1^2)\exp\{\theta n\bar y/\sigma_1^2-\theta^2n/(2\sigma_1^2)\}$, and the exponential equals $\phi(\bar y;\theta,v)/\phi(\bar y;0,v)$, since $-\{(\bar y-\theta)^2-\bar y^2\}/(2v)=(2\bar y\theta-\theta^2)n/(2\sigma_1^2)$. Hence the likelihood factors as $\prod_i\phi(r_i;0,\sigma_1^2)\times\phi(\bar y;\theta,v)/\phi(\bar y;0,v)$, the sufficiency of $\bar y$. Integrating $\phi(\bar y;\theta,v)$ against $\phi(\theta;0,\tau_z^2)$ by \eqref{eq:gaussprod} gives $\phi(\bar y;0,\tau_z^2+v)$, and the sum over $z$ with weights $w$ and $1-w$ gives $M_g$. When $n_1=0$ the leaf has no likelihood factor and the integral of the prior is one.
+-
+-(c) By \eqref{eq:gaussprod}, the joint density of $(z,\theta)$ given $\bar y$ is proportional to $P(z)\phi(\bar y;0,\tau_z^2+v)\,\phi(\theta;\tau_z^2\bar y/(\tau_z^2+v),\tau_z^2v/(\tau_z^2+v))$; summing out $\theta$ gives the stated Bernoulli weight and the remaining factor is the stated conditional of $\theta$.
++(b) With a single source, (a) gives $\prod_i\phi(r_i;\theta,\sigma_1^2)=\prod_i\phi(r_i;0,\sigma_1^2)\exp\{\theta n\bar y/\sigma_1^2-\theta^2n/(2\sigma_1^2)\}$, and the exponential equals $\phi(\bar y;\theta,v)/\phi(\bar y;0,v)$, since $-\{(\bar y-\theta)^2-\bar y^2\}/(2v)=(2\bar y\theta-\theta^2)n/(2\sigma_1^2)$. Hence the likelihood factors as $\prod_i\phi(r_i;0,\sigma_1^2)\times\phi(\bar y;\theta,v)/\phi(\bar y;0,v)$, the sufficiency of $\bar y$. Integrating $\phi(\bar y;\theta,v)$ against $\phi(\theta;0,\tau_{1-z}^2)$ by \eqref{eq:gaussprod} gives $\phi(\bar y;0,\tau_{1-z}^2+v)$, and the sum over $z$ with weights $w$ and $1-w$ gives $M_g$. When $n_1=0$ the leaf has no likelihood factor and the integral of the prior is one.
++
++(c) By \eqref{eq:gaussprod}, the joint density of $(z,\theta)$ given $\bar y$ is proportional to
++\[
++P(z)\phi(\bar y;0,\tau_{1-z}^2+v)\,
++\phi\Bigl(\theta;\frac{\tau_{1-z}^2}{\tau_{1-z}^2+v}\bar y,\frac{\tau_{1-z}^2v}{\tau_{1-z}^2+v}\Bigr).
++\]
++Integrating out $\theta$ gives the stated Bernoulli weight; the remaining factor is the conditional density of $\theta$.
+@@ -191 +198 @@
+-r\given\theta\sim\Normal(X\theta,\sigma_1^2I),\qquad \theta\given z\sim\Normal(0,D_z),\quad D_z=\mathrm{diag}(\tau^2_{z_j}),\qquad \pi(z)=\prod_jw^{z_j}(1-w)^{1-z_j}.
++r\given\theta\sim\Normal(X\theta,\sigma_1^2I),\qquad \theta\given z\sim\Normal(0,D_z),\quad D_z=\mathrm{diag}(\tau^2_{1-z_j}),\qquad \pi(z)=\prod_jw^{z_j}(1-w)^{1-z_j}.

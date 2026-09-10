@@ -1,0 +1,10 @@
+{
+  "distribution_clean_build": "passed; no warnings or overfull boxes",
+  "distribution_clean_pdf_text": "matches delivered local PDF",
+  "artifact_manifest": "all hashes verified",
+  "protected_distribution_paths": "unchanged from 594877e1e5018276e8f2f69de148a3eb72327768",
+  "paper_pages": 79,
+  "tracked_pages": 101,
+  "slide_pages": 25,
+  "main_text_words_excluding_abstract": 6961
+}

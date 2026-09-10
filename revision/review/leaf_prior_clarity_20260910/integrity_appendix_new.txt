@@ -1,0 +1,132 @@
+AUDIT numbers changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.UxEd2gXSPy/numbers.before	2026-09-10 10:55:09
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.UxEd2gXSPy/numbers.after	2026-09-10 10:55:09
+@@ -1,4 +1,4 @@
+- 345 0
++ 344 0
+   10 0,1
+    2 0.001
+    1 0.0012
+@@ -20,7 +20,7 @@
+    1 0.993
+    2 000
+    1 03
+- 464 1
++ 478 1
+    1 1.00
+    1 1.15
+    2 1.25
+PASS  number_words (no changes)
+PASS  citations
+PASS  labels
+PASS  sections
+FAIL  equations
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.UxEd2gXSPy/equations.before	2026-09-10 10:55:09
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.UxEd2gXSPy/equations.after	2026-09-10 10:55:09
+@@ -4,7 +4,7 @@
+ \end{equation}
+ %%__EQUATION_BOUNDARY__%%
+ \begin{equation}
+-\theta_{h\ell}\given z_{h\ell}\sim z_{h\ell}\,\Normal(0,\tau_0^2)+(1-z_{h\ell})\,\Normal(0,\tau_1^2),\qquad z_{h\ell}\iid\Ber(w),
++\theta_{h\ell}\given z_{h\ell},\tau_0^2,\tau_1^2\sim\Normal\!\left(0,\tau_{1-z_{h\ell}}^2\right),\qquad z_{h\ell}\given w\iid\Ber(w),
+ \label{eqA:leafprior}
+ \end{equation}
+ %%__EQUATION_BOUNDARY__%%
+@@ -26,7 +26,7 @@
+ \end{equation}
+ %%__EQUATION_BOUNDARY__%%
+ \begin{equation}
+-\sum_{z\in\{0,1\}}P(z)\int\prod_i\phi(r_i;\theta,\sigma_1^2)\,\phi(\theta;0,\tau_z^2)\,\dd\theta
++\sum_{z\in\{0,1\}}P(z)\int\prod_i\phi(r_i;\theta,\sigma_1^2)\,\phi(\theta;0,\tau_{1-z}^2)\,\dd\theta
+ =\Bigl[\prod_i\phi(r_i;0,\sigma_1^2)\Bigr]\,M_g,
+ \label{eqA:Mg}
+ \end{equation}
+@@ -37,8 +37,10 @@
+ \end{equation}
+ %%__EQUATION_BOUNDARY__%%
+ \begin{equation}
+-P(z=1\given\bar y)=\frac{w\,\phi(\bar y;0,\tau_0^2+v)}{w\,\phi(\bar y;0,\tau_0^2+v)+(1-w)\,\phi(\bar y;0,\tau_1^2+v)},\qquad
+-\theta\given z,\bar y\sim\Normal\Bigl(\frac{\tau_z^2}{\tau_z^2+v}\bar y,\ \frac{\tau_z^2v}{\tau_z^2+v}\Bigr),
++\begin{aligned}
++P(z=1\given\bar y)&=\frac{w\,\phi(\bar y;0,\tau_0^2+v)}{w\,\phi(\bar y;0,\tau_0^2+v)+(1-w)\,\phi(\bar y;0,\tau_1^2+v)},\\
++\theta\given z,\bar y&\sim\Normal\Bigl(\frac{\tau_{1-z}^2}{\tau_{1-z}^2+v}\bar y,\ \frac{\tau_{1-z}^2v}{\tau_{1-z}^2+v}\Bigr).
++\end{aligned}
+ \label{eq:leafcond}
+ \end{equation}
+ %%__EQUATION_BOUNDARY__%%
+@@ -80,7 +82,7 @@
+ \end{equation}
+ %%__EQUATION_BOUNDARY__%%
+ \begin{equation}
+-r\given\theta\sim\Normal(X\theta,\sigma_1^2I),\qquad \theta\given z\sim\Normal(0,D_z),\quad D_z=\mathrm{diag}(\tau^2_{z_j}),\qquad \pi(z)=\prod_jw^{z_j}(1-w)^{1-z_j}.
++r\given\theta\sim\Normal(X\theta,\sigma_1^2I),\qquad \theta\given z\sim\Normal(0,D_z),\quad D_z=\mathrm{diag}(\tau^2_{1-z_j}),\qquad \pi(z)=\prod_jw^{z_j}(1-w)^{1-z_j}.
+ \label{eq:linform}
+ \end{equation}
+ %%__EQUATION_BOUNDARY__%%
+AUDIT inline_math changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.UxEd2gXSPy/inline_math.before	2026-09-10 10:55:09
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.UxEd2gXSPy/inline_math.after	2026-09-10 10:55:09
+@@ -61,6 +61,7 @@
+ $1-p=(1+e^{a+\kappa\bar y^2})^{-1}\le\min\{1,e^{-a-\kappa\bar y^2}\}=\min\{1,Ce^{-\kappa\bar y^2}\}$
+ $1-p\le Ce^{-\kappa\bar y^2}$
+ $1-w$
++$1-z$
+ $1.00$
+ $1.15$
+ $1.80$
+@@ -160,7 +161,6 @@
+ $P(\chi^2_{\nu_0}<\nu_0s_0^2/\tau_1^2)$
+ $P(k\ \text{spikes in leaf }\ell\given\bar y_\ell)\propto\binom{H_g}{k}w^k(1-w)^{H_g-k}\phi(\bar y_\ell;0,T_k+v_\ell)$
+ $P(k\given\bar y_\ell)\le P(k\given\bar y_\ell)/P(0\given\bar y_\ell)=C_{k\ell}e^{-\kappa_{k\ell}\bar y_\ell^2}$
+-$P(z)\phi(\bar y;0,\tau_z^2+v)\,\phi(\theta;\tau_z^2\bar y/(\tau_z^2+v),\tau_z^2v/(\tau_z^2+v))$
+ $P(|N|\ge c)\le P(|N-m|\ge c-|m|)=2\Phibar((c-|m|)/\sqrt V)$
+ $P(|g(x)|<c\given\text{data})$
+ $P\{\ess_0(\gamma U_b;s)=N_{\rm target}\}=0$
+@@ -381,12 +381,12 @@
+ $\mu_g=a\tr\theta$
+ $\nu_0>0$
+ $\omega^2=e\tr D_ze$
+-$\phi(\bar y;0,\tau_z^2+v)$
++$\phi(\bar y;0,\tau_{1-z}^2+v)$
+ $\phi(\bar y;\theta,v)$
+ $\phi(\bar y;\theta,v)/\phi(\bar y;0,v)$
+ $\phi(\cdot;m,V)$
+ $\phi(\theta;0,\lambda_f^2)$
+-$\phi(\theta;0,\tau_z^2)$
++$\phi(\theta;0,\tau_{1-z}^2)$
+ $\pi(T_h)\prod_i\phi(r_i;0,\sigma^2_{g_i})\prod_{\ell\in T_h}M_\ell$
+ $\pi(z)\phi(\bar y_\ell;0,T_k+v_\ell)$
+ $\pi_\ell=n_{2\ell}/n_2$
+@@ -465,7 +465,6 @@
+ $\tau_1^2\gg v$
+ $\tau_1^2\gg\tau_0^2+v$
+ $\tau_j^2$
+-$\tau_z^2$
+ $\theta$
+ $\theta$
+ $\theta$
+@@ -796,6 +795,7 @@
+ $|m|=\rho_0|\bar y|$
+ $|u|\le\sqrt{\log C/\kappa}$
+ \[\nG_m(s)=P\{\ess_0(\gamma U_b;s)\le N_{\rm target}\}.\n\]
++\[\nP(z)\phi(\bar y;0,\tau_{1-z}^2+v)\,\n\phi\Bigl(\theta;\frac{\tau_{1-z}^2}{\tau_{1-z}^2+v}\bar y,\frac{\tau_{1-z}^2v}{\tau_{1-z}^2+v}\Bigr).\n\]
+ \[\nV_\mu^f=\sum_\ell a_\ell^2(\lambda_f^{-2}+n_{2\ell}/\sigma_2^2)^{-1}\n\le\frac{\sigma_2^2}{n_2}\sum_\ell\frac{a_\ell^2}{\pi_\ell},\qquad\n\frac{\sigma_1^2}{V_\mu^f}\ge\frac{n_2\sigma_1^2/\sigma_2^2}{\sum_\ell a_\ell^2/\pi_\ell}.\n\]
+ \[\nV_z^{-1}-V_{\mathbf 0}^{-1}=V_z^{-1}(V_{\mathbf 0}-V_z)V_{\mathbf 0}^{-1}=\delta\,V_z^{-1}X_SX_S\tr V_{\mathbf 0}^{-1},\n\qquad\text{so}\qquad\nV_z^{-1}r=V_{\mathbf 0}^{-1}r+\delta\,V_z^{-1}X_Su .\n\]
+ \[\n\Delta(r)=\sum_{\ell:\,n_{1\ell}>0}a_\ell\,I_\ell(\bar y_\ell),\qquad\n\sup_r|\Delta(r)|\le\sum_\ell a_\ell\sqrt{2v_\ell\max\{\log C_\ell,\tfrac12\}} ,\n\]
+PASS  protected_blocks (no changes)
+PASS  graphics
+PASS  references
+AUDIT structure changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.UxEd2gXSPy/structure.before	2026-09-10 10:55:09
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.UxEd2gXSPy/structure.after	2026-09-10 10:55:09
+@@ -17,6 +17,8 @@
+ \begin{equation}
+ \end{equation}
+ \begin{equation}
++\begin{aligned}
++\end{aligned}
+ \end{equation}
+ \end{enumerate}
+ \end{lemA}
+
+1 hard integrity check(s) failed.
