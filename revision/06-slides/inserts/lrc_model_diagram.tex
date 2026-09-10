@@ -1,0 +1,44 @@
+% Diagram: one illustrative discrepancy tree; not a fitted partition.
+\begin{frame}{A shared surface with local discrepancies}
+\centering
+\begin{tikzpicture}[
+  x=1cm,y=1cm,
+  split/.style={draw,rounded corners=1pt,fill=white,minimum size=7pt,inner sep=1pt},
+  spike/.style={draw=BayesGreen,rounded corners=2pt,fill=BayesLight,inner sep=5pt,font=\small},
+  slab/.style={draw=BayesGold,rounded corners=2pt,fill=BayesGold!12,inner sep=5pt,font=\small},
+  edge label/.style={font=\scriptsize,fill=white,inner sep=2pt},
+  note/.style={font=\footnotesize,align=left},
+  callout/.style={draw=BayesGreen,dashed,thick,rounded corners=3pt,fill=white,inner sep=7pt,align=left,font=\footnotesize}]
+\path[use as bounding box] (0,0) rectangle (14.5,5.65);
+\node[anchor=west,font=\small] at (0.15,5.3)
+  {\textbf{RWD controls:} $f(\bx)$ \qquad \textbf{RCT controls:} $f(\bx)+g(\bx)$};
+\node[anchor=west,note] at (0.15,4.68) {One tree in $g$ \; (illustrative splits)};
+\node[split] (root) at (3.4,4.15) {};
+\node[spike] (left) at (1.45,2.95) {$\theta_{h1}$};
+\node[split] (right) at (5.3,2.95) {};
+\node[slab] (middle) at (4.25,1.72) {$\theta_{h2}$};
+\node[spike] (last) at (6.45,1.72) {$\theta_{h3}$};
+\draw (root) -- (left) node[midway,edge label,above left] {$x_1<c_1$};
+\draw (root) -- (right) node[midway,edge label,above right] {$x_1\ge c_1$};
+\draw (right) -- (middle) node[midway,edge label,left] {$x_2<c_2$};
+\draw (right) -- (last) node[midway,edge label,right] {$x_2\ge c_2$};
+\node[callout,anchor=north west,text width=6.45cm] (sum) at (0.15,0.85)
+  {Each profile reaches one leaf per tree.\\
+   Add those contributions: $g(\bx)=\sum_{h=1}^{H_g}\theta_{h,\ell_h(\bx)}$.};
+\draw[BayesGold,dashed,thick,-{Stealth}] (sum.north) -- (middle.south);
+\node[note,anchor=north west,text width=6.05cm] at (8.05,4.7)
+  {\textbf{$f$: the external response mean}\\
+   Fitted jointly to both control sources.};
+\node[spike,anchor=north west,text width=5.8cm,align=left,font=\footnotesize] at (8.05,3.70)
+  {\textbf{Spike: $z_{h\ell}=1$}\\
+   $\theta_{h\ell}\sim\Normal(0,\tau_0^2)$\\
+   Draws the RCT mean toward $f(\bx)$.};
+\node[slab,anchor=north west,text width=5.8cm,align=left,font=\footnotesize] at (8.05,2.02)
+  {\textbf{Slab: $z_{h\ell}=0$}\\
+   $\theta_{h\ell}\sim\Normal(0,\tau_1^2)$,\quad $\tau_1^2>\tau_0^2$\\
+   Allows departures from $f(\bx)$.};
+\node[note,anchor=north west,text width=6cm,font=\scriptsize] at (8.05,0.45)
+  {$z_{h\ell}\sim\Ber(w)$. Leaf indicators vary; $w,\tau_0^2,\tau_1^2$ are shared.};
+\end{tikzpicture}
+\end{frame}
+

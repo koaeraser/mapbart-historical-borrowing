@@ -23,6 +23,7 @@ The author field still needs completion. The main text is approximately 7,500 wo
 - `03-theory/`: technical appendix source.
 - `04-application/`: application scripts and aggregate results.
 - `05-writing/`: manuscript sources, bibliography, tables, figures, and compiled PDF.
+- `06-slides/`: slide deck, diagram, bibliography, and source.
 - `review/`: numerical audit, editorial change records, and visual QA.
 
 Raw patient data, replicate caches, and compiled libraries are not included in this revision directory. Application scripts refer to the existing `mapbart-case-study-mm` data directory in the repository. See [distribution notes](review/distribution.md) for packaging details.
@@ -42,3 +43,5 @@ latexmk -pdf -recorder -outdir=build -interaction=nonstopmode -halt-on-error mai
 The checked-in summary CSVs support table regeneration without rerunning the simulations. Full simulation and application runs require the dependencies named by their scripts and can be expensive. Historical tuning and development scripts document intermediate analyses; use the full-study drivers and associated reports to interpret the final results.
 
 The manuscript passed numerical and prose-integrity checks and rendered-page inspection before packaging. See [numerical audit](review/numerical_audit.md) and [visual QA](review/visual_qa.md). Remaining scientific questions are documented in the review ledger.
+
+The [commensurate-center clarification](review/commensurate_center.md) is included in the current paper, tracked diff, and [slides](06-slides/main_lrcbart.pdf).
