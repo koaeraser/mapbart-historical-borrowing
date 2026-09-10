@@ -2,7 +2,7 @@
 
 This directory contains the September 10, 2026 manuscript candidate, its implementation, and the summary results used to produce the tables. The original repository files remain available alongside it.
 
-Start with the [paper](05-writing/main_draft.pdf) and [review ledger](review/resolution_ledger.md). The paper includes the CAHB comparison, regional effective sample sizes, and the Sc4 boundary analysis, with a revised exposition throughout. This is a working candidate for scientific review; the editing reports are not independent scientific approval.
+Start with the [paper](05-writing/main_draft.pdf), [colored tracked changes](05-writing/main_tracked.pdf) and [review ledger](review/resolution_ledger.md). The paper includes the CAHB comparison, regional effective sample sizes, and the Sc4 boundary analysis, with a revised exposition throughout. This is a working candidate for scientific review; the editing reports are not independent scientific approval.
 
 ## Review requested
 
