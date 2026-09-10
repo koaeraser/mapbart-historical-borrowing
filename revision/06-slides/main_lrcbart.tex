@@ -61,7 +61,7 @@
 }
 
 \title[LRC-BART]{Locally Robust Commensurate BART\\for Borrowing External Controls}
-\subtitle{Borrow where the sources agree, abstain where they do not, and report the map}
+\subtitle{Model local compatibility and calibrate borrowing}
 \author{Yuan Ji}
 \institute{University of Chicago\\Department of Public Health Sciences}
 \date{Joint Statistical Meetings 2026}
@@ -90,7 +90,7 @@
   \begin{enumerate}
     \item Established borrowing priors decide through one study-level parameter; whether an external patient is a fair control depends on who that patient is.
     \item LRC-BART writes the RCT control surface as a pooled BART surface plus a sparse discrepancy ensemble, with a spike-and-slab commensurate prior on each discrepancy leaf.
-    \item The prior effective sample size is defined at the estimand and has a ceiling: the information the external source carries about the trial population.
+    \item A variance-based prior ESS is defined at the standardized control mean; its ceiling depends on the RWD fit at trial profiles.
     \item Simulations with regional shifts, and a 30-patient single-arm myeloma trial with a registry control.
   \end{enumerate}
 \end{frame}
@@ -171,7 +171,7 @@
   \small
   \begin{itemize}
     \item $f(\bx)$ is the external-control response mean; $f_1(\bx)$ is the RCT-control response mean.
-    \item Conditional on $f$, the discrepancy trees $T_g$ and the scale, when every leaf reached by $\bx$ is in the spike:
+    \item \textbf{All-spike case:} fix every reached indicator $z_{h,\ell_h(\bx)}=1$, conditional on $f$, $T_g$ and the scale:
   \end{itemize}
   \[
   \boxed{f_1(\bx)\given f,T_g,\{z_{h,\ell_h(\bx)}=1\}_{h=1}^{H_g},\tau_0^2
@@ -183,7 +183,7 @@
        \sim\Normal(0,H_g\tau_0^2).\]
   \end{block}
   \footnotesize
-  $H_g$ independent leaf contributions add their variances. These are priors for the latent response mean; residual variance is separate.
+  Each $z$ selects a variance: $z=1$ gives $\tau_0^2$; $z=0$ gives $\tau_1^2$. The display fixes all $z=1$, giving $H_g\tau_0^2$. Observation variance is separate.
 \end{frame}
 
 \input{inserts/lrc_model_diagram.tex}
@@ -214,15 +214,16 @@
 \end{frame}
 
 \begin{frame}{Why a separate discrepancy ensemble}
-  \footnotesize
-  The alternative looks equally natural: one ensemble of $H=50$ trees with two means per leaf coupled by a common scale. Suppose the RWD surface is shifted by $\delta$ on a region.
+  \small
   \begin{itemize}
-    \item Shared leaves: the cheapest fit spreads $\delta/H$ across every tree under the spike at prior cost $\delta^2/(2H\tau^2)$; routing the shift through slab leaves wins only if $\delta>2H\tau^2\sqrt{2c}/\lambda$, which at $H=50$ is a shift of $17$ to $86$ on an outcome with range $10$.
-    \item Decomposition: the shift lands in one or two leaves of one $g$ tree after a single split on the boundary, and the slab wins as soon as $\tfrac{\delta^2}{2}\{(H_g\tau_0^2)^{-1}-\tau_1^{-2}\}$ exceeds $\log\tfrac{w}{1-w}+\log\tfrac{\tau_1}{\tau_0}$.
+    \item Separate ensembles permit different partition and shrinkage priors for the external mean $f$ and the discrepancy $g$.
+    \item We use $H_f=50$ trees for the outcome surface and $H_g=5$ shallow trees for the discrepancy.
+    \item At fixed leaf variances and partitions, fewer discrepancy trees reduce the total all-spike variance at a profile. The slab range rule also depends on $H_g$.
   \end{itemize}
-  \begin{alertblock}{Consequence}
-    With fifty trees the spike can hide any clinically sized shift by spreading it, and the borrowing map stays flat. With few trees and a small $\tau_0$ it cannot. $H_g$ is kept small on purpose.
-  \end{alertblock}
+  \begin{block}{Scope of the prior-cost calculation}
+    Appendix G.6 minimizes over integer numbers of slab leaves and retains contributions from the remaining spike leaves. It compares joint prior densities at constrained modes; posterior indicator probabilities also depend on the likelihood and partitions.
+  \end{block}
+  \footnotesize The simulations assess this specification. They do not establish that shared-leaf models cannot detect regional discrepancies.
 \end{frame}
 
 \begin{frame}{Every leaf marginal is exact}
@@ -236,7 +237,7 @@
   with $A,B$ the precision-weighted counts and sums of both sources in an $f$ leaf, and $\bar y_1$, $v_1=\sigma_1^2/n_1$ the RCT residual mean and its variance in a $g$ leaf.
   \begin{itemize}
     \item Grow, prune and change moves use the exact collapsed ratios, so the sampler targets the exact posterior: no surrogate likelihood.
-    \item Leaf draws are conjugate; $z$ is drawn first, then $\theta$; $\tau_0^2$ and $w$ update from the spike leaves.
+    \item Leaf draws are conjugate; $z$ is drawn first, then $\theta$; $\tau_0^2$ and $w$ update from the leaf means and states.
     \item Right-censored outcomes: log-normal AFT with data augmentation; nothing else changes.
     \item One sweep costs a standard BART on $n_1+n_2$ observations plus a five-tree ensemble on $n_1$.
   \end{itemize}
@@ -245,36 +246,32 @@
 \section{Borrowing calibration}
 \begin{frame}{Prior effective sample size at the estimand}
   \footnotesize
-  Estimand: the RCT-standardized control mean $\mu=N^{-1}\sum_{i\le N}f_1(\bx_i)$. Conditionally on the RWD, $f_1=f+g$ with $f\mid\text{RWD}$ the posterior of a BART fitted to the RWD alone and $g$ from its prior. With the expected local-information-ratio ESS \citep{neuenschwander2020},
+  For $\mu=N^{-1}\sum_i f_1(\bx_i)$, $V_\mu^f$ is the RWD-only posterior variance. The working calibration is:
   \[
-    \mathrm{ESS}_0(s_0^2)=\sigma_1^2\,\E_{\tau_0^2}\Bigl[\frac{1}{V_\mu^f+c_gH_g\tau_0^2}\Bigr],
-    \qquad V_\mu^f=\mathrm{Var}\bigl(N^{-1}\textstyle\sum_i f(\bx_i)\given\text{RWD}\bigr).
+    \mathrm{ESS}_0(s_0^2)=\hat\sigma_1^2\,\E_{\tau_0^2}\Bigl[\frac{1}{V_\mu^f+c_gH_g\tau_0^2}\Bigr].
   \]
-  \begin{columns}[T,onlytextwidth]
-    \column{0.48\textwidth}
-      \begin{block}{The ceiling}
-        As $s_0^2\to0$, $\mathrm{ESS}_0\to\sigma_1^2/V_\mu^f$: the information the RWD posterior carries about $\mu$. With matched covariate distributions it equals $n_2\sigma_1^2/\sigma_2^2$; covariate shift lowers it (Theorem 3(d)).
-      \end{block}
-    \column{0.48\textwidth}
-      \begin{block}{The Pr-rule}
-        Stage 1 fits BART to the RWD once; Stage 2 selects the most informative spike scale whose $\mathrm{ESS}_0$ respects $\target$ in 95\% of Stage-1 blocks. A target may be absolute or a fraction of the ceiling.
-      \end{block}
-  \end{columns}
-  \vspace{0.3em}
-  \centering\footnotesize A pointwise version $\mathrm{ESS}(x)=\sigma_1^2/\{V_f(x)+H_g\tau_0^2\}$ gives the local ESS map.
+  \begin{itemize}
+    \item $c_g$ averages squared leaf proportions before inversion; the scale law here is untruncated.
+    \item A normal prior gives the ELIR variance ratio \citep{neuenschwander2020}; this BART/scale-mixture summary is not exact marginal ELIR.
+    \item Ceiling: $\hat\sigma_1^2/V_\mu^f$, including BART regularization. Equality to scaled $n_2$ requires one fixed tree, matched proportions and a flat prior.
+    \item The Pr-rule requires the target in 95\% of blocks. A target at or above the whole-chain ceiling instead triggers a smallest-scale override.
+  \end{itemize}
+  \begin{block}{Realized information diagnostic}
+    With target leaf proportions $a_{h\ell}$, use $V_g=\sum_{h,\ell}a_{h\ell}^2\{z_{h\ell}\tau_0^2+(1-z_{h\ell})\tau_1^2\}$, then average $\sigma_1^2/(V_\mu^f+V_g)$. Standardization can span several leaves per tree.
+  \end{block}
 \end{frame}
 
 \begin{frame}{Three results}
   \footnotesize
-  Leaf-level results condition on $f$, the $g$ partitions and $(\sigma_1^2,\tau_0^2,\tau_1^2,w)$; $\bar y$ is the RCT residual mean of a leaf with $n$ controls, $v=\sigma_1^2/n$.
+  Leaf results condition on $f$, the other discrepancy trees, partitions, scales and $0<w<1$. Write $v=\sigma_1^2/n$ for a leaf's RCT residual-mean variance.
   \begin{block}{Theorem 1: bounded local influence}
-    The RWD-induced shift of a leaf estimate relative to the slab estimate satisfies $\sup_{\bar y}|I(\bar y)|\le\sqrt{2v\max\{\log C,\tfrac12\}}$ and vanishes at a Gaussian rate as $|\bar y|\to\infty$. Under C-BART and BART-CP the shift is linear and unbounded.
+    Relative to the slab estimate, $\sup_{\bar y}|I(\bar y)|\le\sqrt{2v\max\{\log C,\tfrac12\}}$, and the shift vanishes at a Gaussian rate under growing conflict. The C-BART and BART-CP leaf shifts are linear and unbounded.
   \end{block}
   \begin{block}{Theorem 2: detection and the map}
-    The spike probability is one half at $d_{1/2}$, a few multiples of $(\tau_0^2+\sigma_1^2/n)^{1/2}$; the map $\mathcal B_c(x)=P(|g(x)|<c\given\text{data})\to\mathbb{I}\{|d|<c\}$ as $n\to\infty$, whereas the all-spike indicator does not settle.
+    The leaf spike probability decreases with $|\bar y|$. With fixed partitions, $f$ fixed, a representable discrepancy and growing local counts, $\mathcal B_c(x)\to\mathbb I\{|d|<c\}$ for $|d|\ne c$. A fixed positive spike scale need not identify compatibility through its indicator.
   \end{block}
-  \begin{block}{Theorem 3: monotone, well-posed calibration}
-    $\mathrm{ESS}_0$ is continuous, convex and strictly decreasing in $s_0^2$ with limits $\sigma_1^2/V_\mu^f$ and $0$; the Pr-rule has a unique solution, positive exactly when the target is below the ceiling, and the Monte Carlo rule recovers it.
+  \begin{block}{Theorem 3: the working calibration}
+    Under the untruncated law, $\mathrm{ESS}_0$ is continuous, convex and strictly decreasing from its ceiling to zero. Truncation gives a positive lower limit. Grid-selection consistency requires the stated moment and separation conditions; ceiling overrides are separate.
   \end{block}
 \end{frame}
 
@@ -287,11 +284,11 @@
   the posterior probability that the local discrepancy is below a threshold $c$ fixed in advance on the outcome scale, together with the posterior mean and interval of $g(x)$ and the pointwise ESS.
   \begin{itemize}
     \item $c=0.5$ in the simulations, one third of the RCT residual SD for Gaussian outcomes.
-    \item The all-spike probability $B(x)$ is kept as a diagnostic: its prior scale is $w^{H_g}$ and it does not settle as the RCT grows.
+    \item The all-spike probability $B(x)$ is kept as a diagnostic: its prior scale is $w^{H_g}$ and at a fixed positive spike scale, it need not identify compatibility as RCT counts grow.
     \item In single-arm mode nothing informs $g$, the map is flat by construction, and the covariate-resolved display is the local ESS map.
   \end{itemize}
   \begin{alertblock}{What is proved and what is not}
-    The map results are conditional on the $g$ partitions and treat $f$ as fixed; there is no statement about the posterior over partitions. Separation of shifted from compatible regions under the full posterior is shown empirically.
+    The map results require fixed $g$ partitions, a representable discrepancy, growing local counts and $f$ fixed; there is no statement about the posterior over partitions. Separation of shifted from compatible regions under the full posterior is shown empirically.
   \end{alertblock}
 \end{frame}
 
@@ -315,11 +312,11 @@
         \item \textbf{Sc1} no confounding: source at random
         \item \textbf{Sc2} measured: source depends on $(X_5,X_6)$
         \item \textbf{Sc3} unmeasured: source and outcome depend on $\bm U$, observed as proxies at $\rho\in\{-0.5,0,0.5\}$
-        \item \textbf{Sc4} regional shift (new): RWD surface raised by $\delta_2\in\{0.5,1,2\}$ outside $\mathcal R=\{X_5>2\}$, half the population; secondary version on the null covariate $X_7$
-        \item \textbf{Sc5} global shift (new): raised by $\delta_2$ everywhere; the right answer is to abstain
+        \item \textbf{Sc4} regional shift: RWD surface raised by $\delta_2\in\{0.5,1,2\}$ outside $\mathcal R=\{X_5>2\}$, half the population; secondary version on the null covariate $X_7$
+        \item \textbf{Sc5} global shift: raised by $\delta_2$ everywhere; the right answer is to abstain
       \end{itemize}
       \vspace{0.2em}
-      {\scriptsize Shifts chosen around the leaf resolution $d_{1/2}\approx0.5$ of Theorem 2. Comparators: LM/AFT and BART with no pooling, complete pooling or the source indicator; PSCL; MAP; hierarchical regressions; C-BART; LRC-BART ($w=0$).}
+      {\scriptsize Illustrative leaf threshold: $d_{1/2}\approx0.5$. Comparators: regression/BART pooling variants, PSCL, MAP, hierarchies, C-BART and LRC-BART ($w=0$). CAHB \citep{Jin2023CAHB}: transferred analysis, first $200$ paired Gaussian replicates; variants in the supplement.}
   \end{columns}
 \end{frame}
 
@@ -344,7 +341,7 @@
   \end{tabular}}
   \vspace{0.3em}
   \begin{block}{Reading the table}
-    Agreement (Sc1): LRC-BART borrows, RMSE $0.172$ against $0.205$ for BART-PP; the pooling models win here. Global disagreement (Sc3, Sc5): it abstains, bias about $0.04$ and $0.00$, where C-BART and BART-CP fail. Regional shift: unbiased at $\delta_2=2$; at $\delta_2=1$ it borrows across the boundary, bias $-0.04$, coverage $0.89$.
+    Agreement (Sc1): LRC-BART borrows, RMSE $0.172$ against $0.205$ for BART-PP; the pooling models win here. Global disagreement (Sc3, Sc5): it abstains, bias about $0.04$ and $0.00$, where C-BART and BART-CP fail. Regional shift: near-zero empirical bias at $\delta_2=2$; at $\delta_2=1$ it borrows across the boundary, bias $-0.04$, coverage $0.89$.
   \end{block}
 \end{frame}
 
@@ -358,16 +355,17 @@
 \end{frame}
 
 \begin{frame}{What the Gaussian study shows}
-  \begin{block}{When the sources agree}
-    About $16\%$ less RMSE than the free-offset model, and more on the control surface; realized ESS $53$ against a prior ESS of $82$ and a ceiling of $127$.
+  \footnotesize
+  \begin{block}{Agreement and global conflict}
+    Sc1: RMSE $0.172$ versus $0.205$ for BART-PP; realized ESS $53$, prior ESS $82$, ceiling $127$. Under global conflict, realized ESS falls to $1.6$ (Sc3) and $0.2$ (Sc5). Sc3 bias is $0.012$ above BART-PP (paired SE $0.001$); the leaf theorem does not isolate its cause.
   \end{block}
-  \begin{block}{When they disagree everywhere}
-    Abstention: realized ESS $1.6$ (Sc3) and $0.2$ (Sc5), bias about $0.04$ and $0.00$; the $0.04$ is $0.012$ above BART-PP with paired SE $0.001$, the price of a spike that is a Gaussian component and not a point mass.
-  \end{block}
-  \begin{alertblock}{When they disagree on a region}
-    Found at $1.3$ residual SDs with a one-unit boundary transition and a shortfall of a tenth of the shift on each side, a sample-size limit that tuning did not remove. At one residual SD, near $d_{1/2}$, the method over-borrows: bias $-0.04$, coverage $0.89$, RMSE $0.223$ against $0.207$; the control surface in $\mathcal R$ is not better than BART-PP's ($0.824$ against $0.785$).
+  \begin{alertblock}{Regional conflict remains difficult}
+    At shift $2$ ($1.3$ residual SDs), compatible-region surface RMSE over all RCT profiles is $0.824$ versus $0.785$. On control profiles away from the boundary, it is $0.747$ versus $0.723$ (difference $0.024$, SE $0.005$, $R=200$). At shift $1$ (two thirds of a residual SD), bias is $-0.04$, coverage $0.89$, and RMSE $0.223$ versus $0.207$.
   \end{alertblock}
-  \centering\footnotesize In Sc2 the ceiling falls from $127$ to $23$ under covariate shift, every absolute target is capped, and only the fractional ladder still moves.
+  \begin{block}{Compatibility and realized regional ESS are distinct}
+    At shift $2$, realized regional ESS is $9.5$ in the compatible region and $0.44$ outside ($R=200$). Each uses its own standardized mean; they are not additive. The compatibility map reports a posterior probability.
+  \end{block}
+  \footnotesize The CAHB comparison assesses our transfer of kernel-local estimation; it does not establish a general method ranking. Sc2's ceiling falls from $127$ to $23$, so absolute targets are capped.
 \end{frame}
 
 \begin{frame}{Survival outcomes}
@@ -390,7 +388,7 @@
   \end{tabular}
   \vspace{0.3em}
   \begin{block}{Two readings}
-    With $75$ controls and censoring the median ratio has a wide, skewed posterior whose mean is biased upward for every method; borrowing makes it usable (Sc1: RMSE $0.312$ against $0.345$, power $0.34$ against $0.25$ for BART-PP). Under unmeasured confounding LRC-BART abstains (realized ESS $2.3$) but its wider posterior, through the convex ratio, costs $0.11$ of median-ratio bias against BART-PP; on the RMST ratio the biases are $0.03$ and $-0.005$.
+    With $75$ controls and censoring the median ratio has a wide, skewed posterior whose posterior mean has upward bias in Sc1; borrowing reduces RMSE (Sc1: RMSE $0.312$ against $0.345$, power $0.34$ against $0.25$ for BART-PP). Under unmeasured confounding LRC-BART abstains (realized ESS $2.3$) but its wider posterior, together with the nonlinear ratio transformation, accompanies $0.11$ more median-ratio bias than BART-PP; on the RMST ratio the biases are $0.03$ and $-0.005$.
   \end{block}
 \end{frame}
 
@@ -404,14 +402,14 @@
       \end{block}
     \column{0.49\textwidth}
       \begin{alertblock}{Measured confounding}
-        Every method is biased: Gaussian ATE bias $1.68$ (LM-CP), $0.41$ (BART-CP), $0.42$ (LRC-BART); nothing in the data can reveal a discrepancy where the RWD does not cover the trial profiles.
+        Every method is biased: Gaussian ATE bias $1.68$ (LM-CP), $0.41$ (BART-CP), $0.42$ (LRC-BART); no internal control identifies a discrepancy, and RWD overlap is limited.
       \end{alertblock}
   \end{columns}
   \vspace{0.3em}
   \begin{itemize}
-    \item The single-arm ceiling is $27$ to $34$ under Sc2, so an absolute target of $100$ is capped and LRC-BART reduces to pooling; the fractional target still widens the interval (coverage $0.82$ to $0.99$).
-    \item With $w<1$ the slab only adds prior noise, variance $(1-w)H_g\tau_1^2$: posterior SD $1.4$ on the ATE and $10$ to $34$ on the median ratio with the point estimate unchanged. Hence $w=1$ in single-arm mode.
-    \item The hierarchical regressions with the stated hyperprior and no internal control are unusable (SD $8$ on the ATE).
+    \item The single-arm ceiling is $27$ to $34$ under Sc2, so an absolute target of $100$ is capped and LRC-BART approximates pooling with $w=1$; the fractional target still widens the interval (coverage $0.82$ to $0.99$).
+    \item With $w<1$, slab variance $(1-w)H_g\tau_1^2$ adds uncertainty: SD $1.4$ for the ATE and $10$ to $34$ for the median ratio. Zero-mean $g$ preserves linear log-time means, but survival-ratio means also change. Primary analysis: $w=1$.
+    \item Hierarchical regressions: ATE SD $8$ under the stated hyperprior.
   \end{itemize}
 \end{frame}
 
@@ -431,13 +429,13 @@
         \begin{itemize}
           \item $n=253$ after cohort restrictions
           \item Standard induction regimens
-          \item Six harmonized baseline covariates
+          \item Five baseline covariates plus ASCT after induction
         \end{itemize}
       \end{block}
   \end{columns}
   \vspace{0.3em}
-  \begin{alertblock}{A coding problem the calibration exposed}
-    The non-Hispanic label differed between sources, so the earlier dummy coding predicted the 29 non-Hispanic trial patients from the 13-patient Hispanic registry stratum. The ESS ceiling at the trial profiles is $12.6$ (PFS) and $14.6$ (OS) under that coding and $63.7$ and $36.7$ under the harmonized one.
+  \begin{alertblock}{Coding and interpretation}
+    Incompatible non-Hispanic dummy columns change extrapolation. Harmonization raises the working ESS ceilings from $12.6$/$14.6$ to $63.7$/$36.7$ (PFS/OS). ASCT is recorded after induction, so this adjustment supports a descriptive comparison, not a total causal treatment effect.
   \end{alertblock}
   \centering\footnotesize Estimand: standardized 5-year RMST ratio (neither trial median is reached). Kaplan--Meier: $1.015$ for PFS, $0.90$ for OS.
 \end{frame}
@@ -463,47 +461,46 @@
     \bottomrule
   \end{tabular}
   \vspace{0.3em}
-  \begin{block}{Two readings}
-    No nonparametric analysis supports a marginal EloKRd benefit ($P(\text{ratio}>1)$ of $0.37$ and $0.08$); the interval widens as the target falls, on a scale of tenths. The long upper tails of the earlier analysis were a property of its prior: with the discrepancy carried by a five-tree ensemble of pointwise variance $H_g\tau_0^2\approx0.07$, the PFS ratio at target $30$ has a $99.9$th percentile of $1.6$ over $8{,}000$ draws.
+  \begin{block}{Descriptive comparison conditional on recorded profiles}
+    At target $30$, $P(\text{ratio}>1)$ is $0.37$ (PFS) and $0.08$ (OS); both nonparametric intervals include one. Lower targets widen intervals. The fitted PFS distribution has a $99.9$th percentile of $1.6$ over $8{,}000$ draws, but the unavailable earlier sampler prevents a controlled attribution of the tail difference.
   \end{block}
 \end{frame}
 
 \begin{frame}{The local ESS map at the 30 trial profiles}
   \centering
-  \includegraphics[height=0.58\textheight]{inserts/lrc_fig_ess_map.pdf}
+  \includegraphics[height=0.56\textheight]{inserts/lrc_fig_ess_map.pdf}
   \vspace{-0.2em}
   \begin{block}{Reading the map}
-    $\mathrm{ESS}(x)=\sigma_1^2/\{V_f(x)+H_g\tau_0^2\}$ ranges from $5$ to $17$ for PFS and $6$ to $15$ for OS: highest for White patients with ASCT and standard-risk cytogenetics, lowest for the one Hispanic patient, the Other/Unknown-race patients and the high-risk profiles without ASCT. A target of $30$ is spread thinly over the enrolled profiles.
+    $\mathrm{ESS}(x)=\hat\sigma_1^2/\{V_f(x)+H_g\bar\tau_0^2\}$ ranges from $5$ to $17$ for PFS and $6$ to $15$ for OS: highest for White/ASCT/standard-risk profiles; lowest for the one Hispanic patient, Other/Unknown race and high-risk profiles without ASCT. $\bar\tau_0^2$ is the fitted mean scale. Target $30$ concerns the standardized log-time mean; local values are not additive.
   \end{block}
 \end{frame}
 
 \section{Takeaways}
 \begin{frame}{Summary}
   \begin{enumerate}
-    \item \textbf{Where borrowing is decided:} in the leaves of a discrepancy ensemble, so the tree prior chooses region by region and the choice is reported as a map.
-    \item \textbf{Exactness:} every leaf marginal is closed-form; the sampler targets the exact posterior.
-    \item \textbf{Calibration:} the prior ESS is defined at the estimand, has a ceiling equal to the information the external source carries about the trial population, and a target can be a fraction of that ceiling.
-    \item \textbf{Guarantees:} bounded local influence, leaf resolution and map consistency, monotone well-posed calibration.
-    \item \textbf{Evidence:} $16\%$ RMSE gain under agreement, abstention under global conflict, detection of a regional shift of $1.3$ SDs with a one-unit boundary transition, over-borrowing at a shift near the resolution.
+    \item The RCT control mean is centered on the external mean through a spike-and-slab discrepancy ensemble.
+    \item Closed-form leaf marginals support posterior-invariant tree updates; this does not establish finite-chain mixing.
+    \item Variance-based ESS calibration concerns the standardized control mean. Its ceiling and approximation convention are explicit.
+    \item Conditional leaf influence and map results require the stated fixed-surface and partition assumptions.
+    \item Gaussian Sc1 RMSE is about $16\%$ lower than BART-PP's. Regional conflict produces informative compatibility summaries, but also surface losses and excessive borrowing at moderate shifts.
   \end{enumerate}
 \end{frame}
 
 \begin{frame}{Limitations and next steps}
   \begin{itemize}
-    \item Map results are conditional on the $g$ partitions and on $f$ fixed; nothing is proved about the posterior over partitions, which is where the boundary leak lives.
-    \item A leaf-specific spike scale would let compatible regions differ, at the cost of conjugacy.
-    \item Several external sources: one discrepancy ensemble per source with a common $w$; the ceiling becomes a sum.
-    \item Binary and count outcomes; nonparametric survival BART in place of the AFT model.
-    \item Prospective calibration to Type I error rate and power, with the map as a pre-specified diagnostic.
+    \item Full-posterior map consistency over learned partitions is unproved; the Sc4 surface loss persists away from the boundary.
+    \item Calibration uses a working precision summary. Exact marginal ELIR would require a different calculation and new calibration analyses.
+    \item Multiple external sources require joint calibration. Additive ceilings have not been established.
+    \item A single-arm study cannot learn the control discrepancy. The application remains a descriptive comparison with post-induction ASCT adjustment.
+    \item Confirmatory use requires operating-characteristic evaluation, including Type I error and power, and a pre-specified role for the map.
   \end{itemize}
-  \vspace{0.5em}
-  \begin{block}{Takeaway}
-    LRC-BART borrows where the sources agree, abstains where they do not, and reports for each patient profile how much external information it used and how much was available.
+  \begin{block}{Reported summaries}
+    The compatibility map, prior pointwise ESS and realized regional ESS answer different questions. None establishes an observed count of external patients used at each profile.
   \end{block}
 \end{frame}
 
 \begin{frame}[allowframebreaks]{References}
-  \scriptsize
+  \fontsize{6.5pt}{7.4pt}\selectfont
   \bibliographystyle{unsrtnat}
   \bibliography{ref_lrcbart}
 \end{frame}

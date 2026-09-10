@@ -1,0 +1,241 @@
+AUDIT numbers changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.QTy0baomwI/numbers.before	2026-09-10 10:24:01
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.QTy0baomwI/numbers.after	2026-09-10 10:24:01
+@@ -1,5 +1,5 @@
+- 135 0
+-   4 0,1
++ 134 0
++   5 0,1
+    5 0.5
+    2 0.95
+    1 03
+@@ -9,7 +9,7 @@
+    1 1,1
+    1 1,2
+    5 12
+- 172 2
++ 162 2
+    1 2.1
+    2 2.2
+    1 2.3
+@@ -30,7 +30,7 @@
+    3 2025
+    2 2026
+    8 3
+-   3 4
++   2 4
+    2 5
+-   3 50
++   1 50
+    2 6
+AUDIT number_words changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.QTy0baomwI/number_words.before	2026-09-10 10:24:01
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.QTy0baomwI/number_words.after	2026-09-10 10:24:01
+@@ -1,8 +1,8 @@
+-   3 first
++   2 first
+    1 five
+-  20 one
++  13 one
+    1 second
+    1 third
+-   4 three
+-   8 two
+-   5 zero
++   3 three
++   3 two
++   8 zero
+PASS  citations
+PASS  labels
+PASS  sections
+FAIL  equations
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.QTy0baomwI/equations.before	2026-09-10 10:24:01
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.QTy0baomwI/equations.after	2026-09-10 10:24:01
+@@ -24,7 +24,7 @@
+ \end{equation}
+ %%__EQUATION_BOUNDARY__%%
+ \begin{equation}
+-\mathrm{ESS}_0(s_0^2)=\sigma_1^2\,\E_{\tau_0^2\sim\text{scaled-Inv-}\chi^2(\nu_0,s_0^2)}\Bigl[\frac1{V_\mu^f+c_gH_g\tau_0^2}\Bigr],
++\mathrm{ESS}_0(s_0^2)=\sigma_1^2\,\E_{\tau_0^2\sim\text{scaled-Inv-}\chi^2(\nu_0,s_0^2)}\Bigl[\frac1{V_\mu^f+c_gH_g\tau_0^2}\Bigr].
+ \label{eq:ess0}
+ \end{equation}
+ %%__EQUATION_BOUNDARY__%%
+AUDIT inline_math changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.QTy0baomwI/inline_math.before	2026-09-10 10:24:01
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.QTy0baomwI/inline_math.after	2026-09-10 10:24:01
+@@ -8,50 +8,45 @@
+ $(\alpha_g,\beta_g)=(0.5,3)$
+ $(\log C_i,\infty)$
+ $(\sigma_1^2,\tau_0^2,\tau_1^2,w)$
+-$(\tau_0^2+\sigma_1^2/n)^{1/2}$
+ $(\tau_0^2,\tau_1^2,w)$
+ $-(\rho_1-\rho_0)\bar y$
+ $-\rho_1\bar y$
+ $0$
+ $0.5$
+-$1/\sigma_1^2$
++$0/0$
++$0<w<1$
++$0<w<1$
+ $A=n_1/\sigma_1^2+n_2/\sigma_2^2$
+ $B$
+ $B$
++$B$
+ $B(x)$
+ $B=S_1/\sigma_1^2+S_2/\sigma_2^2$
+ $C_i$
+ $D_i=\mathbf 1\{g_i=1\}$
+-$G$
+ $G(s)=P\{s^\dagger(V)\le s\}$
+-$G\ne q$
+ $H$
+ $H$
+-$H$
+-$H=50$
+ $H_f=50$
+-$H_f=50$
+ $H_g$
+ $H_g$
+ $H_g$
+ $H_g$
+-$H_g$
+ $H_g=5$
+ $H_g\{w\tau_0^2+(1-w)\tau_1^2\}$
+ $I(\bar y)=\E[\theta\given\bar y]-\hat\theta_1=-(1-p)(\rho_1-\rho_0)\bar y$
+ $I(\bar y)\to0$
+ $K_0$
++$L_+$
+ $L_g$
+ $M_LM_R/M_P$
+-$M_f$
+-$M_g$
+ $M_g=1$
+ $M_g=1$
+ $N$
+ $N$
++$N$
+ $N-n_1$
+-$N_{\rm target}$
+-$N_{\rm target}$
++$N_{\rm target}>0$
+ $P(N_{\rm target}<\sigma_1^2/V)>1-q$
+ $P(z=1\given\bar y)=\{1+\exp(a+\kappa\bar y^2)\}^{-1}$
+ $S_0$
+@@ -64,15 +59,15 @@
+ $V>0$
+ $V^{(b)}$
+ $V_\mu^f$
+-$V_\mu^f$
+ $V_\mu^f=V$
+-$V_\mu^f=\Var\bigl(N^{-1}\sum_{i\le N}f(x_i)\given\text{RWD}\bigr)$
+-$V_\mu^f=\sigma_2^2/n_2$
++$V_\mu^f=\Var(N^{-1}\sum_i f(x_i)\given\text{RWD})$
+ $V_f(x)$
++$V_g$
+ $[s^\dagger(V),\infty)$
+-$\E_{\rm post}[\sigma_1^2/\{V_\mu^f+c_g\sum_h\tau^2_{z_h}\}]$
++$\E_{\rm post}[\sigma_1^2/\{V_\mu^f+V_g(\mathcal T,z,\tau_0^2)\}]$
+ $\Normal(0,\lambda^2)$
+ $\Normal(0,\lambda_f^2)$
++$\Normal(\mu,\sigma_1^2)$
+ $\Normal(f(x_i)+D_ig(x_i),\sigma_{g_i}^2)$
+ $\Psi_j(c)=P\{|\Normal(\rho_j\bar y,\rho_jv)|<c\}$
+ $\alpha(1+d)^{-\beta}$
+@@ -81,6 +76,8 @@
+ $\bar y_1$
+ $\bar\Phi$
+ $\bar\Phi\{(d_{1/2}-d)/\sqrt v\}+\bar\Phi\{(d_{1/2}+d)/\sqrt v\}$
++$\bar\tau_0^2$
++$\ell$
+ $\ell=1,\dots,L_h$
+ $\epsilon_i\iid\Normal(0,\sigma_1^2)$
+ $\frac{w\tau_1}{(1-w)\tau_0}\exp\{-\frac{d^2}2(\tau_0^{-2}-\tau_1^{-2})\}$
+@@ -89,39 +86,33 @@
+ $\int_0^{t^\ast}\bar S_T(t)\,\dd t/\int_0^{t^\ast}\bar S_1(t)\,\dd t$
+ $\lambda=(\max y-\min y)/(2k\sqrt H)$
+ $\lambda_f$
+-$\lim_{s\downarrow0}\mathrm{ESS}_0(s)\ge n_2\sigma_1^2/\sigma_2^2\big/\sum_\ell a_\ell^2/\pi_\ell$
+-$\log y_i=f(x_i)+D_ig(x_i)+\varepsilon_i$
+ $\log\frac w{1-w}+\frac12\log\frac{\tau_1^2+v}{\tau_0^2+v}>0$
+ $\logit p=a+\kappa\bar y^2$
+ $\mathcal B_c$
+ $\mathcal B_c(x)=p\,\Psi_1(c)+(1-p)\,\Psi_0(c)$
+ $\mathcal B_c(x)\to\mathbf 1\{|d|<c\}$
+ $\mathcal S$
++$\mathcal T$
+ $\mathrm{ATE}=N^{-1}\sum_{i\le N}\{f_T(x_i)-f_1(x_i)\}$
+ $\mathrm{ESS}(x)$
+-$\mathrm{ESS}(x)=\sigma_1^2/\{V_f(x)+H_g\tau_0^2\}$
+-$\mathrm{ESS}_0$
+-$\mathrm{ESS}_0$
++$\mathrm{ESS}(x)=\hat\sigma_1^2/\{V_f(x)+H_g\bar\tau_0^2\}$
+ $\mathrm{ESS}_0(V;s)$
+-$\mathrm{ESS}_0\to\sigma_1^2/V_\mu^f$
+-$\mu$
+-$\mu$
+-$\mu$
+-$\mu$
+ $\mu=N^{-1}\sum_{i\le N}f_1(x_i)$
++$\mu_g$
+ $\nu_0=3$
+-$\pi_\ell$
++$\pi_\ell>0$
+ $\prod_i\phi(r_i;0,\sigma^2_{g_i})$
+ $\rho_1$
+ $\rho_j=\tau_j^2/(\tau_j^2+v)$
+ $\sigma_1^2$
+-$\sigma_1^2/(H_f\lambda_f^2)$
+ $\sigma_1^2/(V+c_gH_g\tau_1^2)>0$
+ $\sigma_1^2/V$
+ $\sigma_1^2/V$
++$\sigma_1^2/V_\mu^f$
++$\sigma_1^2=\sigma_2^2$
+ $\sigma_1^2>0$
+-$\sigma_2^2$
+ $\sum_\ell a_\ell^2/\pi_\ell$
++$\sum_{h,\ell}a_{h\ell}^2$
+ $\sum_{h=1}^H m(x;T_h,\theta_h)$
+ $\sum_{h=1}^{H_g}\{z_{h,\ell_h(x)}\tau_0^2+(1-z_{h,\ell_h(x)})\tau_1^2\}$
+ $\tau$
+@@ -140,6 +131,7 @@
+ $\tau_0^2\to0$
+ $\tau_1^2$
+ $\tau_1^2$
++$\tau_1^2$
+ $\tau_1^2=(\max y-\min y)^2/(4k^2H_g)$
+ $\tau_z^2$
+ $\theta\given z\sim\Normal\bigl(\tau_z^2\bar y_1/(\tau_z^2+v_1),\ \tau_z^2v_1/(\tau_z^2+v_1)\bigr)$
+@@ -147,7 +139,6 @@
+ $\theta\given\theta_0\sim\Normal(\theta_0,1/\tau)$
+ $\theta\sim\Normal\bigl(\lambda_f^2B/(1+\lambda_f^2A),\ \lambda_f^2/(1+\lambda_f^2A)\bigr)$
+ $\theta_{h\ell}$
+-$\widehat G(s)\to G(s)$
+ $\{s:G(s)\ge q\}=[s_\star,\infty)$
+ $\{s:\mathrm{ESS}_0(V;s)\le N_{\rm target}\}$
+ $a$
+@@ -155,11 +146,13 @@
+ $a_0$
+ $a_0$
+ $a_\ell$
++$a_{h\ell}$
+ $c=0.5$
+ $c>0$
+-$c_g=\E\bigl[N^{-2}\sum_{i,j}\mathbf 1\{x_i,x_j\text{ share a leaf}\}\bigr]$
+PASS  protected_blocks (no changes)
+PASS  graphics
+FAIL  references
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.QTy0baomwI/references.before	2026-09-10 10:24:01
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.QTy0baomwI/references.after	2026-09-10 10:24:01
+@@ -1,6 +1,7 @@
+-   2 \eqref{eq:ess0}
++   4 \eqref{eq:ess0}
+    1 \eqref{eq:leafprior}
+-   2 \eqref{eq:model}
++   1 \eqref{eq:model}
++   2 \eqref{eq:prrule}
+    1 \ref{sec:application}
+    1 \ref{sec:discussion}
+    2 \ref{sec:ess}
+PASS  structure (no changes)
+
+2 hard integrity check(s) failed.

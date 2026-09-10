@@ -1,0 +1,15 @@
+# Implementation and empirical impact
+
+This round changes scientific exposition and its conditional mathematics, not the fitted model, calibration algorithm, simulation settings, application covariates, code, numerical tables, or result files. SHA-256 verification found no changes in 304,665 protected files under 01-code, 02-validation, and 04-application. Candidate tables and figures match the restart baseline byte-for-byte. Distribution-only portable path edits are retained.
+
+The current calibration is explicitly a variance-based working precision summary, with the mean partition coefficient substituted before inversion and the reciprocal averaged over an untruncated scale law. Fitting retains the truncated spike-scale law. The ceiling-cap branch and finite-grid fallback remain as implemented. Correcting their description does not require rerunning existing fits.
+
+The reported realized and regional ESS already use the exact squared-leaf-proportion covariance calculated by `forest_gvar_cpp`; their manuscript definitions now match the producing path. This covariance is a conditional prior covariance evaluated at posterior states. It is not the fitted posterior variance or a measured gain from individual historical patients. The application map uses a fitted mean scale before inversion. The separate supplementary pointwise prior summary integrates reciprocal variance over the untruncated scale law.
+
+The exported, unused `lrc_ess_prior` helper still implements the tree-binomial approximation; it is not a general independent-leaf calculation for a standardized mean spanning several leaves. No result-generating script calls it. Its name/documentation and the old realized-ESS roxygen summary are implementation-documentation debt preserved under the user's code-preservation constraint. This record prevents treating the corrected manuscript as a claim that those helpers were repaired.
+
+The deterministic R checks compile the actual local C++ function in an isolated cache and verify weighted forest variance, independent-leaf averaging, mixture curvature versus variance, Jensen ordering, the constrained prior-cost optimizer, pooled Gaussian likelihood loss, and a finite-prior ceiling counterexample. They do not validate the full sampler, MCMC convergence, or operating characteristics.
+
+A change to exact marginal ELIR, exact partition-integrated calibration, the truncated calibration law, the cap/fallback algorithm, or numerical Monte Carlo settings would require recalibration and rerunning affected fits and summaries. A change to post-induction ASCT adjustment, residual-variance equality, or a causal target-trial estimand would require a specified application reanalysis. None was performed or silently substituted.
+
+The former MAP-AFT-BART sampler is unavailable in this source pack. Observed tail differences remain descriptive; the present audit cannot isolate the effects of prior, coding, or sampler changes. Author names/order/affiliations remain pending. Independent clinical qualification and external scientific review remain outside this manuscript revision.

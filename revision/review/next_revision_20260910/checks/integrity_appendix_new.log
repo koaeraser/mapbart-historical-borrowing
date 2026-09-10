@@ -1,0 +1,370 @@
+AUDIT numbers changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.KCQEbvDcuR/numbers.before	2026-09-10 10:24:01
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.KCQEbvDcuR/numbers.after	2026-09-10 10:24:01
+@@ -1,5 +1,5 @@
+- 401 0
+-   9 0,1
++ 345 0
++  10 0,1
+    2 0.001
+    1 0.0012
+    1 0.011
+@@ -14,41 +14,32 @@
+    2 0.5
+    2 0.51
+    2 0.54
+-   1 0.7
+    1 0.8
+    2 0.94
+-   1 0.95
+    1 0.98
+    1 0.993
++   2 000
+    1 03
+- 522 1
++ 464 1
+    1 1.00
+    1 1.15
+-   1 1.2
+    2 1.25
+-   3 1.5
++   2 1.5
+    1 1.80
+-   5 10
++   3 10
+    1 10.5
+    1 100
+   32 12
+    1 125
+- 558 2
+-   2 2.1
+-   9 2.2
+-   2 2.4
+-   2 20
++ 485 2
++   8 2.2
++   1 20
+    1 2010
+    1 2011
+    3 2020
+    1 21.2
+-  15 3
++   5 3
+    1 3.06
+-   1 300
+-   1 38
+-   4 4
+-   3 5
+-   3 50
+-   1 6
+-   1 75,100
+-   2 8
++   3 4
++   2 5
++   2 50
+AUDIT number_words changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.KCQEbvDcuR/number_words.before	2026-09-10 10:24:01
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.KCQEbvDcuR/number_words.after	2026-09-10 10:24:01
+@@ -1,8 +1,8 @@
+    6 first
+-   3 four
+-  18 one
++   1 four
++  16 one
+    3 second
+    3 third
+    3 three
+-  23 two
+-  10 zero
++  20 two
++  13 zero
+PASS  citations
+FAIL  labels
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.KCQEbvDcuR/labels.before	2026-09-10 10:24:01
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.KCQEbvDcuR/labels.after	2026-09-10 10:24:01
+@@ -23,6 +23,7 @@
+    1 \label{eqA:Mg}
+    1 \label{eqA:ess0}
+    1 \label{eqA:leafprior}
++   1 \label{eqA:leafvariance}
+    1 \label{eqA:model}
+    1 \label{eqA:prrule}
+    1 \label{eqA:zpost}
+FAIL  sections
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.KCQEbvDcuR/sections.before	2026-09-10 10:24:01
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.KCQEbvDcuR/sections.after	2026-09-10 10:24:01
+@@ -5,10 +5,11 @@
+ \subsection*{B.2 The estimand level: fixed partitions of the $g$ ensemble}
+ \section*{Web Appendix C: Detection and the borrowing map (T2)}
+ \subsection*{C.1 A single $g$ leaf under a true local shift}
+-\paragraph{Gap (consistency of abstention).}
++\paragraph{Fixed and vanishing spike scales.}
+ \subsection*{C.2 The borrowing map $P(|g(x)|<c\given\text{data})$}
+ \subsection*{C.3 The ensemble with fixed partitions, and what is not proved}
+-\paragraph{Gap (the ensemble with random partitions).}
+-\section*{Web Appendix D: Monotone, well-posed ESS calibration (T3)}
++\paragraph{Scope under random partitions.}
++\section*{Web Appendix D: Variance-based ESS and calibration (T3)}
++\subsection*{D.1 Leaf aggregation and the calibration reference}
+ \section*{Web Appendix E: Identifiability of $f$ and $g$}
+-\section*{Web Appendix F: What is dropped from the previous version}
++\section*{Web Appendix F: Scope of the posterior-invariance result}
+FAIL  equations
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.KCQEbvDcuR/equations.before	2026-09-10 10:24:01
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.KCQEbvDcuR/equations.after	2026-09-10 10:24:01
+@@ -131,18 +131,24 @@
+ \end{equation}
+ %%__EQUATION_BOUNDARY__%%
+ \begin{equation}
+-\ess_0(s_0^2)=\sigma_1^2\,\E_{\tau_0^2\sim\text{scaled-Inv-}\chi^2(\nu_0,s_0^2)}\Bigl[\frac1{V^f_\mu+c_gH_g\tau_0^2}\Bigr],
++V_g(\mathcal T,z,t)=\Var(\mu_g\given\mathcal T,z,\tau_0^2=t)
++=\sum_{h,\ell}a_{h\ell}^2\{z_{h\ell}t+(1-z_{h\ell})\tau_1^2\}.
++\label{eqA:leafvariance}
++\end{equation}
++%%__EQUATION_BOUNDARY__%%
++\begin{equation}
++\ess_0(s_0^2)=\sigma_1^2\,\E_{\tau_0^2\sim\text{scaled-Inv-}\chi^2(\nu_0,s_0^2)}\Bigl[\frac1{V^f_\mu+c_gH_g\tau_0^2}\Bigr].
+ \label{eqA:ess0}
+ \end{equation}
+ %%__EQUATION_BOUNDARY__%%
+ \begin{equation}
+ \hat s^2_{0\star}=\inf\{s_0^2\in\mathcal S:\widehat G(s_0^2)\ge q\},\qquad
+-\widehat G(s_0^2)=\frac1B\sum_{b=1}^B\mathbf 1\{\ess_0(V^{(b)};s_0^2)\le N_{\rm target}\},
++\widehat G(s_0^2)=\frac1B\sum_{b=1}^B\mathbf 1\{\ess_0(V^{(b)};s_0^2)\le N_{\rm target}\}.
+ \label{eqA:prrule}
+ \end{equation}
+ %%__EQUATION_BOUNDARY__%%
+ \begin{equation}
+-P_{\mathbb P}\bigl(N_{\rm target}<\sigma_1^2/V\bigr)>1-q ,
++s_\star>0\quad\Longleftrightarrow\quad P\{N_{\rm target}<\sigma_1^2/V\}>1-q.
+ \label{eq:feasible}
+ \end{equation}
+ %%__EQUATION_BOUNDARY__%%
+AUDIT inline_math changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.KCQEbvDcuR/inline_math.before	2026-09-10 10:24:01
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.KCQEbvDcuR/inline_math.after	2026-09-10 10:24:01
+@@ -1,13 +1,7 @@
+ $(-c,c)$
+ $(0,\infty)$
+-$(0,\infty)$
+-$(0,\infty)$
+-$(0,\sigma_1^2/V)$
+-$(0,\sigma_1^2/V)$
+ $(0,\tau_1^2)$
+ $(0,\tau_1^2)$
+-$(0,\tau_1^2)$
+-$(0,\tau_1^2)$
+ $(1+e^t)^{-1}\le e^{-t}$
+ $(1-w)\phi(\bar y;0,\tau_1^2+v)$
+ $(2\pi)^{1/2}(A+\lambda_f^{-2})^{-1/2}\exp\{B^2/(2(A+\lambda_f^{-2}))\}$
+@@ -15,23 +9,22 @@
+ $(T_h,\theta_h)$
+ $(T_h,\theta_h,z_h)$
+ $(T_h,\theta_h,z_h)$
+-$(V+x)^2\ge4Vx$
+-$(V,s)\mapsto\ess_0(V;s)$
+-$(V^{(b)}_{\rm raw})_{b\ge1}$
++$(V+c\nu_0s/Q)^{-1}$
+ $(X\tr X/\sigma^2+D^{-1})^{-1}X\tr/\sigma^2=DX\tr(XDX\tr+\sigma^2I)^{-1}$
+ $(\bar y,n)$
+ $(\bar y,n)$
++$(\gamma-\epsilon)U_b\le\gamma_BU_b\le(\gamma+\epsilon)U_b$
++$(\lambda_f^{-2}+n_{2\ell}/\sigma_2^2)^{-1}$
+ $(\sigma_1^2,\sigma_2^2,\lambda_f^2,\tau_0^2,\tau_1^2,w)$
+ $(\sigma_1^2,\tau_0^2,\tau_1^2,w)$
+ $(\sigma_1^2,\tau_0^2,\tau_1^2,w)$
+ $(\sigma_1^2,\tau_0^2,\tau_1^2,w)$
+-$(\sigma_1^2/(V+c\tau_1^2),\sigma_1^2/V)$
+ $(\sigma_g^2,\tau_0^2,w)$
+ $(\tau_0^2,\tau_1^2,w)$
+ $(\tau_0^2,\tau_1^2,w)$
+ $(\tau_0^2,w)$
+-$(\tau_0^2,w)$
+ $(\tau_1^2+v)/(\tau_1^2-\tau_0^2)$
++$(\tau_1^2-\epsilon/2,\tau_1^2)$
+ $(m,\bar r_1,\dots,\bar r_m)$
+ $(z,\theta)$
+ $(z,\theta)$
+@@ -52,7 +45,6 @@
+ $0.43$
+ $0.5$
+ $0.51$
+-$0.7$
+ $0.94\,|\bar y|$
+ $0.98$
+ $0.993$
+@@ -68,31 +60,27 @@
+ $1-p$
+ $1-p=(1+e^{a+\kappa\bar y^2})^{-1}\le\min\{1,e^{-a-\kappa\bar y^2}\}=\min\{1,Ce^{-\kappa\bar y^2}\}$
+ $1-p\le Ce^{-\kappa\bar y^2}$
+-$1-q$
+ $1-w$
+ $1.00$
+ $1.15$
+ $1.80$
++$1/(4Vs)$
++$1/(V_\mu^f+tC)$
+ $1/V$
+-$1/V$
+ $10$
+ $10^{-3}$
+-$10^{-3}$
+-$10^{-5}$
+-$1=(\sum_\ell a_\ell)^2=(\sum_\ell(a_\ell/\sqrt{\pi_\ell})\sqrt{\pi_\ell})^2\le\sum_\ell a_\ell^2/\pi_\ell\cdot\sum_\ell\pi_\ell=\sum_\ell a_\ell^2/\pi_\ell$
++$1=(\sum_\ell a_\ell)^2\le\sum_\ell a_\ell^2/\pi_\ell$
+ $2$
+ $2^{L_g}-1$
+ $2^{L_g}-1$
+ $2v_\ell\kappa_{k\ell}|\bar y_\ell|\min\{1,C_{k\ell}e^{-\kappa_{k\ell}\bar y_\ell^2}\}\le2v_\ell\sqrt{\kappa_{k\ell}\max\{\log C_{k\ell},\tfrac12\}}$
+-$38$
++$2{,}000$
++$4{,}000$
+ $A=n_1/\sigma_1^2+n_2/\sigma_2^2$
+ $A_1,\dots,A_m$
+ $A_k$
+ $B$
+ $B$
+-$B$
+-$B$
+-$B$
+ $B(x)$
+ $B(x)$
+ $B(x)=P(\text{all }H_g\text{ leaves covering }x\text{ are spike}\given\text{data})$
+@@ -101,8 +89,10 @@
+ $B=20$
+ $B=S_1/\sigma_1^2+S_2/\sigma_2^2$
+ $B\to\infty$
+-$B\to\infty$
++$B^{-1}\sum_bU_b\to u_m$
+ $C(2e\kappa)^{-1/2}<\sqrt{1/(2\kappa)}$
++$C(\mathcal T)$
++$C(\mathcal T)=\sum_{h,\ell}a_{h\ell}^2$
+ $C<e^{1/2}$
+ $C=21.2$
+ $C>0$
+@@ -111,24 +101,18 @@
+ $D_z^{-1}\succeq D_{\mathbf 0}^{-1}$
+ $D_{\mathbf 0}-D_z=\delta E_S$
+ $E_S$
+-$F(s;\gamma_B)-F(s;\gamma)$
+ $G$
+ $G(0)<q$
+-$G(0)=P\{s^\dagger(V)=0\}=P\{N_{\rm target}\ge\sigma_1^2/V\}$
+-$G(s)=P_{\mathbb P}\{s^\dagger(V)\le s\}$
+-$G(s)\to1$
++$G(s)=P\{\ess_0(V;s)\le N_{\rm target}\}$
++$G(s)=P\{s^\dagger(V)\le s\}$
+ $G=X\tr X/\sigma_1^2$
+ $G\preceq G+D_z^{-1}=\Sigma_z^{-1}$
+-$G_m$
+-$G_m$
+-$G_m$
+ $G_m(s)$
+-$G_m(s)$
++$G_m(s)>q$
+ $G_m(s)\ne q$
+ $G_m(s)\ne q$
+ $H_f$
+-$H_f=1$
+-$H_f=50$
++$H_f\lambda_f^2=(\max y-\min y)^2/(4k^2)$
+ $H_g$
+ $H_g$
+ $H_g$
+@@ -139,7 +123,6 @@
+ $H_g$
+ $H_g$
+ $H_g$
+-$H_g$
+ $H_g=1$
+ $H_g=10$
+ $H_g=5$
+@@ -152,9 +135,9 @@
+ $I(\bar y)\to0$
+ $I\equiv0$
+ $I\equiv0$
+-$K_\epsilon$
+-$K_\epsilon\exp\{-\nu_0s\,\epsilon/(8\tau_1^4)\}\to0$
+ $L$
++$L_+$
++$L_+=H_g$
+ $L_g$
+ $M=XD_z^{1/2}$
+ $M_LM_R/M_P$
+@@ -168,21 +151,11 @@
+ $M_g=1$
+ $M_g=1$
+ $N$
+-$N^{-1}\sum_if(x_i)$
+-$N^{-1}\sum_if(x_i)=\sum_\ell a_\ell\theta_\ell$
+-$N^{-1}\sum_if^{(t)}(x_i)$
+-$N^{-1}\sum_{i\le N}f^{(b)}(x_i)$
+ $N_j$
+-$N_{\rm target}$
+PASS  protected_blocks (no changes)
+PASS  graphics
+FAIL  references
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.KCQEbvDcuR/references.before	2026-09-10 10:24:01
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.KCQEbvDcuR/references.after	2026-09-10 10:24:01
+@@ -2,32 +2,29 @@
+    2 \eqref{eq:I}
+    2 \eqref{eq:detectprob}
+    2 \eqref{eq:dhalf}
+-   1 \eqref{eq:ess0}
+-   3 \eqref{eq:feasible}
++   1 \eqref{eq:feasible}
+    4 \eqref{eq:gaussprod}
+    5 \eqref{eq:kappaC}
+    2 \eqref{eq:leafcond}
+    3 \eqref{eq:linform}
+    3 \eqref{eq:pinf}
+    3 \eqref{eq:postmean}
+-   1 \eqref{eq:prrule}
+    1 \eqref{eq:rhodiff}
+    3 \eqref{eq:sup-lemma}
+    2 \eqref{eq:supI}
+-   6 \eqref{eq:tau0prior}
+-   3 \eqref{eqA:ess0}
+-   7 \eqref{eqA:leafprior}
++   5 \eqref{eq:tau0prior}
++   2 \eqref{eqA:ess0}
++   5 \eqref{eqA:leafprior}
++   1 \eqref{eqA:leafvariance}
+    1 \eqref{eqA:model}
++   2 \eqref{eqA:prrule}
+    2 \eqref{eqA:zpost}
+   10 \ref{ass:A1}
+-   1 \ref{cor:estimand}
+-   4 \ref{lem:marg}
++   3 \ref{lem:marg}
+    1 \ref{prop:ensemble}
+    2 \ref{prop:exact}
+    2 \ref{rem:T1num}
+-   1 \ref{rem:nosurrogate}
+-   1 \ref{sec:application}
+-   7 \ref{thm:T1}
++   2 \ref{sec:sim}
++   5 \ref{thm:T1}
+    2 \ref{thm:T2}
+-   3 \ref{thm:T3}
+    2 \ref{thm:gmap}
+AUDIT structure changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.KCQEbvDcuR/structure.before	2026-09-10 10:24:02
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.KCQEbvDcuR/structure.after	2026-09-10 10:24:02
+@@ -104,12 +104,12 @@
+ \end{equation}
+ \begin{equation}
+ \end{equation}
++\begin{equation}
++\end{equation}
+ \begin{thmA}
+ \begin{enumerate}
+ \begin{equation}
+ \end{equation}
+-\begin{itemize}
+-\end{itemize}
+ \end{enumerate}
+ \end{thmA}
+ \begin{proof}
+
+4 hard integrity check(s) failed.

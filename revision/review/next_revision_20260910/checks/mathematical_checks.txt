@@ -1,0 +1,13 @@
+Actual C++ fixed-partition weighted variance: 0.573125 expected 0.573125
+Independent leaf-state precision average: 5.398357 one-indicator shortcut: 6.198783
+Normal scale-mixture: inverse marginal variance 1.980198 exact marginal ELIR (sigma^2=1) 34.53125 average conditional information 50.5
+Mean-partition variance plug-in 4 partitionwise average precision 4.166667
+Prior density cost m=0:10
+Prior density cost m=1:4.169649
+Prior density cost m=2:7.624064
+Prior density cost m=3:11.2322
+Prior density cost m=4:14.88021
+Prior density cost m=5:18.5444
+Optimized Gaussian pooling likelihood loss: 32.67974
+Finite leaf prior variance matched: 0.0086 shifted: 0.008333333 (ceiling can increase)
+All deterministic checks passed. No operating characteristics were rerun.

@@ -1,0 +1,329 @@
+AUDIT numbers changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.HjgpBVmt1M/numbers.before	2026-09-10 10:24:01
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.HjgpBVmt1M/numbers.after	2026-09-10 10:24:01
+@@ -1,20 +1,21 @@
+-  15 0
++  16 0
+    1 0,0
+    2 0,1
+    1 0,10
+    1 0,2
+    1 0,5
+-   3 0.005
+-   1 0.02
++   2 0.005
+    1 0.024
+    1 0.04
+    1 0.041
+    1 0.047
+    3 0.05
+-   2 0.06
++   1 0.06
+    1 0.07
++   1 0.076
+    1 0.08
+    1 0.09
++   2 0.108
+    2 0.11
+    2 0.16
+    1 0.19
+@@ -42,7 +43,7 @@
+    1 0.8
+    1 0.82
+    1 0.89
+-   7 0.9
++   8 0.9
+    5 0.90
+    2 0.91
+    2 0.92
+@@ -55,7 +56,7 @@
+    1 01
+    1 02
+    1 03
+-  60 1
++  63 1
+    1 1,1
+    1 1.0
+    4 1.00
+@@ -74,11 +75,12 @@
+    1 1.3
+    1 1.4
+    1 1.40
++   1 1.492
+    1 1.5
+    1 1.6
+    1 1.68
+-  11 10
+-   6 100
++  10 10
++   8 100
+    1 12.226
+    1 12.6
+    5 13
+@@ -89,14 +91,13 @@
+    1 16
+    1 160
+    1 164
+-   1 17
+    1 18
+-  73 2
++  69 2
+    1 2.0
+    1 2.1
+    1 2.3
+    1 20
+-   7 200
++   9 200
+    1 2010
+    1 2018
+    1 2019
+@@ -121,7 +122,7 @@
+    2 3.1
+    1 3.65
+    1 3.71
+-  14 30
++  12 30
+    6 300
+    1 32
+    2 33
+@@ -137,11 +138,11 @@
+   26 5
+    1 5.09
+    1 5.5
+-   4 50
++   3 50
+    1 500
+    1 51
+    1 58
+-   7 6
++   8 6
+    1 60
+    1 61.3
+    1 62.8
+@@ -158,7 +159,6 @@
+    3 8
+    1 80
+    1 81
+-   1 86
+    1 9
+    2 90
+    2 95
+AUDIT number_words changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.HjgpBVmt1M/number_words.before	2026-09-10 10:24:01
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.HjgpBVmt1M/number_words.after	2026-09-10 10:24:01
+@@ -1,9 +1,9 @@
+    3 first
+-   4 five
+-   3 four
+-  13 one
++   3 five
++   2 four
++  11 one
+    2 seven
+    2 ten
+    2 three
+-  17 two
+-   3 zero
++  11 two
++   4 zero
+PASS  citations
+PASS  labels
+FAIL  sections
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.HjgpBVmt1M/sections.before	2026-09-10 10:24:01
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.HjgpBVmt1M/sections.after	2026-09-10 10:24:01
+@@ -5,5 +5,5 @@
+ \subsection*{G.3 Configuration of the discrepancy ensemble}
+ \subsection*{G.4 Full simulation tables}
+ \subsection*{G.5 Application}
+-\subsection*{G.6 The prior cost of a regional shift in a shared-leaf design}
++\subsection*{G.6 A conditional prior-cost comparison}
+ \subsection*{G.7 The single-arm simulation in detail}
+PASS  equations
+AUDIT inline_math changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.HjgpBVmt1M/inline_math.before	2026-09-10 10:24:01
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.HjgpBVmt1M/inline_math.after	2026-09-10 10:24:01
+@@ -14,8 +14,6 @@
+ $0$
+ $0.005$
+ $0.005$
+-$0.005$
+-$0.02$
+ $0.024$
+ $0.04$
+ $0.047$
+@@ -23,9 +21,11 @@
+ $0.05$
+ $0.05$
+ $0.06$
+-$0.06$
+ $0.07$
++$0.076$
+ $0.09$
++$0.108$
++$0.108$
+ $0.16$
+ $0.16$
+ $0.19$
+@@ -72,6 +72,8 @@
+ $0.97$
+ $0.99$
+ $0.99$
++$0<\tau^2<\lambda^2$
++$0<w<1$
+ $1$
+ $1$
+ $1-1/R(x)$
+@@ -97,16 +99,18 @@
+ $1.3$
+ $1.4$
+ $1.40$
++$1.492$
+ $1.6$
+ $1.68$
+ $10$
+-$10$
+ $100$
+ $100$
+ $100$
+ $100$
+ $100$
+ $100$
++$100$
++$100$
+ $10\%$
+ $12.226$
+ $12.6$
+@@ -115,7 +119,6 @@
+ $15$
+ $16$
+ $160$
+-$17$
+ $18$
+ $1{,}000$
+ $1{,}000$
+@@ -160,14 +163,13 @@
+ $75$
+ $797$
+ $8$
+-$86$
+ $8{,}000$
+ $8{,}000$
+ $90\%$
+ $95\%$
+ $99.9$
+ $H$
+-$H=50$
++$H$
+ $H=50$
+ $H=50$
+ $H_f=10$
+@@ -177,15 +179,16 @@
+ $H_g=10$
+ $H_g=10$
+ $H_g=5$
++$H_g=5$
+ $H_g\tau_0^2$
+ $L_1$
+ $N_{\rm target}=30$
+ $N_{\rm target}=30$
+ $N_{\rm target}=30$
+-$N_{\rm target}=30$
+ $P(D_i=1\given\bm W_i)=\logit^{-1}\{(\ell_i-q_{0.5}(\ell))/0.5\}$
+ $P(\mathrm{ATE}>0.5\given\text{data})>0.95$
+ $P(\text{ratio}>1\given\text{data})>0.95$
++$Q_m$
+ $R(x)$
+ $R(x)-1$
+ $R=200$
+@@ -212,12 +215,10 @@
+ $\bm W_i=(X_{i5},X_{i6})$
+ $\bm\beta\sim\Normal(0,2^2I)$
+ $\delta$
+-$\delta/H$
+ $\delta=1$
+ $\delta=1$
+ $\delta=1$
+-$\delta>2H\tau^2\sqrt{2c}/\lambda$
+-$\delta^2/(2H\tau^2)$
++$\delta^2/[2(\sigma_1^2/n_1+\sigma_2^2/n_2)]$
+ $\delta_2=0$
+ $\delta_2=1$
+ $\delta_2=1$
+@@ -226,17 +227,13 @@
+ $\delta_2=2$
+ $\delta_2=2$
+ $\delta_2=2$
+-$\delta_2=2$
+ $\ell_i=-1.20\,(W_{i5}+W_{i6})$
+ $\epsilon_j\sim\Normal(0,1)$
+ $\gamma^2=3$
+ $\gamma^2=3\times0.11/\hat\phi^2$
+ $\hat\phi^2$
+-$\lambda^2$
+ $\lambda_2=300\log(n)$
+ $\lambda_2=300\log(n)\times0.11/\hat\phi^2$
+-$\log\tfrac w{1-w}+\log\tfrac{\tau_1}{\tau_0}$
+-$\log\{w/(1-w)\}+\log(\tau_1/\tau_0)$
+ $\mathcal B_c$
+ $\mathcal B_c$
+ $\mathcal B_c$
+@@ -256,18 +253,18 @@
+ $\nu=3$
+ $\rho$
+ $\sigma_1$
+-$\tau^2$
++$\sum_hu_h=\delta$
+ $\tau^2\sim\text{Inv-Gamma}(1.5,0.75)$
+ $\tau_0$
+-$\tau_0$
+ $\tau_0^2$
+ $\tau_1$
+-$\tfrac{\delta^2}2\{(H_g\tau_0^2)^{-1}-\tau_1^{-2}\}$
+ $\tilde U_j$
+ $\{X_5>2\}$
+ $\{X_5\le2\}$
+ $c$
+-$c$
++$c=\log\{w/(1-w)\}+\log(\lambda/\tau)$
++$c>0$
++$c\le0$
+ $d$
+ $d_{1/2}$
+ $f$
+@@ -275,8 +272,6 @@
+ $f$
+ $f$
+ $f$
+-$f$
+-$f$
+ $f_0(\bm X)+\delta_2\mathbf 1\{\bm X\notin\mathcal R\}$
+ $g$
+ $g$
+@@ -288,38 +283,46 @@
+PASS  protected_blocks (no changes)
+PASS  graphics
+FAIL  references
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.HjgpBVmt1M/references.before	2026-09-10 10:24:01
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.HjgpBVmt1M/references.after	2026-09-10 10:24:01
+@@ -1,17 +1,13 @@
+    1 \eqref{eq:dgp}
+    1 \eqref{eq:model}
+    1 \ref{fig:essmap}
+-   1 \ref{sec:app_data}
+-   1 \ref{sec:app_results}
+-   1 \ref{sec:ess}
+-   1 \ref{sec:model}
+    1 \ref{sec:related}
+    1 \ref{sec:sim_design}
+    1 \ref{sec:sim_gauss}
+    2 \ref{sec:sim_single}
+    2 \ref{sec:sim}
+    1 \ref{sec:singlearm}
+-   3 \ref{tab:app}
++   2 \ref{tab:app}
+    3 \ref{tab:map}
+    1 \ref{tab:single}
+    1 \ref{thm:map}
+PASS  structure (no changes)
+
+2 hard integrity check(s) failed.

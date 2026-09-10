@@ -2,19 +2,15 @@
 
 This directory contains the September 10, 2026 manuscript candidate, its implementation, and the summary results used to produce the tables. The original repository files remain available alongside it.
 
-Start with the [paper](05-writing/main_draft.pdf), [colored tracked changes](05-writing/main_tracked.pdf) and [review ledger](review/resolution_ledger.md). The paper includes the CAHB comparison, regional effective sample sizes, and the Sc4 boundary analysis, with a revised exposition throughout. This is a working candidate for scientific review; the editing reports are not independent scientific approval.
+Start with the [paper](05-writing/main_draft.pdf), [cumulative tracked changes](05-writing/main_tracked.pdf), and [current revision report](review/next_revision_20260910/final_report.md). The current paper is 79 pages with 6,993 main-text words excluding its 227-word abstract. The [25-slide deck](06-slides/main_lrcbart.pdf) is synchronized, including explicit all-spike conditioning in the external-centered prior display.
+
+The paper now defines a working variance-based ESS, corrects leaf aggregation and the calibration theorem, states implementation overrides, and separates support identification from tree extrapolation. G.6 is a conditional prior-density comparison with a corrected optimizer. CAHB is correctly described as nonparametric, and the application is a descriptive comparison with post-induction ASCT adjustment and an explicit equal-residual-variance assumption.
 
 ## Review requested
 
-Yunxuan, please review the manuscript and code, particularly:
+Yunxuan, please review the corrected scientific definitions and conditional results alongside the producing code, especially the working-ESS interpretation and calibration conventions, the scope of G.6, and the clinical interpretation of the application. The [side-review reconciliation](review/next_revision_20260910/side_review_reconciliation.md) maps all nine findings from the earlier 82-page baseline to the current text.
 
-- The prior-averaged ESS calculation when an estimand spans several independently selected leaves.
-- The interpretation of ELIR and inverse-variance information for the BART mixture prior.
-- Identification outside trial support and information shared through leaves and hyperparameters.
-- The shared-leaf prior-cost argument in Appendix G.6, which was retained pending scientific review.
-- The CAHB comparison, application definitions, and agreement between the implementation and the reported results.
-
-The author field still needs completion. The main text is approximately 7,500 words, excluding the abstract, and needs further shortening if the 7,000-word target applies.
+Two independent agent reviews in each of two rounds found their original major objections resolved, with final minor corrections applied. These are internal AI assessments, not external scientific approval. Author names/order/affiliations remain pending. The [implementation-impact note](review/next_revision_20260910/implementation_impact.md) records the unused prior-ESS helper limitation and which future changes require new fits or an application reanalysis.
 
 ## Contents
 
@@ -42,6 +38,6 @@ latexmk -pdf -recorder -outdir=build -interaction=nonstopmode -halt-on-error mai
 
 The checked-in summary CSVs support table regeneration without rerunning the simulations. Full simulation and application runs require the dependencies named by their scripts and can be expensive. Historical tuning and development scripts document intermediate analyses; use the full-study drivers and associated reports to interpret the final results.
 
-The manuscript passed numerical and prose-integrity checks and rendered-page inspection before packaging. See [numerical audit](review/numerical_audit.md) and [visual QA](review/visual_qa.md). Remaining scientific questions are documented in the review ledger.
+Validation for this revision: clean and tracked LaTeX rebuilds, complete page overviews and targeted full-size inspections, and bounded deterministic checks against the actual C++ variance calculation. All protected local code/data/result files and numerical table/figure files were preserved. No simulations or application fits were rerun. The original package parsing/install and 102-assertion smoke checks remain earlier evidence, not a new full-model qualification. See [current QA](review/next_revision_20260910/visual_qa.md) and [integrity dispositions](review/next_revision_20260910/checks/integrity_dispositions.md).
 
-The [commensurate-center clarification](review/commensurate_center.md) is included in the current paper, tracked diff, and [slides](06-slides/main_lrcbart.pdf).
+The [commensurate-center clarification](review/commensurate_center.md) remains preserved; the current slide now explicitly labels the all-spike event and explains how each indicator chooses its variance.
