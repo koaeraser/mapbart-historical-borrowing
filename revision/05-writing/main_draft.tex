@@ -1,0 +1,59 @@
+% main_draft.tex : full manuscript assembly for the LRC-BART revision.
+% Compile from 05-writing:  pdflatex -output-directory=build main_draft
+%                           (cd build && bibtex main_draft) ; pdflatex x2
+\documentclass[11pt]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsfonts,amsthm,bm}
+\usepackage{setspace}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+\usepackage{microtype}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\usepackage{subcaption}
+\usepackage{mathtools}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{comment}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{booktabs, threeparttable, siunitx, multirow}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{longtable}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\I}{\mathbb{I}}
+\newcommand{\Normal}{\mathcal{N}}
+\newcommand{\Ber}{\mathrm{Bernoulli}}
+\newcommand{\logit}{\mathrm{logit}}
+\newcommand{\invlogit}{\mathrm{logit}^{-1}}
+\newcommand{\given}{\,\vert\,}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\iid}{\stackrel{\text{iid}}{\sim}}
+\newcommand{\indep}{\stackrel{\text{indep}}{\sim}}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{remark}[theorem]{Remark}
+\theoremstyle{plain}
+\begin{document}
+\input{sections_1_2.tex}
+\input{sections_3_5.tex}
+\bibliographystyle{plainnat}
+\bibliography{merged}
+\clearpage
+\appendix
+\begin{center}{\Large Web Appendices}\end{center}
+{\emergencystretch=1em
+\input{../03-theory/appendix_new.tex}
+}
+\clearpage
+\input{web_appendix_G.tex}
+\end{document}

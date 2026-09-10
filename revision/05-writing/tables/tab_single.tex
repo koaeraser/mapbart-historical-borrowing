@@ -1,0 +1,81 @@
+\begingroup
+\singlespacing
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\renewcommand{\arraystretch}{1.0}
+\begin{longtable}{llcccccccc}
+\caption{Single-arm design, $R=500$: the trial contributes $n_T$ treated subjects only and the $n_2=300$ RWD controls are the sole control source, under Sc1 (no confounding) and Sc2 (measured confounding). LRC-BART (pooled) is $w=1$ with the spike scale at the grid minimum, LRC-BART (0.9) is $w=1$ at 0.9 of the ESS ceiling, and LRC-BART ($w=0.9$) is the slab sensitivity at the absolute target 100. HierLM and HierAFT use the stated hyperprior $\tau_j^2\sim$ Inv-Gamma$(1.5,0.75)$ with no RCT controls, under which the control surface is drawn from the hierarchy; values above $10^3$ are printed as such. Control columns are on the outcome scale (Gaussian) or the log-median scale (survival). Web Table~S6 adds the absolute-target rows and the median ratio at $n_T=200$.}\label{tab:single}\\
+\toprule
+& & \multicolumn{5}{c}{Treatment effect} & \multicolumn{2}{c}{Control} & \\
+\cmidrule(lr){3-7}\cmidrule(lr){8-9}
+Design & Method & Bias & SD & RMSE & Cov & Pow & Bias & RMSE & Prior ESS \\
+\midrule
+\endfirsthead
+\multicolumn{10}{l}{\textit{Table \ref{tab:single}, continued}}\\
+\toprule
+& & \multicolumn{5}{c}{Treatment effect} & \multicolumn{2}{c}{Control} & \\
+\cmidrule(lr){3-7}\cmidrule(lr){8-9}
+Design & Method & Bias & SD & RMSE & Cov & Pow & Bias & RMSE & Prior ESS \\
+\midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+\multirow{6}{*}{\shortstack[l]{Gaussian, $n_T=200$\\ATE\\Sc1}} & LM-CP & 0.007 & 0.259 & 0.254 & 0.95 & 0.97 & $-$0.003 & 0.233 & --- \\*
+& HierLM & $-$0.014 & 8.239 & 0.497 & 1.00 & 0.00 & 0.018 & 0.487 & --- \\*
+& BART-CP & 0.010 & 0.163 & 0.162 & 0.94 & 1.00 & $-$0.003 & 0.127 & --- \\*
+& LRC-BART (pooled) & 0.007 & 0.165 & 0.162 & 0.94 & 1.00 & 0.001 & 0.127 & 172.3 \\*
+& LRC-BART (0.9) & 0.007 & 0.202 & 0.163 & 0.98 & 1.00 & 0.000 & 0.128 & 115.8 \\*
+& LRC-BART ($w=0.9$) & 0.010 & 1.383 & 0.169 & 1.00 & 0.00 & $-$0.003 & 0.136 & 81.9 \\
+\midrule
+\multirow{6}{*}{\shortstack[l]{Gaussian, $n_T=200$\\ATE\\Sc2}} & LM-CP & 1.682 & 0.417 & 1.734 & 0.01 & 1.00 & $-$1.676 & 1.726 & --- \\*
+& HierLM & 1.642 & 8.317 & 1.754 & 1.00 & 0.00 & $-$1.636 & 1.747 & --- \\*
+& BART-CP & 0.408 & 0.310 & 0.506 & 0.75 & 1.00 & $-$0.399 & 0.492 & --- \\*
+& LRC-BART (pooled) & 0.420 & 0.316 & 0.515 & 0.75 & 1.00 & $-$0.412 & 0.501 & 34.8 \\*
+& LRC-BART (0.9) & 0.417 & 0.416 & 0.511 & 0.89 & 0.98 & $-$0.409 & 0.498 & 23.1 \\*
+& LRC-BART ($w=0.9$) & 0.416 & 1.329 & 0.511 & 1.00 & 0.00 & $-$0.408 & 0.498 & 34.8 \\
+\midrule
+\multirow{6}{*}{\shortstack[l]{Survival, $n_T=30$\\median ratio\\Sc1}} & AFT-CP & 1.540 & 4.678 & 4.444 & 0.92 & 0.15 & $-$0.006 & 0.204 & --- \\*
+& HierAFT & $>\!10^{3}$ & $>\!10^{3}$ & $>\!10^{3}$ & 1.00 & 0.00 & $>\!10^{3}$ & $>\!10^{3}$ & --- \\*
+& BART-CP & $-$0.013 & 0.580 & 0.482 & 0.97 & 0.05 & $-$0.026 & 0.103 & --- \\*
+& LRC-BART (pooled) & 0.182 & 0.918 & 0.686 & 0.98 & 0.02 & $-$0.017 & 0.102 & 80.2 \\*
+& LRC-BART (0.9) & 0.222 & 1.174 & 0.711 & 0.99 & 0.01 & $-$0.005 & 0.133 & 51.8 \\*
+& LRC-BART ($w=0.9$) & 1.423 & 11.199 & 1.959 & 1.00 & 0.00 & 0.318 & 0.433 & 79.3 \\
+\midrule
+\multirow{6}{*}{\shortstack[l]{Survival, $n_T=30$\\median ratio\\Sc2}} & AFT-CP & 20.944 & 46.014 & 51.645 & 0.19 & 0.89 & $-$0.441 & 0.526 & --- \\*
+& HierAFT & $>\!10^{3}$ & $>\!10^{3}$ & $>\!10^{3}$ & 1.00 & 0.00 & $>\!10^{3}$ & $>\!10^{3}$ & --- \\*
+& BART-CP & 0.814 & 1.109 & 1.231 & 0.92 & 0.25 & $-$0.199 & 0.277 & --- \\*
+& LRC-BART (pooled) & 1.324 & 1.859 & 1.864 & 0.95 & 0.21 & $-$0.207 & 0.284 & 29.2 \\*
+& LRC-BART (0.9) & 1.511 & 3.461 & 2.055 & 0.97 & 0.12 & $-$0.180 & 0.279 & 19.3 \\*
+& LRC-BART ($w=0.9$) & 4.243 & 28.669 & 5.305 & 1.00 & 0.00 & 0.179 & 0.537 & 28.9 \\
+\midrule
+\multirow{6}{*}{\shortstack[l]{Survival, $n_T=30$\\RMST ratio\\Sc1}} & AFT-CP & 0.036 & 0.178 & 0.202 & 0.90 & 0.16 & 0.079 & 0.187 & --- \\*
+& HierAFT & $>\!10^{3}$ & $>\!10^{3}$ & $>\!10^{3}$ & 1.00 & 0.00 & 0.311 & 0.355 & --- \\*
+& BART-CP & $-$0.111 & 0.176 & 0.186 & 0.92 & 0.02 & $-$0.021 & 0.089 & --- \\*
+& LRC-BART (pooled) & $-$0.046 & 0.192 & 0.157 & 0.97 & 0.02 & 0.002 & 0.085 & 80.2 \\*
+& LRC-BART (0.9) & $-$0.040 & 0.218 & 0.156 & 0.98 & 0.01 & 0.002 & 0.085 & 51.8 \\*
+& LRC-BART ($w=0.9$) & 0.080 & 0.998 & 0.200 & 1.00 & 0.00 & 0.020 & 0.089 & 79.3 \\
+\midrule
+\multirow{6}{*}{\shortstack[l]{Survival, $n_T=30$\\RMST ratio\\Sc2}} & AFT-CP & 1.216 & 0.522 & 1.336 & 0.13 & 0.94 & $-$0.518 & 0.559 & --- \\*
+& HierAFT & $>\!10^{3}$ & $>\!10^{3}$ & $>\!10^{3}$ & 1.00 & 0.00 & 0.017 & 0.201 & --- \\*
+& BART-CP & 0.149 & 0.271 & 0.286 & 0.95 & 0.14 & $-$0.219 & 0.260 & --- \\*
+& LRC-BART (pooled) & 0.234 & 0.297 & 0.339 & 0.94 & 0.19 & $-$0.210 & 0.251 & 29.2 \\*
+& LRC-BART (0.9) & 0.256 & 0.452 & 0.358 & 0.97 & 0.13 & $-$0.207 & 0.248 & 19.3 \\*
+& LRC-BART ($w=0.9$) & 0.527 & 2.689 & 0.643 & 1.00 & 0.00 & $-$0.185 & 0.228 & 28.9 \\
+\midrule
+\multirow{6}{*}{\shortstack[l]{Survival, $n_T=200$\\RMST ratio\\Sc1}} & AFT-CP & $-$0.023 & 0.101 & 0.098 & 0.94 & 0.15 & 0.074 & 0.114 & --- \\*
+& HierAFT & $>\!10^{3}$ & $>\!10^{3}$ & $>\!10^{3}$ & 1.00 & 0.00 & 0.305 & 0.317 & --- \\*
+& BART-CP & $-$0.001 & 0.084 & 0.082 & 0.97 & 0.32 & $-$0.021 & 0.061 & --- \\*
+& LRC-BART (pooled) & $-$0.024 & 0.078 & 0.076 & 0.95 & 0.25 & 0.001 & 0.054 & 169.5 \\*
+& LRC-BART (0.9) & $-$0.022 & 0.094 & 0.076 & 0.99 & 0.17 & 0.002 & 0.054 & 114.0 \\*
+& LRC-BART ($w=0.9$) & 0.109 & 1.179 & 0.275 & 1.00 & 0.00 & 0.021 & 0.057 & 81.8 \\
+\midrule
+\multirow{6}{*}{\shortstack[l]{Survival, $n_T=200$\\RMST ratio\\Sc2}} & AFT-CP & 1.164 & 0.428 & 1.244 & 0.01 & 1.00 & $-$0.535 & 0.550 & --- \\*
+& HierAFT & $>\!10^{3}$ & $>\!10^{3}$ & $>\!10^{3}$ & 1.00 & 0.00 & 0.001 & 0.101 & --- \\*
+& BART-CP & 0.305 & 0.206 & 0.361 & 0.61 & 0.77 & $-$0.233 & 0.261 & --- \\*
+& LRC-BART (pooled) & 0.284 & 0.206 & 0.336 & 0.70 & 0.74 & $-$0.224 & 0.250 & 35.9 \\*
+& LRC-BART (0.9) & 0.301 & 0.350 & 0.353 & 0.85 & 0.50 & $-$0.222 & 0.248 & 23.9 \\*
+& LRC-BART ($w=0.9$) & 0.562 & 2.419 & 0.633 & 1.00 & 0.00 & $-$0.200 & 0.228 & 36.2 \\
+\end{longtable}
+\endgroup

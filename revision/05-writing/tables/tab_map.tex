@@ -1,0 +1,84 @@
+\begingroup
+\singlespacing
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\renewcommand{\arraystretch}{1.0}
+\begin{longtable}{llccccccccc}
+\caption{Regional and global shifts, Gaussian outcomes, $R=500$: ATE bias and coverage; RMSE of the posterior mean control surface over all $N$ RCT profiles (treated and control) inside the compatible region $\mathcal R$ and outside it; the borrowing map $\mathcal B_c(x)=P(|g(x)|<0.5\mid\text{data})$ averaged over the RCT control profiles in each region; the posterior mean of $g(x)$ averaged over each region (true value $0$ in $\mathcal R$ and $-\delta_2$ in $\mathcal R^c$); and the realized ESS. In Sc5 the compatible region is empty. Sc4$'$ places the shift on the null covariate $X_7$. LRC-BART ($w=0$) has no spike, so its map reflects the slab alone. CAHB rows use $R=200$; all other rows use $R=500$. CAHB precision shares and effective sizes have different definitions and are reported separately in Web Appendix~G.2. For Sc1, the two columns use the Sc4 partition although both regions are compatible.}\label{tab:map}\\
+\toprule
+& & \multicolumn{2}{c}{ATE} & \multicolumn{2}{c}{Surface RMSE} & \multicolumn{2}{c}{$\bar{\mathcal B}_c$} & \multicolumn{2}{c}{Mean $\hat g$} & \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}\cmidrule(lr){7-8}\cmidrule(lr){9-10}
+Scenario & Method & Bias & Cov & $\mathcal R$ & $\mathcal R^c$ & $\mathcal R$ & $\mathcal R^c$ & $\mathcal R$ & $\mathcal R^c$ & ESS \\
+\midrule
+\endfirsthead
+\multicolumn{11}{l}{\textit{Table \ref{tab:map}, continued}}\\
+\toprule
+& & \multicolumn{2}{c}{ATE} & \multicolumn{2}{c}{Surface RMSE} & \multicolumn{2}{c}{$\bar{\mathcal B}_c$} & \multicolumn{2}{c}{Mean $\hat g$} & \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}\cmidrule(lr){7-8}\cmidrule(lr){9-10}
+Scenario & Method & Bias & Cov & $\mathcal R$ & $\mathcal R^c$ & $\mathcal R$ & $\mathcal R^c$ & $\mathcal R$ & $\mathcal R^c$ & ESS \\
+\midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+\multirow{5}{*}{Sc1} & BART-PP & 0.006 & 0.94 & 0.750 & 0.780 & --- & --- & --- & --- & --- \\*
+& C-BART & 0.007 & 0.95 & 0.728 & 0.756 & 1.00 & 1.00 & 0.00 & 0.00 & 81.0 \\*
+& LRC-BART ($w=0$) & 0.009 & 0.92 & 0.755 & 0.783 & 0.79 & 0.79 & $-$0.00 & 0.01 & 0.1 \\*
+& LRC-BART (100) & 0.009 & 0.94 & 0.736 & 0.763 & 0.92 & 0.92 & $-$0.00 & 0.00 & 52.5 \\*
+& CAHB & $-$0.003 & 1.00 & 2.071 & 2.273 & --- & --- & --- & --- & --- \\
+\midrule
+\multirow{4}{*}{Sc4 (0.5)} & BART-PP & 0.000 & 0.95 & 0.758 & 0.795 & --- & --- & --- & --- & --- \\*
+& C-BART & $-$0.109 & 0.90 & 0.736 & 0.799 & 0.98 & 0.98 & $-$0.06 & $-$0.06 & 79.4 \\*
+& LRC-BART ($w=0$) & 0.007 & 0.93 & 0.768 & 0.795 & 0.71 & 0.69 & $-$0.21 & $-$0.27 & 0.1 \\*
+& LRC-BART (100) & $-$0.043 & 0.92 & 0.751 & 0.796 & 0.84 & 0.83 & $-$0.15 & $-$0.18 & 42.9 \\
+\midrule
+\multirow{5}{*}{Sc4 (1)} & BART-PP & $-$0.002 & 0.95 & 0.784 & 0.820 & --- & --- & --- & --- & --- \\*
+& C-BART & $-$0.207 & 0.73 & 0.749 & 0.915 & 0.91 & 0.90 & $-$0.14 & $-$0.16 & 73.6 \\*
+& LRC-BART ($w=0$) & 0.006 & 0.93 & 0.801 & 0.827 & 0.51 & 0.40 & $-$0.35 & $-$0.63 & 0.1 \\*
+& LRC-BART (100) & $-$0.041 & 0.89 & 0.783 & 0.843 & 0.62 & 0.52 & $-$0.32 & $-$0.52 & 20.8 \\*
+& CAHB & $-$0.208 & 0.98 & 2.133 & 2.207 & --- & --- & --- & --- & --- \\
+\midrule
+\multirow{5}{*}{Sc4 (2)} & BART-PP & $-$0.006 & 0.96 & 0.785 & 0.822 & --- & --- & --- & --- & --- \\*
+& C-BART & $-$0.227 & 0.66 & 0.801 & 1.087 & 0.66 & 0.39 & $-$0.30 & $-$0.97 & 45.7 \\*
+& LRC-BART ($w=0$) & 0.004 & 0.92 & 0.836 & 0.858 & 0.57 & 0.05 & $-$0.25 & $-$1.73 & 0.1 \\*
+& LRC-BART (100) & 0.000 & 0.92 & 0.824 & 0.857 & 0.64 & 0.05 & $-$0.26 & $-$1.71 & 0.8 \\*
+& CAHB & $-$0.333 & 0.95 & 2.172 & 2.157 & --- & --- & --- & --- & --- \\
+\midrule
+\multirow{4}{*}{Sc4$'$ (1)} & BART-PP & $-$0.001 & 0.96 & 0.807 & 0.810 & --- & --- & --- & --- & --- \\*
+& C-BART & $-$0.206 & 0.73 & 0.767 & 0.899 & 0.91 & 0.90 & $-$0.15 & $-$0.16 & 73.3 \\*
+& LRC-BART ($w=0$) & 0.009 & 0.92 & 0.820 & 0.817 & 0.52 & 0.41 & $-$0.37 & $-$0.63 & 0.1 \\*
+& LRC-BART (100) & $-$0.038 & 0.90 & 0.805 & 0.833 & 0.62 & 0.52 & $-$0.33 & $-$0.52 & 20.5 \\
+\midrule
+\multirow{4}{*}{Sc4$'$ (2)} & BART-PP & $-$0.002 & 0.95 & 0.805 & 0.806 & --- & --- & --- & --- & --- \\*
+& C-BART & $-$0.218 & 0.69 & 0.828 & 1.075 & 0.64 & 0.38 & $-$0.33 & $-$0.97 & 44.7 \\*
+& LRC-BART ($w=0$) & 0.007 & 0.92 & 0.859 & 0.848 & 0.57 & 0.05 & $-$0.25 & $-$1.74 & 0.1 \\*
+& LRC-BART (100) & 0.001 & 0.93 & 0.850 & 0.848 & 0.64 & 0.05 & $-$0.26 & $-$1.71 & 0.8 \\
+\midrule
+\multirow{5}{*}{Sc5 (1)} & BART-PP & $-$0.004 & 0.95 & --- & 0.769 & --- & --- & --- & --- & --- \\*
+& C-BART & $-$0.244 & 0.68 & --- & 0.821 & --- & 0.43 & --- & $-$0.60 & 41.5 \\*
+& LRC-BART ($w=0$) & 0.007 & 0.92 & --- & 0.769 & --- & 0.10 & --- & $-$1.00 & 0.1 \\*
+& LRC-BART (100) & $-$0.005 & 0.91 & --- & 0.768 & --- & 0.10 & --- & $-$0.98 & 1.2 \\*
+& CAHB & $-$0.437 & 0.91 & --- & 2.203 & --- & --- & --- & --- & --- \\
+\midrule
+\multirow{5}{*}{Sc5 (2)} & BART-PP & $-$0.012 & 0.95 & --- & 0.771 & --- & --- & --- & --- & --- \\*
+& C-BART & $-$0.316 & 0.76 & --- & 0.932 & --- & 0.19 & --- & $-$1.54 & 45.4 \\*
+& LRC-BART ($w=0$) & 0.006 & 0.93 & --- & 0.771 & --- & 0.01 & --- & $-$2.00 & 0.1 \\*
+& LRC-BART (100) & $-$0.001 & 0.92 & --- & 0.771 & --- & 0.01 & --- & $-$1.99 & 0.2 \\*
+& CAHB & $-$0.067 & 0.95 & --- & 1.983 & --- & --- & --- & --- & --- \\
+\end{longtable}
+\endgroup
+\begin{center}\scriptsize
+\par\medskip
+\begin{tabular}{lcc}
+\toprule
+Scenario & Regional ESS, $X_5>2$ & Regional ESS, $X_5\le2$ \\
+\midrule
+Sc1 & 32.66 & 31.86 \\
+Sc4 (1) & 15.14 & 12.74 \\
+Sc4 (2) & 9.51 & 0.44 \\
+Sc5 (2) & 0.24 & 0.24 \\
+\bottomrule
+\end{tabular}
+\par\smallskip\parbox{\textwidth}{\scriptsize Regional realized ESS for LRC-BART (100), averaged over the first 200 paired replicates. Each estimand is the control mean standardized to all RCT profiles in that region. The partition is held fixed for Sc1 and Sc5; both regions are compatible in Sc1 and neither is compatible in Sc5. Regional effective sizes are not additive.}
+\end{center}

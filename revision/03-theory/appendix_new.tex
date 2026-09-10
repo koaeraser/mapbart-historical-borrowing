@@ -1,0 +1,470 @@
+% appendix_new.tex : theory appendix for LRC-BART (locally robust commensurate BART).
+% Standalone body: compile by \input-ing this file into a wrapper that carries the
+% preamble of paper/main.tex (see 03-theory/build/wrapper.tex). No \documentclass here.
+%
+% Bibliography keys used below exist in paper/ref.bib except the two flagged in
+% comments (Hahn, Murray and Carvalho 2020; Hobbs et al. 2011), which are cited in
+% text only until the entries are added.
+
+% ---- Appendix-local theorem environments (Theorem A1, Lemma A1, ...) -------------
+\newtheorem{thmA}{Theorem}
+\renewcommand{\thethmA}{A\arabic{thmA}}
+\newtheorem{lemA}{Lemma}
+\renewcommand{\thelemA}{A\arabic{lemA}}
+\newtheorem{propA}{Proposition}
+\renewcommand{\thepropA}{A\arabic{propA}}
+\newtheorem{corA}{Corollary}
+\renewcommand{\thecorA}{A\arabic{corA}}
+\theoremstyle{definition}
+\newtheorem{assA}{Assumption}
+\renewcommand{\theassA}{A\arabic{assA}}
+\newtheorem{remA}{Remark}
+\renewcommand{\theremA}{A\arabic{remA}}
+\theoremstyle{plain}
+\renewcommand{\theequation}{A\arabic{equation}}
+\newcommand{\Pspike}{P_{\mathrm{spike}}}
+\newcommand{\ess}{\mathrm{ESS}}
+\newcommand{\Phibar}{\bar\Phi}
+\newcommand{\tr}{^{\top}}
+
+\section*{Web Appendix A: Model, notation, and exact leaf marginals}
+
+This appendix collects the proofs for the locally robust commensurate BART (LRC-BART) model of the main text. We fix notation first. The two control sources are indexed by $g=1$ (RCT control) and $g=2$ (RWD control), with residual variances $\sigma_1^2$ and $\sigma_2^2$. The control outcomes follow
+\begin{equation}
+y_i=f(x_i)+D_i\,g(x_i)+\varepsilon_i,\qquad \varepsilon_i\sim\Normal(0,\sigma^2_{g_i}),\qquad D_i=\mathbf 1\{i\ \text{is an RCT control}\},
+\label{eqA:model}
+\end{equation}
+where $f$ is a standard BART ensemble of $H_f$ trees with leaf prior $\Normal(0,\lambda_f^2)$ and $g$ is an ensemble of $H_g$ trees whose leaves carry the two-component prior
+\begin{equation}
+\theta_{h\ell}\given z_{h\ell}\sim z_{h\ell}\,\Normal(0,\tau_0^2)+(1-z_{h\ell})\,\Normal(0,\tau_1^2),\qquad z_{h\ell}\iid\Ber(w),
+\label{eqA:leafprior}
+\end{equation}
+with $z=1$ the spike (commensurate component) and $z=0$ the slab, $w\sim\mathrm{Beta}(a_w,b_w)$, $\tau_1^2$ fixed by the range rule, and
+\begin{equation}
+\tau_0^2\sim\text{scaled-Inv-}\chi^2(\nu_0,s_0^2)\ \text{truncated to }(0,\tau_1^2),
+\label{eq:tau0prior}
+\end{equation}
+which is the prior the sampler implements (its conditional for $\tau_0^2$ is the scaled-Inv-$\chi^2(\nu_0+K_0,\cdot)$ law truncated to $(0,\tau_1^2)$, which is conjugate for \eqref{eq:tau0prior} and not for the untruncated prior). Throughout we impose
+\begin{assA}[(A1)]\label{ass:A1}
+$0<\tau_0^2<\tau_1^2<\infty$.
+\end{assA}
+\noindent Under \eqref{eq:tau0prior}, Assumption~\ref{ass:A1} holds almost surely under the prior and along the chain. The prior-ESS calculation of Web Appendix~D uses the untruncated scaled-Inv-$\chi^2(\nu_0,s_0^2)$ law, and we say there where truncation matters; at the calibrated $s_0^2$ of order $10^{-3}$ against $\tau_1^2$ of order one the truncated mass $P(\chi^2_{\nu_0}<\nu_0s_0^2/\tau_1^2)$ is of order $10^{-5}$.
+
+Within a leaf, $n_g$ and $\bar y_g$ denote the number and the mean of the source-$g$ partial residuals routed to the leaf, $v_g=\sigma_g^2/n_g$, and $\phi(\cdot;m,V)$ is the $\Normal(m,V)$ density; $\Phi$ is the standard normal distribution function and $\Phibar=1-\Phi$. For a $g$ leaf only RCT controls enter, and we write $\bar y=\bar y_1$, $v=v_1$, $n=n_1$ when no confusion arises. The identity we use repeatedly is the Gaussian product rule
+\begin{equation}
+\phi(\theta;0,\tau^2)\,\phi(\bar y;\theta,v)=\phi(\bar y;0,\tau^2+v)\,\phi\Bigl(\theta;\tfrac{\tau^2}{\tau^2+v}\bar y,\ \tfrac{\tau^2 v}{\tau^2+v}\Bigr),
+\label{eq:gaussprod}
+\end{equation}
+which follows by completing the square in $\theta$.
+
+\subsection*{A.1 Exact leaf marginals}
+
+\begin{lemA}[Exact leaf marginals]\label{lem:marg}
+Fix all trees other than tree $h$, their leaf parameters, the residual variances, $\lambda_f^2$, and $(\tau_0^2,\tau_1^2,w)$.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item (\emph{$f$ leaf.}) Let $r_i=y_i-f_{-h}(x_i)-D_ig(x_i)$ be the partial residuals of the control observations routed to a leaf of $f$-tree $h$, so that $r_i\given\theta\indep\Normal(\theta,\sigma^2_{g_i})$ and $\theta\sim\Normal(0,\lambda_f^2)$. With $A=n_1/\sigma_1^2+n_2/\sigma_2^2$ and $B=S_1/\sigma_1^2+S_2/\sigma_2^2$, $S_g=\sum_{i:g_i=g}r_i$,
+\begin{equation}
+\int\prod_i\phi(r_i;\theta,\sigma^2_{g_i})\,\phi(\theta;0,\lambda_f^2)\,\dd\theta
+=\Bigl[\prod_i\phi(r_i;0,\sigma^2_{g_i})\Bigr]\,M_f,\qquad
+M_f=\frac{\exp\bigl\{\lambda_f^2B^2/\{2(1+\lambda_f^2A)\}\bigr\}}{(1+\lambda_f^2A)^{1/2}}.
+\label{eqA:Mf}
+\end{equation}
+\item (\emph{$g$ leaf.}) Let $r_i=y_i-f(x_i)-g_{-h}(x_i)$ be the partial residuals of the $n_1$ RCT controls routed to a leaf of $g$-tree $h$, with mean $\bar y$. Under the prior \eqref{eqA:leafprior},
+\begin{equation}
+\sum_{z\in\{0,1\}}P(z)\int\prod_i\phi(r_i;\theta,\sigma_1^2)\,\phi(\theta;0,\tau_z^2)\,\dd\theta
+=\Bigl[\prod_i\phi(r_i;0,\sigma_1^2)\Bigr]\,M_g,
+\label{eqA:Mg}
+\end{equation}
+\begin{equation}
+M_g=\frac{w\,\phi(\bar y;0,\tau_0^2+v)+(1-w)\,\phi(\bar y;0,\tau_1^2+v)}{\phi(\bar y;0,v)},
+\label{eq:Mg2}
+\end{equation}
+where $\tau_z^2$ denotes $\tau_0^2$ for $z=1$ and $\tau_1^2$ for $z=0$. A leaf with $n_1=0$ has $M_g=1$.
+\item (\emph{Leaf conditionals.}) In a $g$ leaf,
+\begin{equation}
+P(z=1\given\bar y)=\frac{w\,\phi(\bar y;0,\tau_0^2+v)}{w\,\phi(\bar y;0,\tau_0^2+v)+(1-w)\,\phi(\bar y;0,\tau_1^2+v)},\qquad
+\theta\given z,\bar y\sim\Normal\Bigl(\frac{\tau_z^2}{\tau_z^2+v}\bar y,\ \frac{\tau_z^2v}{\tau_z^2+v}\Bigr),
+\label{eq:leafcond}
+\end{equation}
+and in an $f$ leaf $\theta\given\cdot\sim\Normal\bigl(\lambda_f^2B/(1+\lambda_f^2A),\ \lambda_f^2/(1+\lambda_f^2A)\bigr)$.
+\end{enumerate}
+\end{lemA}
+
+\begin{proof}
+(a) Expanding $-(r_i-\theta)^2/(2\sigma^2_{g_i})=-r_i^2/(2\sigma^2_{g_i})+r_i\theta/\sigma^2_{g_i}-\theta^2/(2\sigma^2_{g_i})$ and summing over $i$ gives
+$\prod_i\phi(r_i;\theta,\sigma^2_{g_i})=\prod_i\phi(r_i;0,\sigma^2_{g_i})\exp(\theta B-\theta^2A/2)$. Multiplying by $\phi(\theta;0,\lambda_f^2)$ and integrating, the exponent is $-\tfrac12(A+\lambda_f^{-2})\theta^2+B\theta$, a Gaussian integral equal to $(2\pi)^{1/2}(A+\lambda_f^{-2})^{-1/2}\exp\{B^2/(2(A+\lambda_f^{-2}))\}$; dividing by the prior normalizing constant $(2\pi\lambda_f^2)^{1/2}$ gives $M_f$. The conditional of $\theta$ is read off the same quadratic form.
+
+(b) With a single source, (a) gives $\prod_i\phi(r_i;\theta,\sigma_1^2)=\prod_i\phi(r_i;0,\sigma_1^2)\exp\{\theta n\bar y/\sigma_1^2-\theta^2n/(2\sigma_1^2)\}$, and the exponential equals $\phi(\bar y;\theta,v)/\phi(\bar y;0,v)$, since $-\{(\bar y-\theta)^2-\bar y^2\}/(2v)=(2\bar y\theta-\theta^2)n/(2\sigma_1^2)$. Hence the likelihood factors as $\prod_i\phi(r_i;0,\sigma_1^2)\times\phi(\bar y;\theta,v)/\phi(\bar y;0,v)$, the sufficiency of $\bar y$. Integrating $\phi(\bar y;\theta,v)$ against $\phi(\theta;0,\tau_z^2)$ by \eqref{eq:gaussprod} gives $\phi(\bar y;0,\tau_z^2+v)$, and the sum over $z$ with weights $w$ and $1-w$ gives $M_g$. When $n_1=0$ the leaf has no likelihood factor and the integral of the prior is one.
+
+(c) By \eqref{eq:gaussprod}, the joint density of $(z,\theta)$ given $\bar y$ is proportional to $P(z)\phi(\bar y;0,\tau_z^2+v)\,\phi(\theta;\tau_z^2\bar y/(\tau_z^2+v),\tau_z^2v/(\tau_z^2+v))$; summing out $\theta$ gives the stated Bernoulli weight and the remaining factor is the stated conditional of $\theta$.
+\end{proof}
+
+\begin{propA}[The tree moves target the exact posterior]\label{prop:exact}
+Condition on $(\sigma_1^2,\sigma_2^2,\lambda_f^2,\tau_0^2,\tau_1^2,w)$ and on all trees other than $h$ together with their leaf parameters. Let the update of tree $h$ consist of a Metropolis--Hastings step on the partition $T_h$ with grow, prune, and change proposals, acceptance ratio equal to the tree-prior ratio times the proposal ratio times the ratio of products of $M_f$ (for $f$ trees) or $M_g$ (for $g$ trees) over the affected leaves, followed by a draw of the leaf parameters of $T_h$ (and, for a $g$ tree, the indicators) from \eqref{eq:leafcond}. Then the composite update leaves the conditional posterior of $(T_h,\theta_h)$ (resp.\ $(T_h,\theta_h,z_h)$) invariant. Consequently the full sweep, with the conjugate updates of $(\sigma_g^2,\tau_0^2,w)$, the update of $\tau_0^2$ being the truncated conditional under the prior \eqref{eq:tau0prior}, is a partially collapsed Gibbs sampler whose invariant law is the exact joint posterior under \eqref{eqA:leafprior} and \eqref{eq:tau0prior}.
+\end{propA}
+
+\begin{proof}
+Given the conditioning, the marginal conditional of $T_h$ with the leaf parameters and indicators integrated out is $\pi(T_h)\prod_i\phi(r_i;0,\sigma^2_{g_i})\prod_{\ell\in T_h}M_\ell$ by Lemma~\ref{lem:marg}, where $M_\ell$ is $M_f$ or $M_g$. The partial residuals $r_i$ do not depend on $T_h$, and the observation-level product is over all observations of the tree, so it is the same for the current and the proposed partition and cancels from the Metropolis--Hastings ratio. The stated acceptance ratio is therefore the exact ratio for the collapsed target; for a grow move that splits leaf $P$ into $L$ and $R$, the leaf factor ratio is $M_LM_R/M_P$, and the prune and change ratios follow in the same way. A Metropolis--Hastings kernel with the exact ratio leaves the collapsed conditional invariant. Drawing the leaf parameters (and indicators) from their exact conditional given $T_h$ then yields a draw from the joint conditional of $(T_h,\theta_h,z_h)$, which is the marginal-then-conditional construction of \citet{Chipman2010BART}. The conjugate updates of $\sigma_g^2$, $\tau_0^2$, and $w$ are ordinary Gibbs steps, so the sweep is a partially collapsed Gibbs sampler with the joint posterior as invariant law.
+\end{proof}
+
+\begin{remA}[No surrogate is needed]\label{rem:nosurrogate}
+Every factor entering a tree move is closed form because, conditionally on $(\tau_0^2,\tau_1^2,w)$, the leaf prior \eqref{eqA:leafprior} is a finite Gaussian mixture, and the Gaussian likelihood integrates against each component in closed form. The previous model placed a leaf-specific discrepancy variance under a scaled-Inv-$\chi^2$ prior and integrated it inside the leaf marginal, which produced an additive scale mixture, $\int\phi(\bar y_1;0,v_1+\tau^2)\phi(\bar y_2;0,v_2+\tau^2)p(\tau^2)\,\dd\tau^2$, with no elementary form; the moment-matched Student-$t$ surrogate and the perturbation bound of the previous Theorem~2 were the response to that integral. In the present model the scale $\tau_0^2$ is a global parameter updated by its own conjugate step, and the local adaptivity is carried by the per-leaf indicator $z$, so the leaf marginal is exact and the tree kernels target the exact posterior (Proposition~\ref{prop:exact}). The surrogate, its error bound, and the compactness assumption that supported it are therefore no longer part of the method; Web Appendix~F lists what is dropped.
+\end{remA}
+
+\section*{Web Appendix B: Bounded local influence (T1)}
+
+\subsection*{B.1 A single $g$ leaf}
+
+We fix a $g$ leaf and condition on $f$, on the other $g$ trees, on the partition, and on $(\sigma_1^2,\tau_0^2,\tau_1^2,w)$, so that $\bar y\given\theta\sim\Normal(\theta,v)$ with $v=\sigma_1^2/n$. Write
+\begin{equation}
+\rho_j=\frac{\tau_j^2}{\tau_j^2+v},\qquad \hat\theta_j=\rho_j\,\bar y,\qquad V_j=\rho_j\,v=\frac{\tau_j^2v}{\tau_j^2+v},\qquad j\in\{0,1\},
+\label{eq:rho}
+\end{equation}
+so that $\hat\theta_1$ is the slab estimate (close to the RCT-only residual mean $\bar y$ when $\tau_1^2\gg v$) and $\hat\theta_0$ the spike-shrunk estimate (close to zero, that is, to the pooled surface $f$, when $\tau_0^2\ll v$). The subscript $j$ of $\rho_j$, $\hat\theta_j$, $V_j$ indexes the scale $\tau_j^2$, so $j=1$ is the slab, whereas the indicator convention of \eqref{eqA:leafprior} has $z=1$ for the spike. Under Assumption~\ref{ass:A1}, $0<\rho_0<\rho_1<1$. Let $p=P(z=0\given\bar y)$ be the posterior slab probability and define
+\begin{equation}
+\kappa=\frac12\Bigl(\frac{1}{\tau_0^2+v}-\frac{1}{\tau_1^2+v}\Bigr),\qquad
+a=\log\frac{1-w}{w}+\frac12\log\frac{\tau_0^2+v}{\tau_1^2+v},\qquad
+C=e^{-a}=\frac{w}{1-w}\sqrt{\frac{\tau_1^2+v}{\tau_0^2+v}}.
+\label{eq:kappaC}
+\end{equation}
+Under Assumption~\ref{ass:A1}, $\kappa>0$, and a direct computation gives
+\begin{equation}
+\rho_1-\rho_0=\frac{v(\tau_1^2-\tau_0^2)}{(\tau_1^2+v)(\tau_0^2+v)}=2v\kappa .
+\label{eq:rhodiff}
+\end{equation}
+
+\begin{thmA}[Bounded local influence]\label{thm:T1}
+Under Assumption~\ref{ass:A1} and the conditioning above, the following hold for every $\bar y\in\mathbb R$; parts (b) to (d) assume $0<w<1$.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item (\emph{Posterior.}) $\theta\given\bar y\sim p\,\Normal(\hat\theta_1,V_1)+(1-p)\,\Normal(\hat\theta_0,V_0)$, and hence
+\begin{equation}
+\E[\theta\given\bar y]=p\,\frac{\tau_1^2}{\tau_1^2+v}\,\bar y+(1-p)\,\frac{\tau_0^2}{\tau_0^2+v}\,\bar y .
+\label{eq:postmean}
+\end{equation}
+\item (\emph{Slab probability.}) $\displaystyle \logit p=\log\frac{p}{1-p}=a+\kappa\,\bar y^2$, with $a$ and $\kappa$ as in \eqref{eq:kappaC}.
+\item (\emph{Bounded spike contribution and bounded RWD-induced shift.}) The spike-shrunk part of \eqref{eq:postmean} satisfies $|(1-p)\hat\theta_0|\le|\bar y|\,\tau_0^2/(\tau_0^2+v)$. The shift of the posterior mean relative to the slab estimate,
+\begin{equation}
+I(\bar y)=\E[\theta\given\bar y]-\hat\theta_1=-(1-p)\,(\rho_1-\rho_0)\,\bar y ,
+\label{eq:I}
+\end{equation}
+satisfies $|I(\bar y)|\le(\rho_1-\rho_0)\,|\bar y|\,\min\{1,\,Ce^{-\kappa\bar y^2}\}$ and
+\begin{equation}
+\sup_{\bar y\in\mathbb R}|I(\bar y)|\ \le\ 2v\sqrt{\kappa\max\{\log C,\tfrac12\}}\ \le\ \sqrt{2v\max\{\log C,\tfrac12\}} .
+\label{eq:supI}
+\end{equation}
+\item (\emph{Gaussian rate.}) $1-p\le Ce^{-\kappa\bar y^2}$, so $p\to1$ and $I(\bar y)\to0$ as $|\bar y|\to\infty$, at a Gaussian rate.
+\item (\emph{Nested cases.}) With $w=1$ (C-BART), $p\equiv0$ and $I(\bar y)=-(\rho_1-\rho_0)\bar y$, linear and unbounded; if in addition $\tau_0^2\to0$ (BART-CP), $\E[\theta\given\bar y]\to0$ and $I(\bar y)\to-\rho_1\bar y$. With $w=0$, $p\equiv1$ and $I\equiv0$. If Assumption~\ref{ass:A1} fails with $\tau_0^2>\tau_1^2$, then $\kappa<0$, the roles of the two components are exchanged, and (c), (d) hold with the wide component in the role of the slab; if $\tau_0^2=\tau_1^2$, $p\equiv1-w$ and $I\equiv0$.
+\end{enumerate}
+\end{thmA}
+
+\begin{proof}
+(a) The posterior density is proportional to $\{w\phi(\theta;0,\tau_0^2)+(1-w)\phi(\theta;0,\tau_1^2)\}\phi(\bar y;\theta,v)$. Applying \eqref{eq:gaussprod} to each term gives $w\phi(\bar y;0,\tau_0^2+v)\phi(\theta;\hat\theta_0,V_0)+(1-w)\phi(\bar y;0,\tau_1^2+v)\phi(\theta;\hat\theta_1,V_1)$, a two-component Gaussian mixture with weights proportional to $w\phi(\bar y;0,\tau_0^2+v)$ and $(1-w)\phi(\bar y;0,\tau_1^2+v)$; normalizing gives $1-p$ and $p$ as in \eqref{eq:leafcond}, and \eqref{eq:postmean} is the mean of the mixture.
+
+(b) The log odds of the two weights are
+\[
+\log\frac{(1-w)\phi(\bar y;0,\tau_1^2+v)}{w\,\phi(\bar y;0,\tau_0^2+v)}
+=\log\frac{1-w}{w}-\frac12\log\frac{\tau_1^2+v}{\tau_0^2+v}+\frac{\bar y^2}{2}\Bigl(\frac{1}{\tau_0^2+v}-\frac{1}{\tau_1^2+v}\Bigr)=a+\kappa\bar y^2 .
+\]
+
+(c) The first bound is immediate from $0\le1-p\le1$. For $I$, subtract $\hat\theta_1$ from \eqref{eq:postmean}. Since $1-p=(1+e^{a+\kappa\bar y^2})^{-1}\le\min\{1,e^{-a-\kappa\bar y^2}\}=\min\{1,Ce^{-\kappa\bar y^2}\}$, the pointwise bound follows. For the supremum we show that for $\kappa>0$ and $C>0$,
+\begin{equation}
+\sup_{u\in\mathbb R}|u|\min\{1,Ce^{-\kappa u^2}\}\le\sqrt{\max\{\log C,\tfrac12\}/\kappa}.
+\label{eq:sup-lemma}
+\end{equation}
+Put $t=\kappa u^2$. On $\{t\le\log C\}$ (empty if $C\le1$) the left side is at most $|u|\le\sqrt{\log C/\kappa}$. On $\{t>\max(\log C,0)\}$ the left side equals $\sqrt{t/\kappa}\,Ce^{-t}$. If $\log C\ge\tfrac12$, the function $\sqrt t\,e^{-t}$ is decreasing on $[\tfrac12,\infty)$, so the value is at most $\sqrt{\log C/\kappa}\,Ce^{-\log C}=\sqrt{\log C/\kappa}$. If $\log C<\tfrac12$, then $\sup_{t>0}\sqrt t\,e^{-t}=(2e)^{-1/2}$ gives at most $C(2e\kappa)^{-1/2}<\sqrt{1/(2\kappa)}$ because $C<e^{1/2}$. This proves \eqref{eq:sup-lemma}. Combining with \eqref{eq:rhodiff}, $\sup|I|\le2v\kappa\sqrt{\max\{\log C,\tfrac12\}/\kappa}=2v\sqrt{\kappa\max\{\log C,\tfrac12\}}$, and $\kappa\le1/(2(\tau_0^2+v))\le1/(2v)$ gives the second inequality in \eqref{eq:supI}.
+
+(d) is the pointwise bound in (c) together with $\kappa>0$. (e) With $w=1$ the slab weight is zero for every $\bar y$; with $w=0$ the spike weight is zero; the remaining statements are read off \eqref{eq:kappaC} and \eqref{eq:I}.
+\end{proof}
+
+\begin{remA}[What is and is not bounded]\label{rem:slabshrink}
+Theorem~\ref{thm:T1} bounds the influence of the commensurate component relative to the slab estimate $\hat\theta_1=\rho_1\bar y$. The slab estimate itself is shrunk toward zero, that is toward the pooled surface $f$, by the factor $\rho_1$: $\E[\theta\given\bar y]-\bar y=-(1-\rho_1)\bar y+I(\bar y)$ with $1-\rho_1=v/(\tau_1^2+v)$. This linear term is the range-rule regularization that any BART leaf with prior variance $\tau_1^2$ applies, and it is of the same form as the shrinkage of a BART-NP leaf toward its ensemble center; at $n=50$, $\sigma_1=1.5$ and $\tau_1^2=1.25$ its slope is $0.035$. The bounded term $I$ is the part specific to borrowing.
+\end{remA}
+
+\begin{remA}[Numerical illustration]\label{rem:T1num}
+With $\sigma_1=1.5$, $n=50$, $\tau_0^2=0.001$ (the scale calibrated for $N_{\rm target}=100$ in the Gaussian study), $\tau_1^2=1.25$ (the range rule at $H_g=5$ for an outcome range of $10$) and $w=0.8$ fixed for illustration, $v=0.045$, $\kappa=10.5$, $C=21.2$, $\log C=3.06$, and $\rho_1-\rho_0=0.94$. The bound \eqref{eq:supI} gives $\sup|I|\le0.51$; the exact supremum of \eqref{eq:I}, a one-dimensional maximization, is $0.31$, attained at $\bar y=0.43$. By comparison C-BART's shift is $0.94\,|\bar y|$, which exceeds $0.51$ once $|\bar y|>0.54$.
+\end{remA}
+
+\subsection*{B.2 The estimand level: fixed partitions of the $g$ ensemble}
+
+The estimand is the RCT-standardized control mean $\mu=N^{-1}\sum_{i\le N}f_1(x_i)$ over the $N$ RCT covariate profiles, and $f_1=f+g$, so $\mu=\mu_f+\mu_g$ with $\mu_g=N^{-1}\sum_{i\le N}g(x_i)$. We condition on $f$, on the partitions $\mathcal T=(T_1,\dots,T_{H_g})$ of the $g$ trees, and on $(\sigma_1^2,\tau_0^2,\tau_1^2,w)$; the RWD then enters $\mu_g$ only through the shrinkage of $g$ toward zero. Index the $L_g$ leaves of all $g$ trees by $j$, let $\theta\in\mathbb R^{L_g}$ collect the leaf parameters and $z\in\{0,1\}^{L_g}$ the indicators, and let $r\in\mathbb R^{n_1}$ be the residuals $y_i-f(x_i)$ of the RCT controls. Let $X\in\{0,1\}^{n_1\times L_g}$ be the incidence matrix ($X_{ij}=1$ if control $i$ falls in leaf $j$), so each row of $X$ has exactly $H_g$ ones and $g(x_i)=(X\theta)_i$. Let $a\in\mathbb R^{L_g}$ with $a_j=N_j/N$, $N_j$ the number of estimand profiles in leaf $j$, so $\mu_g=a\tr\theta$, $\|a\|_1=H_g$, and $\|a\|_2^2\le\max_ja_j\sum_ja_j\le H_g$, so $\|a\|_2\le\sqrt{H_g}$. Then
+\begin{equation}
+r\given\theta\sim\Normal(X\theta,\sigma_1^2I),\qquad \theta\given z\sim\Normal(0,D_z),\quad D_z=\mathrm{diag}(\tau^2_{z_j}),\qquad \pi(z)=\prod_jw^{z_j}(1-w)^{1-z_j}.
+\label{eq:linform}
+\end{equation}
+Standard Gaussian algebra gives, with $V_z=XD_zX\tr+\sigma_1^2I$ and $\Sigma_z=(X\tr X/\sigma_1^2+D_z^{-1})^{-1}$,
+\begin{equation}
+P(z\given r)\propto\pi(z)\,\phi_{n_1}(r;0,V_z),\qquad
+\theta\given z,r\sim\Normal\bigl(\hat\theta(z),\Sigma_z\bigr),\qquad \hat\theta(z)=D_zX\tr V_z^{-1}r,
+\label{eqA:zpost}
+\end{equation}
+where the form of $\hat\theta(z)$ follows from $(X\tr X/\sigma^2+D^{-1})^{-1}X\tr/\sigma^2=DX\tr(XDX\tr+\sigma^2I)^{-1}$. We write $\mathbf 0$ for the all-slab configuration; the $w=0$ model (the tree analogue of BART-PP, a free source offset regularized by the range rule) has $\E_{w=0}[\mu_g\given r]=a\tr\hat\theta(\mathbf 0)$, and we call
+\begin{equation}
+\Delta(r)=\E[\mu_g\given r]-a\tr\hat\theta(\mathbf 0)=\sum_{z\ne\mathbf 0}P(z\given r)\,a\tr\bigl(\hat\theta(z)-\hat\theta(\mathbf 0)\bigr)
+\label{eq:Delta}
+\end{equation}
+the RWD-induced shift of the estimand at the given partitions.
+
+\begin{corA}[Bounded shift of the standardized control mean]\label{cor:estimand}
+Under Assumption~\ref{ass:A1}, $0<w<1$, and the conditioning of this subsection, let $\delta=\tau_1^2-\tau_0^2$ and $b=w\tau_1/\{(1-w)\tau_0\}$.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item (\emph{General partitions.}) $\displaystyle\sup_{r\in\mathbb R^{n_1}}|\Delta(r)|\le \sqrt{H_g}\Bigl(1+\frac{\tau_1}{\tau_0}\Bigr)(2^{L_g}-1)\sqrt{2\delta\max\{L_g\log b,\tfrac12\}}<\infty$.
+\item (\emph{Single tree, $H_g=1$.}) With leaves $\ell$, RCT counts $n_{1\ell}$, $v_\ell=\sigma_1^2/n_{1\ell}$, leaf means $\bar y_\ell$, and $\kappa_\ell,C_\ell$ as in \eqref{eq:kappaC} with $v=v_\ell$,
+\[
+\Delta(r)=\sum_{\ell:\,n_{1\ell}>0}a_\ell\,I_\ell(\bar y_\ell),\qquad
+\sup_r|\Delta(r)|\le\sum_\ell a_\ell\sqrt{2v_\ell\max\{\log C_\ell,\tfrac12\}} ,
+\]
+and the right side is at most $\max_\ell\sqrt{2v_\ell\max\{\log C_\ell,\tfrac12\}}$.
+\item (\emph{$H_g$ trees with a common partition.}) If all $g$ trees share one partition with leaves $\ell$, write $\vartheta_\ell=\sum_h\theta_{h\ell}$, $T_k=k\tau_0^2+(H_g-k)\tau_1^2$, $\rho^{(k)}_\ell=T_k/(T_k+v_\ell)$,
+\[
+\kappa_{k\ell}=\frac12\Bigl(\frac1{T_k+v_\ell}-\frac1{T_0+v_\ell}\Bigr),\qquad
+C_{k\ell}=\binom{H_g}{k}\Bigl(\frac{w}{1-w}\Bigr)^{k}\sqrt{\frac{T_0+v_\ell}{T_k+v_\ell}} .
+\]
+Then $P(k\ \text{spikes in leaf }\ell\given\bar y_\ell)\propto\binom{H_g}{k}w^k(1-w)^{H_g-k}\phi(\bar y_\ell;0,T_k+v_\ell)$, the leaves are independent a posteriori,
+\begin{align}
+\Delta(r)&=-\sum_\ell a_\ell\,\bar y_\ell\sum_{k=1}^{H_g}P(k\given\bar y_\ell)\bigl(\rho^{(0)}_\ell-\rho^{(k)}_\ell\bigr),
+\label{eq:Delta-common}\\
+\sup_r|\Delta(r)|&\le\max_\ell\ 2v_\ell\sum_{k=1}^{H_g}\sqrt{\kappa_{k\ell}\max\{\log C_{k\ell},\tfrac12\}}
+\ \le\ \max_\ell H_g\,v_\ell\sqrt{\frac{2\max_k\max\{\log C_{k\ell},\tfrac12\}}{H_g\tau_0^2+v_\ell}} .
+\label{eq:Delta-common-bound}
+\end{align}
+\item (\emph{Contrasts.}) Under complete pooling of the control surface ($w=1$, $\tau_0^2\to0$) the shift is $-a\tr\hat\theta(\mathbf 0)$, and under C-BART ($w=1$) it is $a\tr(\hat\theta(\mathbf 1)-\hat\theta(\mathbf 0))$; both are linear in $r$, and each is unbounded on $\mathbb R^{n_1}$ unless the corresponding linear functional vanishes identically. For a single tree the C-BART functional is $-\sum_\ell a_\ell(\rho_{1\ell}-\rho_{0\ell})\bar y_\ell$, which is nonzero whenever some leaf has $a_\ell>0$ and $n_{1\ell}>0$.
+\end{enumerate}
+\end{corA}
+
+\begin{proof}
+(a) Fix $z\ne\mathbf 0$, let $S=\{j:z_j=1\}$ be its spike leaves, $E_S$ the diagonal indicator of $S$, $X_S$ the corresponding columns of $X$, and $u=X_S\tr V_{\mathbf 0}^{-1}r\in\mathbb R^{|S|}$. Since $D_{\mathbf 0}-D_z=\delta E_S$,
+\[
+V_z^{-1}-V_{\mathbf 0}^{-1}=V_z^{-1}(V_{\mathbf 0}-V_z)V_{\mathbf 0}^{-1}=\delta\,V_z^{-1}X_SX_S\tr V_{\mathbf 0}^{-1},
+\qquad\text{so}\qquad
+V_z^{-1}r=V_{\mathbf 0}^{-1}r+\delta\,V_z^{-1}X_Su .
+\]
+Three consequences follow. First, the quadratic form in the likelihood ratio is
+\[
+r\tr(V_z^{-1}-V_{\mathbf 0}^{-1})r=\delta\,(V_z^{-1}r)\tr X_Su=\delta\bigl(u+\delta X_S\tr V_z^{-1}X_Su\bigr)\tr u=\delta\|u\|^2+\delta^2u\tr X_S\tr V_z^{-1}X_Su\ \ge\ \delta\|u\|^2 .
+\]
+Second, the difference of posterior means is
+\[
+\hat\theta(z)-\hat\theta(\mathbf 0)=(D_z-D_{\mathbf 0})X\tr V_{\mathbf 0}^{-1}r+D_zX\tr(V_z^{-1}-V_{\mathbf 0}^{-1})r=-\delta\,\iota_Su+\delta\,D_zX\tr V_z^{-1}X_S\,u ,
+\]
+where $\iota_S$ embeds $\mathbb R^{|S|}$ into the $S$ coordinates of $\mathbb R^{L_g}$. The matrix $D_zX\tr V_z^{-1}X=D_z^{1/2}\{M\tr(MM\tr+\sigma_1^2I)^{-1}M\}D_z^{-1/2}$ with $M=XD_z^{1/2}$, and the bracket is symmetric with eigenvalues $\lambda_i/(\lambda_i+\sigma_1^2)\in[0,1)$, so $\|D_zX\tr V_z^{-1}X_S\|\le\|D_zX\tr V_z^{-1}X\|\le\|D_z^{1/2}\|\|D_z^{-1/2}\|\le\tau_1/\tau_0$, and $\|\hat\theta(z)-\hat\theta(\mathbf 0)\|\le\delta(1+\tau_1/\tau_0)\|u\|$. Third, $|V_z|=\sigma_1^{2n_1}|D_z|\,|D_z^{-1}+X\tr X/\sigma_1^2|$ and $D_z^{-1}\succeq D_{\mathbf 0}^{-1}$ give $|V_{\mathbf 0}|/|V_z|\le|D_{\mathbf 0}|/|D_z|=(\tau_1^2/\tau_0^2)^{|S|}$, so
+\begin{align*}
+P(z\given r)\le\frac{P(z\given r)}{P(\mathbf 0\given r)}
+&=\frac{\pi(z)}{\pi(\mathbf 0)}\sqrt{\frac{|V_{\mathbf 0}|}{|V_z|}}\exp\Bigl\{-\tfrac12r\tr(V_z^{-1}-V_{\mathbf 0}^{-1})r\Bigr\}\\
+&\le c_z\,e^{-\delta\|u\|^2/2},\qquad c_z=b^{|S|}.
+\end{align*}
+Combining, and using \eqref{eq:sup-lemma} in the variable $\|u\|$ with $\kappa=\delta/2$,
+\begin{align*}
+\bigl|P(z\given r)\,a\tr(\hat\theta(z)-\hat\theta(\mathbf 0))\bigr|
+&\le\|a\|\,\delta\Bigl(1+\frac{\tau_1}{\tau_0}\Bigr)\|u\|\min\{1,c_ze^{-\delta\|u\|^2/2}\}\\
+&\le \sqrt{H_g}\Bigl(1+\frac{\tau_1}{\tau_0}\Bigr)\sqrt{2\delta\max\{|S|\log b,\tfrac12\}} .
+\end{align*}
+Summing over the $2^{L_g}-1$ configurations $z\ne\mathbf 0$ and using $|S|\le L_g$ gives (a).
+
+(b) For a single tree $X\tr X$ is diagonal, the residual vector splits by leaf, and \eqref{eq:linform} factorizes over leaves, so the leaves are independent a posteriori and each is the single-leaf model of Section~B.1 with $v=v_\ell$; leaves with $n_{1\ell}=0$ have posterior equal to prior under every $w$ and contribute zero to $\Delta$. Theorem~\ref{thm:T1}(c) bounds each $|I_\ell|$, and $\sum_\ell a_\ell=1$ gives the last inequality.
+
+(c) With a common partition, the residual in leaf $\ell$ is $r_i=\vartheta_\ell+\varepsilon_i$ and, given the indicators, $\vartheta_\ell\sim\Normal(0,T_{k_\ell})$ with $k_\ell$ the number of spikes among the $H_g$ leaves stacked on $\ell$; the leaves are independent a posteriori and $\mu_g=\sum_\ell a_\ell\vartheta_\ell$. Summing $\pi(z)\phi(\bar y_\ell;0,T_k+v_\ell)$ over the $\binom{H_g}{k}$ configurations with $k$ spikes gives the stated posterior of $k$, and \eqref{eq:gaussprod} gives $\E[\vartheta_\ell\given k,\bar y_\ell]=\rho^{(k)}_\ell\bar y_\ell$. Under $w=0$, $k=0$ almost surely, which gives the expression for $\Delta$. For $k\ge1$, $P(k\given\bar y_\ell)\le P(k\given\bar y_\ell)/P(0\given\bar y_\ell)=C_{k\ell}e^{-\kappa_{k\ell}\bar y_\ell^2}$, and $\rho^{(0)}_\ell-\rho^{(k)}_\ell=v_\ell(T_0-T_k)/\{(T_0+v_\ell)(T_k+v_\ell)\}=2v_\ell\kappa_{k\ell}$; the $k$-th term is therefore at most $2v_\ell\kappa_{k\ell}|\bar y_\ell|\min\{1,C_{k\ell}e^{-\kappa_{k\ell}\bar y_\ell^2}\}\le2v_\ell\sqrt{\kappa_{k\ell}\max\{\log C_{k\ell},\tfrac12\}}$ by \eqref{eq:sup-lemma}. The final form uses $\kappa_{k\ell}\le\kappa_{H_g\ell}\le1/\{2(H_g\tau_0^2+v_\ell)\}$ and $\sum_\ell a_\ell=1$.
+
+(d) With $w=1$ the posterior over $z$ is degenerate at $\mathbf 1$, so $\E[\mu_g\given r]=a\tr\hat\theta(\mathbf 1)$, linear in $r$; as $\tau_0^2\to0$, $\hat\theta(\mathbf 1)\to0$. A nonzero linear functional on $\mathbb R^{n_1}$ is unbounded. For a single tree, $\hat\theta_\ell(\mathbf 1)-\hat\theta_\ell(\mathbf 0)=(\rho_{0\ell}-\rho_{1\ell})\bar y_\ell$ by (b).
+\end{proof}
+
+\begin{remA}[On the constants]\label{rem:constants}
+The constant in (a) is finite for every design and every partition, which is the content of the statement, but it is far from sharp: it treats each of the $2^{L_g}-1$ non-slab configurations separately and bounds the posterior probability of each by its odds against the all-slab configuration. Parts (b) and (c) are the cases in which the sum collapses, and they display the dependence on $H_g$, on $\tau_0$ through $\kappa$, and on the leaf shrinkage $\rho^{(H_g)}_\ell=H_g\tau_0^2/(H_g\tau_0^2+v_\ell)$ of the all-spike state. For the numbers of Remark~\ref{rem:T1num} with $\tau_0^2=0.0012$ and the study's configuration $H_g=5$, the common-partition bound in (c) is $1.15$ per leaf, while the exact supremum of \eqref{eq:Delta-common} is $0.148$, attained at $\bar y_\ell=0.33$ (at $H_g=10$ the corresponding values are $1.80$ and $0.067$ at $0.30$); the ensemble abstains sooner than a single leaf because there are $H_g$ ways to place one slab, and one slab leaf absorbs almost all of the discrepancy. The exact supremum is a one-dimensional maximization and is what we recommend reporting.
+\end{remA}
+
+\section*{Web Appendix C: Detection and the borrowing map (T2)}
+
+\subsection*{C.1 A single $g$ leaf under a true local shift}
+
+We keep the conditioning of Section~B.1 and add a data-generating assumption: the RCT residuals in the leaf are $r_i=d+\epsilon_i$ with $\epsilon_i\iid\Normal(0,\sigma_1^2)$, where $d$ is the true local discrepancy between the RCT control surface and the pooled surface $f$ (taken as fixed; see the Gap paragraph in Section~C.3 for the estimated $f$). Then $\bar y\sim\Normal(d,v)$, $v=\sigma_1^2/n$. Let $\Pspike(\bar y)=1-p=P(z=1\given\bar y)$.
+
+\begin{thmA}[Leaf-level detection]\label{thm:T2}
+Under Assumption~\ref{ass:A1} and the conditioning above:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item (\emph{Spike probability.}) $\Pspike(\bar y)=\{1+\exp(a+\kappa\bar y^2)\}^{-1}$ with $a,\kappa$ as in \eqref{eq:kappaC}; it depends on $(\bar y,n)$ only through $\bar y^2$ and $v=\sigma_1^2/n$, is decreasing in $|\bar y|$, and satisfies $\Pspike(0)=\{1+e^{a}\}^{-1}$.
+\item (\emph{Half-detection discrepancy.}) If $\log\frac{w}{1-w}+\frac12\log\frac{\tau_1^2+v}{\tau_0^2+v}>0$, the equation $\Pspike(\bar y)=\tfrac12$ has the unique positive solution
+\begin{equation}
+d_{1/2}=\sqrt{\frac{2(\tau_0^2+v)(\tau_1^2+v)}{\tau_1^2-\tau_0^2}\Bigl\{\log\frac{w}{1-w}+\frac12\log\frac{\tau_1^2+v}{\tau_0^2+v}\Bigr\}}\ ;
+\label{eq:dhalf}
+\end{equation}
+otherwise $\Pspike\le\tfrac12$ for every $\bar y$ (with equality only at $\bar y=0$ when the bracket vanishes) and we set $d_{1/2}=0$. When $\tau_1^2\gg\tau_0^2+v$, $d_{1/2}^2\approx2(\tau_0^2+v)\{\log\frac{w}{1-w}+\frac12\log\frac{\tau_1^2}{\tau_0^2+v}\}$, a few multiples of $\tau_0^2+\sigma_1^2/n$. The probability that the leaf's slab probability exceeds one half, under the true shift $d$, is
+\begin{equation}
+P_d\bigl(p(\bar y)>\tfrac12\bigr)=P_d(|\bar y|>d_{1/2})=\Phibar\Bigl(\frac{d_{1/2}-d}{\sqrt v}\Bigr)+\Phibar\Bigl(\frac{d_{1/2}+d}{\sqrt v}\Bigr).
+\label{eq:detectprob}
+\end{equation}
+\item (\emph{Large $n$, $\tau_0^2$ fixed.}) As $n\to\infty$, almost surely
+\begin{equation}
+\Pspike(\bar y)\ \to\ \Pspike^\infty(d)=\Bigl\{1+\frac{(1-w)\tau_0}{w\,\tau_1}\exp\Bigl(\frac{d^2}{2}\Bigl(\frac1{\tau_0^2}-\frac1{\tau_1^2}\Bigr)\Bigr)\Bigr\}^{-1}\in(0,1).
+\label{eq:pinf}
+\end{equation}
+In particular, when $d=0$ (borrowing is warranted), $\Pspike\to w\tau_1/\{w\tau_1+(1-w)\tau_0\}>w$; when $d\ne0$, $\Pspike^\infty(d)\le\frac{w\tau_1}{(1-w)\tau_0}\exp\{-\frac{d^2}{2}(\tau_0^{-2}-\tau_1^{-2})\}$, which tends to zero as $|d|/\tau_0\to\infty$ but is strictly positive for every fixed $d$.
+\item (\emph{Large $n$ with a vanishing spike.}) If $\tau_0^2=\tau_{0,n}^2\to0$ as $n\to\infty$ (with $\tau_1^2$, $w$ fixed), then for every $d\ne0$, $\Pspike(\bar y)\to0$ almost surely.
+\end{enumerate}
+\end{thmA}
+
+\begin{proof}
+(a) is Theorem~\ref{thm:T1}(b) with $\kappa>0$. (b) Setting $a+\kappa\bar y^2=0$ gives $\bar y^2=-a/\kappa$, which is \eqref{eq:dhalf} after substituting \eqref{eq:kappaC}; the condition is $-a>0$. The approximation drops $v$ and $\tau_0^2$ against $\tau_1^2$ in $(\tau_1^2+v)/(\tau_1^2-\tau_0^2)$. Since $p>\tfrac12$ iff $|\bar y|>d_{1/2}$ and $\bar y\sim\Normal(d,v)$, \eqref{eq:detectprob} follows.
+
+(c) By the strong law, $\bar y\to d$ almost surely; $v\to0$ gives $a\to a_\infty=\log\frac{1-w}{w}+\frac12\log\frac{\tau_0^2}{\tau_1^2}$ and $\kappa\to\kappa_\infty=\frac12(\tau_0^{-2}-\tau_1^{-2})$, both finite. Hence $a+\kappa\bar y^2\to a_\infty+\kappa_\infty d^2$ almost surely, and \eqref{eq:pinf} follows by continuity of $t\mapsto(1+e^t)^{-1}$; the limit is strictly between $0$ and $1$ because the exponent is finite. The bound on $\Pspike^\infty(d)$ is $(1+e^t)^{-1}\le e^{-t}$.
+
+(d) Write $\epsilon_n=\tau_{0,n}^2+v_n\to0$. Then $a_n+\kappa_n\bar y_n^2\ge\log\frac{1-w}{w}+\frac12\log\frac{\epsilon_n}{\tau_1^2+v_n}+\bar y_n^2\bigl(\frac1{2\epsilon_n}-\frac1{2\tau_1^2}\bigr)$. Almost surely $\bar y_n^2\to d^2>0$, and $\frac{d^2}{2\epsilon_n}+\frac12\log\epsilon_n\to\infty$, so the log odds of the slab diverge and $\Pspike\to0$.
+\end{proof}
+
+\paragraph{Gap (consistency of abstention).}
+The design specification states that $\Pspike\to0$ as $n\to\infty$ for any nonzero shift. Theorem~\ref{thm:T2}(c) shows this is false for a fixed spike scale: because the spike is a $\Normal(0,\tau_0^2)$ component and not a point mass, a discrepancy of the order of $\tau_0$ is consistent with it, and the limiting spike probability \eqref{eq:pinf} is positive for every $d$. What is true is (i) the limit is exponentially small in $d^2/(2\tau_0^2)$, so abstention is consistent in the regime $|d|/\tau_0\to\infty$, and (ii) abstention is consistent for every fixed $d\ne0$ when the spike scale shrinks with $n$ (part (d)). In the two-arm sampler $\tau_0^2$ is learned from the spike leaves under a prior calibrated to the order $10^{-3}$, so on the outcome scale (i) is the operative statement: at $\tau_0^2=0.001$ a shift of $d=0.5$ has $d^2/(2\tau_0^2)=125$. The consistency statement that does hold for every fixed $d\ne0$, without a vanishing spike, is the one for the discrepancy map in Theorem~\ref{thm:gmap} below.
+
+\begin{remA}[Numerical illustration]\label{rem:T2num}
+With the constants of Remark~\ref{rem:T1num}, \eqref{eq:dhalf} gives $d_{1/2}=0.54$ (the specification's rough figure was $0.7$), and \eqref{eq:detectprob} gives leaf abstention probabilities $0.011$, $0.43$, $0.98$ and $1.00$ at true shifts $d=0$, $0.5$, $1$ and $2$. The limit \eqref{eq:pinf} at $d=0$ is $0.993$.
+\end{remA}
+
+\subsection*{C.2 The borrowing map $P(|g(x)|<c\given\text{data})$}
+
+The map we display is the posterior probability that the local discrepancy is smaller than a pre-specified outcome-scale threshold $c>0$, $\mathcal B_c(x)=P(|g(x)|<c\given\text{data})$, together with the all-spike map $B(x)=P(\text{all }H_g\text{ leaves covering }x\text{ are spike}\given\text{data})$ as a diagnostic. For a single tree and a fixed partition, $g(x)=\theta_\ell$ for $x$ in leaf $\ell$, and the two are related by the leaf mixture of Theorem~\ref{thm:T1}(a).
+
+\begin{thmA}[The discrepancy map for a single tree]\label{thm:gmap}
+Under Assumption~\ref{ass:A1}, for a single $g$ tree with a fixed partition, $f$ and $(\sigma_1^2,\tau_0^2,\tau_1^2,w)$ fixed, and $x$ in a leaf with statistics $(\bar y,n)$:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item (\emph{Exact form.}) $\mathcal B_c(x)=p\,\Psi_1(c)+(1-p)\,\Psi_0(c)$ with
+\[
+\Psi_j(c)=\Phi\Bigl(\frac{c-\rho_j\bar y}{\sqrt{\rho_jv}}\Bigr)-\Phi\Bigl(\frac{-c-\rho_j\bar y}{\sqrt{\rho_jv}}\Bigr),\qquad j\in\{0,1\}.
+\]
+\item (\emph{Relation to the spike probability.}) $\mathcal B_c(x)\le\Pspike(\bar y)+p\,\Psi_1(c)$, and on $\{\rho_0|\bar y|<c\}$,
+\[
+\mathcal B_c(x)\ \ge\ \Pspike(\bar y)\Bigl\{1-2\Phibar\Bigl(\frac{c-\rho_0|\bar y|}{\tau_0}\Bigr)\Bigr\}.
+\]
+\item (\emph{Consistency.}) If the RCT residuals in the leaf are $d+\epsilon_i$ as in Section~C.1 and $|d|\ne c$, then as $n\to\infty$, almost surely $\mathcal B_c(x)\to\mathbf 1\{|d|<c\}$, whatever the limit of $\Pspike$.
+\end{enumerate}
+\end{thmA}
+
+\begin{proof}
+(a) By Theorem~\ref{thm:T1}(a), the posterior of $g(x)=\theta$ is the two-component mixture with components $\Normal(\rho_j\bar y,\rho_jv)$, and $\Psi_j(c)$ is the probability that component $j$ lies in $(-c,c)$.
+
+(b) The upper bound uses $\Psi_0\le1$. For the lower bound, $\mathcal B_c\ge(1-p)\Psi_0(c)$ and, for a $\Normal(m,V)$ variable with $|m|<c$, $P(|N|\ge c)\le P(|N-m|\ge c-|m|)=2\Phibar((c-|m|)/\sqrt V)$; here $|m|=\rho_0|\bar y|$ and $V=\rho_0v=\tau_0^2v/(\tau_0^2+v)\le\tau_0^2$, and $\Phibar$ is decreasing.
+
+(c) Almost surely $\bar y\to d$, and $\rho_j\to1$, $\rho_jv\to0$ for both $j$, so $\rho_j\bar y\to d$ and each component concentrates at $d$: $\Psi_j(c)\to\mathbf 1\{|d|<c\}$ when $|d|\ne c$. A convex combination of two sequences with the same limit has that limit, regardless of the weights.
+\end{proof}
+
+\begin{remA}\label{rem:whygmap}
+Parts (b) and (c) are the theoretical counterpart of the empirical finding that $\mathcal B_c$ separates shifted from compatible regions while $B(x)$ does not. The spike indicator answers whether the leaf discrepancy is of the order of $\tau_0$, a question whose answer stays uncertain in the limit (Theorem~\ref{thm:T2}(c)); $\mathcal B_c$ answers whether it is smaller than $c$ on the outcome scale, a question that the RCT controls settle as $n$ grows. The threshold $c$ must be pre-specified on the outcome scale; the study uses one third of $\sigma_{\rm RCT}$.
+\end{remA}
+
+\subsection*{C.3 The ensemble with fixed partitions, and what is not proved}
+
+We return to the fixed-partition linear form \eqref{eq:linform}. For a profile $x$, let $e_x\in\{0,1\}^{L_g}$ select the $H_g$ leaves covering $x$, so $g(x)=e_x\tr\theta$. The atoms of the common refinement of the $H_g$ partitions are the cells $A_1,\dots,A_m$; $e_x$ is constant on each cell, and if $x$ and RCT control $i$ lie in the same cell then $e_x$ is row $i$ of $X$. Let $n_{1k}$ be the number of RCT controls in cell $A_k$.
+
+\begin{propA}[The discrepancy map for $H_g$ trees]\label{prop:ensemble}
+Under Assumption~\ref{ass:A1} and the conditioning of Section~B.2:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item (\emph{Exact form.}) $\mathcal B_c(x)=\sum_zP(z\given r)\,\Psi_z(c)$ with $\Psi_z(c)=P\{|\Normal(e_x\tr\hat\theta(z),\,e_x\tr\Sigma_ze_x)|<c\}$, and $B(x)=\sum_{z\in\mathcal Z_x}P(z\given r)$ where $\mathcal Z_x=\{z:z_j=1\ \text{for all }j\text{ with }(e_x)_j=1\}$.
+\item (\emph{Union bound.}) $1-B(x)\le\sum_{h=1}^{H_g}P(z_{h,\ell_h(x)}=0\given r)$ and $B(x)\le\min_hP(z_{h,\ell_h(x)}=1\given r)$, where $\ell_h(x)$ is the leaf of tree $h$ containing $x$. For $z\in\mathcal Z_x$, $e_x\tr\Sigma_ze_x\le e_x\tr D_ze_x=H_g\tau_0^2$, so on $\{|e_x\tr\hat\theta(z)|<c\}$, $\Psi_z(c)\ge1-2\Phibar\{(c-|e_x\tr\hat\theta(z)|)/(\sqrt{H_g}\tau_0)\}$.
+\item (\emph{Consistency at fixed partitions.}) Suppose the true residual means are representable on the partitions, $\E[r\given x]=X\theta^\ast$ for some $\theta^\ast\in\mathbb R^{L_g}$, and let $x\in A_k$ with $m_k^\ast=e_x\tr\theta^\ast$ and $|m_k^\ast|\ne c$. If $n_{1k}\to\infty$ (the other cell counts arbitrary), then $\mathcal B_c(x)\to\mathbf 1\{|m^\ast_k|<c\}$ in probability.
+\end{enumerate}
+\end{propA}
+
+\begin{proof}
+(a) is \eqref{eqA:zpost} and the definition of the two maps. (b) The first two inequalities are the union bound and monotonicity for the events $\{z_{h,\ell_h(x)}=0\}$, $h=1,\dots,H_g$. For Gaussians the posterior covariance is dominated by the prior covariance, $\Sigma_z=(X\tr X/\sigma_1^2+D_z^{-1})^{-1}\preceq D_z$, and for $z\in\mathcal Z_x$, $e_x\tr D_ze_x=H_g\tau_0^2$; the tail bound is as in Theorem~\ref{thm:gmap}(b).
+
+(c) Fix $z$; write $e=e_x$, $G=X\tr X/\sigma_1^2$, $m=e\tr\theta$. \emph{Variance.} The data enter the Gaussian model \eqref{eq:linform} through the cell means $\bar r_{k'}\given\theta\indep\Normal(e^{(k')\tr}\theta,\sigma_1^2/n_{1k'})$, where $e^{(k')}$ is the common row of $X$ in cell $k'$. In the joint Gaussian law of $(m,\bar r_1,\dots,\bar r_m)$ given $z$, conditional variances are constants and the law of total variance gives $\Var(m\given\bar r_k)=\E[\Var(m\given\bar r)\given\bar r_k]+\Var(\E[m\given\bar r]\given\bar r_k)\ge\Var(m\given\bar r)$; and $\Var(m\given\bar r_k)=\omega^2(\sigma_1^2/n_{1k})/(\omega^2+\sigma_1^2/n_{1k})\le\sigma_1^2/n_{1k}$ with $\omega^2=e\tr D_ze$. Hence $e\tr\Sigma_ze\le\sigma_1^2/n_{1k}\to0$. \emph{Mean.} With $r=X\theta^\ast+\epsilon$, \eqref{eqA:zpost} gives $\E[\theta\given z,r]=\Sigma_zG\theta^\ast+\Sigma_zX\tr\epsilon/\sigma_1^2$, and $\Sigma_zG=I-\Sigma_zD_z^{-1}$, so
+\[
+e\tr\E[\theta\given z,r]-m_k^\ast=-e\tr\Sigma_zD_z^{-1}\theta^\ast+e\tr\Sigma_zX\tr\epsilon/\sigma_1^2 .
+\]
+By the Cauchy--Schwarz inequality in the $\Sigma_z$ inner product,
+\[
+|e\tr\Sigma_zD_z^{-1}\theta^\ast|\le\sqrt{e\tr\Sigma_ze}\,\sqrt{(D_z^{-1}\theta^\ast)\tr\Sigma_z(D_z^{-1}\theta^\ast)}\le\sqrt{\sigma_1^2/n_{1k}}\;\tau_1\|\theta^\ast\|/\tau_0^2 ,
+\]
+using $\Sigma_z\preceq D_z\preceq\tau_1^2I$ and $\|D_z^{-1}\|\le\tau_0^{-2}$. The noise term has mean zero and variance $e\tr\Sigma_zG\Sigma_ze\le e\tr\Sigma_ze\le\sigma_1^2/n_{1k}$, because $G\preceq G+D_z^{-1}=\Sigma_z^{-1}$. Both terms vanish in probability. \emph{Conclusion.} For each of the finitely many $z$, $\Psi_z(c)=P\{|\Normal(\hat m_z,\hat V_z)|<c\}$ with $\hat m_z\to m_k^\ast$ in probability and $\hat V_z\to0$, so $\Psi_z(c)\to\mathbf 1\{|m_k^\ast|<c\}$ in probability when $|m_k^\ast|\ne c$, uniformly over $z$; the mixture $\sum_zP(z\given r)\Psi_z(c)$ then has the same limit whatever the weights.
+\end{proof}
+
+\paragraph{Gap (the ensemble with random partitions).}
+Everything in this appendix about the map is conditional on the partitions of the $g$ trees. Three things are not proved. First, the representability assumption in Proposition~\ref{prop:ensemble}(c) is a real restriction: with two trees splitting on different variables the incidence matrix has rank three on four cells, so a discrepancy with an interaction on those cells is not representable, and the fitted cell means then converge to a weighted projection of the truth onto the additive span of the partitions rather than to the truth. Second, we have no statement about the posterior over the partitions themselves, hence none about $\mathcal B_c(x)$ or $B(x)$ under the full posterior; posterior concentration for a single standard BART ensemble is known \citep{rockova2020bart}, but the two-ensemble decomposition with a spike-and-slab discrepancy prior is outside the available theory, and the empirical separation of regions by $\mathcal B_c$ (verification report, check~6c) is the evidence we have. Third, the leaf-level results treat $f$ as fixed; with $f$ estimated, the residual in a $g$ leaf carries the error of $f$ at the RCT profiles, which is $O_p$ of the RWD posterior standard deviation of $f$ there, and enters $d$ as an additive perturbation. On the estimand, this perturbation is what $V^f_\mu$ of Web Appendix~D measures.
+
+\section*{Web Appendix D: Monotone, well-posed ESS calibration (T3)}
+
+The prior effective sample size of the commensurate component is defined at the level of the estimand as
+\begin{equation}
+\ess_0(s_0^2)=\sigma_1^2\,\E_{\tau_0^2\sim\text{scaled-Inv-}\chi^2(\nu_0,s_0^2)}\Bigl[\frac1{V^f_\mu+c_gH_g\tau_0^2}\Bigr],
+\label{eqA:ess0}
+\end{equation}
+where $V^f_\mu=\Var(N^{-1}\sum_{i\le N}f(x_i)\given\text{RWD})>0$ is the Stage-1 posterior variance of the standardized RWD surface at the RCT profiles, $c_g\in(0,1]$ is the leaf-sharing constant of the $g$-tree prior, and the prior-averaged version is $\ess(w,s_0^2)=\sum_{k=0}^{H_g}\binom{H_g}{k}w^k(1-w)^{H_g-k}\,\sigma_1^2\,\E[\{V^f_\mu+c_g(k\tau_0^2+(H_g-k)\tau_1^2)\}^{-1}]$. In the calibration, $V^f_\mu$ is replaced by a block statistic $V^{(b)}$ from Stage 1, and the selection is the Pr-rule
+\begin{equation}
+\hat s^2_{0\star}=\inf\{s_0^2\in\mathcal S:\widehat G(s_0^2)\ge q\},\qquad
+\widehat G(s_0^2)=\frac1B\sum_{b=1}^B\mathbf 1\{\ess_0(V^{(b)};s_0^2)\le N_{\rm target}\},
+\label{eqA:prrule}
+\end{equation}
+with $\ess_0(V;s_0^2)$ denoting \eqref{eqA:ess0} at $V^f_\mu=V$. Its population counterpart is
+\[
+G(s_0^2)=P_{V\sim\mathbb P}\bigl\{\ess_0(V;s_0^2)\le N_{\rm target}\bigr\},
+\]
+where $\mathbb P$ is the stationary law of the block statistic.
+
+\begin{thmA}[Monotone, well-posed ESS calibration]\label{thm:T3}
+Fix $\sigma_1^2>0$, $V>0$, $c=c_gH_g>0$, $\nu_0>0$, and write $s=s_0^2$.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item (\emph{Monotonicity and limits.}) $s\mapsto\ess_0(V;s)$ is continuous, differentiable, convex, and strictly decreasing on $(0,\infty)$, with $\ess_0(V;s)\uparrow\sigma_1^2/V$ as $s\downarrow0$ and $\ess_0(V;s)\downarrow0$ as $s\uparrow\infty$; it is a bijection of $(0,\infty)$ onto $(0,\sigma_1^2/V)$. If the prior on $\tau_0^2$ is truncated to $(0,\tau_1^2)$ as in \eqref{eq:tau0prior}, $\ess_0(V;s)$ remains continuous and strictly decreasing with limit $\sigma_1^2/V$ as $s\downarrow0$, but its limit as $s\uparrow\infty$ is $\sigma_1^2/(V+c\tau_1^2)>0$, so it is a bijection onto $(\sigma_1^2/(V+c\tau_1^2),\sigma_1^2/V)$; convexity and differentiability are stated for the untruncated case only. $\ess(w,s)$ is strictly decreasing in $s$ and in $\tau_1^2$ (for $w<1$), and, when the prior on $\tau_0^2$ is truncated to $(0,\tau_1^2)$, strictly increasing in $w$.
+\item (\emph{Well-posed selection.}) For each $V$ the sublevel set $\{s:\ess_0(V;s)\le N_{\rm target}\}$ is the half-line $[s^\dagger(V),\infty)$, where $s^\dagger(V)$ is the unique root of $\ess_0(V;s)=N_{\rm target}$ if $N_{\rm target}<\sigma_1^2/V$ and $s^\dagger(V)=0$ otherwise; $s^\dagger$ is continuous and strictly decreasing in $V$ on $\{V<\sigma_1^2/N_{\rm target}\}$. Hence $G(s)=P_{\mathbb P}\{s^\dagger(V)\le s\}$ is the distribution function of $s^\dagger(V)$, non-decreasing and right-continuous, and $\{s:G(s)\ge q\}=[s_\star,\infty)$ is a nonempty closed half-line whose infimum $s_\star=\inf\{s\ge0:G(s)\ge q\}$ is attained and unique. The selected scale is strictly positive, $s_\star>0$, if and only if
+\begin{equation}
+P_{\mathbb P}\bigl(N_{\rm target}<\sigma_1^2/V\bigr)>1-q ,
+\label{eq:feasible}
+\end{equation}
+that is, the target lies below the ceiling $\sup_s\ess_0(V;s)=\sigma_1^2/V$ for more than a $1-q$ fraction of the Stage-1 blocks; when \eqref{eq:feasible} fails, $s_\star=0$, the point-mass limit (BART-CP), which the implementation reports as capped. Under the truncated prior \eqref{eq:tau0prior} a finite root $s^\dagger(V)$ exists only if in addition $N_{\rm target}>\sigma_1^2/(V+c\tau_1^2)$, the floor of part (a); below the floor the sublevel set is empty and no scale meets the target.
+\item (\emph{Monte Carlo consistency.}) Let the Stage-1 draws form a stationary, aperiodic, Harris ergodic Markov chain, and let $V^{(b)}_{\rm raw}$ be the sample variance of $N^{-1}\sum_if(x_i)$ over the $b$-th block of $m$ consecutive draws, $b=1,\dots,B$, with $\mathbb P_m$ the stationary law of $V^{(b)}_{\rm raw}$ and $G_m$ the corresponding population function. The implementation uses $V^{(b)}=\gamma_BV^{(b)}_{\rm raw}$ with $\gamma_B=\widehat V_{\rm whole}/(B^{-1}\sum_bV^{(b)}_{\rm raw})$, a finite-$m$ mean-matching correction that sets the block mean equal to the whole-chain variance and nothing more. Two regimes apply.
+\begin{itemize}[leftmargin=1.5em]
+\item (\emph{$m\to\infty$ at fixed $B$, the regime of the code, which fixes $B=20$ blocks of length $m=n_{\rm draw}/20$.}) Under geometric ergodicity every within-block variance converges almost surely to the stationary variance $V^f_\mu$, $\gamma_B\to1$, every $V^{(b)}\to V^f_\mu$, and $\widehat G(s)\to\mathbf 1\{s^\dagger(V^f_\mu)\le s\}$ for $s\ne s^\dagger(V^f_\mu)$; the Pr-rule then reduces to the root of $\ess_0(V^f_\mu;s)=N_{\rm target}$, and $\hat s^2_{0\star}$ converges to the smallest grid value at or above that root.
+\item (\emph{$B\to\infty$ at fixed $m$.}) For each $s$, $\widehat G(s)\to G_m(s)$ almost surely; if $G_m$ is continuous, the convergence is uniform in $s$. On a fixed finite grid $\mathcal S$ with $G_m(s)\ne q$ at every grid point, $\hat s^2_{0\star}=\inf\{s\in\mathcal S:G_m(s)\ge q\}$ for all $B$ large enough, almost surely. Under geometric ergodicity, $\sqrt B\{\widehat G(s)-G_m(s)\}$ is asymptotically normal, with long-run variance given by the Markov-chain central limit theorem of Theorem~3(c) of the paper for the unscaled indicator plus a delta-method term for the random $\gamma_B$, and the $O_p(B^{-1/2})$ rate of that theorem follows.
+\end{itemize}
+\item (\emph{Anchor.}) Condition on a single $f$ tree ($H_f=1$) with a fixed partition into leaves $\ell$, RWD counts $n_{2\ell}$, and $\sigma_2^2$ fixed, and let $a_\ell=N_\ell/N$ be the RCT profile proportions and $\pi_\ell=n_{2\ell}/n_2$ the RWD ones. Then
+\[
+V^f_\mu=\sum_\ell a_\ell^2\,\frac{\lambda_f^2\,\sigma_2^2/n_{2\ell}}{\lambda_f^2+\sigma_2^2/n_{2\ell}}\ \le\ \frac{\sigma_2^2}{n_2}\sum_\ell\frac{a_\ell^2}{\pi_\ell},
+\qquad
+\lim_{s\downarrow0}\ess_0(s)=\frac{\sigma_1^2}{V^f_\mu}\ \ge\ \frac{n_2\,\sigma_1^2/\sigma_2^2}{\sum_\ell a_\ell^2/\pi_\ell},
+\]
+with equality in the first inequality as $\lambda_f^2\to\infty$. Since $\sum_\ell a_\ell^2/\pi_\ell\ge1$ with equality if and only if $a=\pi$, matched leaf proportions give $\lim_{s\downarrow0}\ess_0(s)=n_2\sigma_1^2/\sigma_2^2$ in the flat-prior limit, and any covariate shift ($a\ne\pi$) lowers the ceiling.
+\end{enumerate}
+\end{thmA}
+
+\begin{proof}
+(a) Write $\tau_0^2=\nu_0s/Q$ with $Q\sim\chi^2_{\nu_0}$, so that $\ess_0(V;s)=\sigma_1^2\E[\psi(s,Q)]$ with $\psi(s,Q)=\{V+c\nu_0s/Q\}^{-1}$. For every $Q>0$, $s\mapsto\psi(s,Q)$ is continuous, strictly decreasing, convex, and bounded by $1/V$; dominated convergence (dominating constant $1/V$) gives continuity of the expectation, and strict monotonicity and convexity are preserved by integration against a probability measure. Differentiability: $\partial_s\psi=-c\nu_0Q^{-1}\{V+c\nu_0s/Q\}^{-2}$, and $|\partial_s\psi|\le1/(4Vs)$ because $(V+x)^2\ge4Vx$ for $x\ge0$, so differentiation under the integral is justified on compact subsets of $(0,\infty)$. As $s\downarrow0$, $\psi\uparrow1/V$ pointwise, and as $s\uparrow\infty$, $\psi\downarrow0$ pointwise; dominated convergence gives the limits, and a continuous strictly decreasing function with these limits is a bijection onto $(0,\sigma_1^2/V)$. For the truncated prior, the scaled-Inv-$\chi^2(\nu_0,s)$ family has monotone likelihood ratio in $s$ (the density ratio $p_{s'}(t)/p_s(t)\propto\exp\{-\nu_0(s'-s)/(2t)\}$ is increasing in $t$ for $s'>s$), truncation to a fixed interval preserves monotone likelihood ratio, monotone likelihood ratio implies stochastic ordering, and $t\mapsto(V+ct)^{-1}$ is strictly decreasing and bounded, so the expectation is strictly decreasing and continuous in $s$ by the same dominated-convergence argument. For the limits under truncation, the truncated density is proportional to $t^{-\nu_0/2-1}\exp\{-\nu_0s/(2t)\}$ on $(0,\tau_1^2)$: as $s\downarrow0$ the truncated law converges weakly to the point mass at $0$ (the untruncated law does, and the truncation probability tends to one), and as $s\uparrow\infty$ it converges weakly to the point mass at $\tau_1^2$, because for any $\epsilon>0$ the ratio of the density at $t<\tau_1^2-\epsilon$ to the density at $t\in(\tau_1^2-\epsilon/2,\tau_1^2)$ is, for $s\ge1$, at most $K_\epsilon\exp\{-\nu_0s\,\epsilon/(8\tau_1^4)\}\to0$ with $K_\epsilon$ independent of $s$ (split the exponent in two halves; one half absorbs the power factor uniformly in $t$, the other is at least $\nu_0s\epsilon/(8\tau_1^4)$); bounded continuity of $t\mapsto(V+ct)^{-1}$ gives the limits $\sigma_1^2/V$ and $\sigma_1^2/(V+c\tau_1^2)$. The scale representation $\tau_0^2=\nu_0s/Q$ is not available under truncation, and we do not claim convexity or differentiability there. For $\ess(w,s)$: each summand with $k\ge1$ is strictly decreasing in $s$ by the argument above and the $k=0$ term is constant, so the sum is strictly decreasing when $w>0$; each summand with $k<H_g$ is strictly decreasing in $\tau_1^2$; and with $\tau_0^2<\tau_1^2$ almost surely, $\varphi(k)=\sigma_1^2\E[\{V+c(k\tau_0^2+(H_g-k)\tau_1^2)\}^{-1}]$ is strictly increasing in $k$, so $\ess(w,s)=\E_{K\sim\mathrm{Bin}(H_g,w)}[\varphi(K)]$ is strictly increasing in $w$ because the binomial family is stochastically increasing in $w$.
+
+(b) By (a), for $N_{\rm target}<\sigma_1^2/V$ the equation $\ess_0(V;s)=N_{\rm target}$ has exactly one root $s^\dagger(V)\in(0,\infty)$ and the sublevel set is $[s^\dagger(V),\infty)$; for $N_{\rm target}\ge\sigma_1^2/V$ every $s>0$ satisfies $\ess_0(V;s)<\sigma_1^2/V\le N_{\rm target}$, and we set $s^\dagger(V)=0$. The map $(V,s)\mapsto\ess_0(V;s)$ is continuous and strictly decreasing in each argument, so $s^\dagger$ is continuous and strictly decreasing on $\{V<\sigma_1^2/N_{\rm target}\}$ (implicit function theorem for a strictly monotone continuous function, or directly: $V<V'$ gives $\ess_0(V';s^\dagger(V))<N_{\rm target}$, hence $s^\dagger(V')<s^\dagger(V)$). Then $\{s:\ess_0(V;s)\le N_{\rm target}\}=\{s:s^\dagger(V)\le s\}$, so $G$ is the distribution function of the random variable $s^\dagger(V)$, $V\sim\mathbb P$, hence non-decreasing and right-continuous with $G(s)\to1$ as $s\to\infty$ (since $s^\dagger(V)<\infty$ for every $V$). Thus $\{G\ge q\}$ is a nonempty closed half-line and its infimum is attained and unique. Finally $s_\star>0$ if and only if $G(0)<q$; $G(0)=P\{s^\dagger(V)=0\}=P\{N_{\rm target}\ge\sigma_1^2/V\}$, which is \eqref{eq:feasible}. This is the point at which the argument differs from Theorem~3(b) of the paper: there the leaf ELIR diverges as $s\to0$, so feasibility was automatic, while here the ceiling $\sigma_1^2/V$ is finite and feasibility is a condition on the data.
+
+(c) \emph{Regime $m\to\infty$.} A geometrically ergodic chain with a stationary start satisfies a strong law for the bounded-moment functional $N^{-1}\sum_if^{(t)}(x_i)$ and its square, so the sample variance over a block of length $m$ converges almost surely to the stationary variance $V^f_\mu$ as $m\to\infty$; the whole-chain variance converges to the same limit, hence $\gamma_B\to1$ and $V^{(b)}\to V^f_\mu$ for each of the $B$ blocks. By continuity of $s^\dagger$ (part (b)), $s^\dagger(V^{(b)})\to s^\dagger(V^f_\mu)$, so for $s\ne s^\dagger(V^f_\mu)$ every indicator converges and $\widehat G(s)\to\mathbf 1\{s^\dagger(V^f_\mu)\le s\}$; on a grid avoiding $s^\dagger(V^f_\mu)$ the selected value is eventually the smallest grid point above the root.
+
+\emph{Regime $B\to\infty$.} The chain being aperiodic and Harris ergodic, the $m$-step chain is Harris ergodic (aperiodicity is what excludes the periodic case, in which the $m$-block sequence can fail to be ergodic), and the raw block statistics $(V^{(b)}_{\rm raw})_{b\ge1}$, a fixed measurable function of the non-overlapping $m$-blocks, form a stationary ergodic sequence with marginal law $\mathbb P_m$. The indicator $\mathbf 1\{s^\dagger(V^{(b)}_{\rm raw})\le s\}$ is bounded and measurable, so the ergodic theorem gives pointwise almost-sure convergence of the unscaled empirical function to $G_m(s)$. The rescaling factor $\gamma_B$ is a ratio of two ergodic averages and converges almost surely to a constant $\gamma$ (equal to the ratio of the stationary variance to the mean within-block variance); when the distribution function of $\gamma V_{\rm raw}$ is continuous, the empirical distribution function of $\gamma_BV^{(b)}_{\rm raw}$ converges to it uniformly, by the Glivenko--Cantelli argument (monotonicity and pointwise convergence on a countable dense set) applied at $\gamma_B$ and the continuity of the limit in the scale. This gives $\widehat G(s)\to G_m(s)$ pointwise, uniformly when $G_m$ is continuous. On a finite grid with $G_m(s)\ne q$ at every grid point, $\widehat G(s)$ lies almost surely on the same side of $q$ as $G_m(s)$ at every grid point for $B$ large, so the empirical and population selections coincide. For the central limit theorem, write $\widehat G(s)=\widehat F_B(s;\gamma_B)$ with $\widehat F_B(s;\gamma)=B^{-1}\sum_b\mathbf 1\{s^\dagger(\gamma V^{(b)}_{\rm raw})\le s\}$. At fixed $\gamma$, $\sqrt B\{\widehat F_B(s;\gamma)-F(s;\gamma)\}$ satisfies the Markov-chain central limit theorem of Theorem~3(c) of the paper, whose proof uses only boundedness and measurability of the indicator; $\sqrt B(\gamma_B-\gamma)$ is asymptotically normal by the same theorem applied to the two averages and the delta method for the ratio; and when $\gamma\mapsto F(s;\gamma)$ is differentiable at $\gamma$, the delta method applied to $F(s;\gamma_B)-F(s;\gamma)$ adds the term $\partial_\gamma F(s;\gamma)\sqrt B(\gamma_B-\gamma)$, so $\sqrt B\{\widehat G(s)-G_m(s)\}$ is asymptotically normal with the sum of the two contributions and their covariance as long-run variance. The $O_p(B^{-1/2})$ rate of the selection then follows as in Theorem~3(c). The inner Monte Carlo over $\tau_0^2$ in \eqref{eqA:ess0} (common random numbers across the grid) adds an error that vanishes as the number of $\tau_0^2$ draws grows, by the strong law applied to the bounded integrand.
+
+(d) Given the partition and $\sigma_2^2$, the leaf means of the single $f$ tree are independent a posteriori with $\Var(\theta_\ell\given\text{RWD})=\lambda_f^2v_{2\ell}/(\lambda_f^2+v_{2\ell})$, $v_{2\ell}=\sigma_2^2/n_{2\ell}$ (Lemma~\ref{lem:marg}(c) with one source), and $N^{-1}\sum_if(x_i)=\sum_\ell a_\ell\theta_\ell$, which gives the expression for $V^f_\mu$; the inequality uses $\lambda_f^2v/(\lambda_f^2+v)\le v$ with equality in the limit, and $v_{2\ell}=\sigma_2^2/(n_2\pi_\ell)$. By the Cauchy--Schwarz inequality, $1=(\sum_\ell a_\ell)^2=(\sum_\ell(a_\ell/\sqrt{\pi_\ell})\sqrt{\pi_\ell})^2\le\sum_\ell a_\ell^2/\pi_\ell\cdot\sum_\ell\pi_\ell=\sum_\ell a_\ell^2/\pi_\ell$, with equality iff $a_\ell/\sqrt{\pi_\ell}\propto\sqrt{\pi_\ell}$, that is $a=\pi$. The limit of $\ess_0$ is (a).
+\end{proof}
+
+\begin{remA}[Units and the ceiling]\label{rem:units}
+The ceiling $\sigma_1^2/V^f_\mu$ is the ELIR of the RWD-informed prior for $\mu$ before any discrepancy is added \citep{neuenschwander2020}, and it is in RCT units only if $\sigma_1^2$ is the RCT residual variance; the verification report found the calibration using the RWD variance, which inflates the ceiling by $\sigma_2^2/\sigma_1^2$. Under covariate shift the ceiling can be far below the RWD sample size (the report gives $38$ against $n_2=300$ in Scenario~2), and then \eqref{eq:feasible} fails for $N_{\rm target}\in\{75,100\}$; Theorem~\ref{thm:T3}(b) says this is a property of the target, not of the rule. The regularization of $f$ adds $\sigma_1^2/(\Lambda_f^2c_f)$ to the ceiling in the notation of the specification; this is negligible at $H_f=50$ and is not subtracted.
+\end{remA}
+
+\begin{remark}[Calibration implementation]
+The calibration has two stages, of which Stage 1 fits standard BART to the RWD alone and records, for each posterior draw, the standardized surface $N^{-1}\sum_{i\le N}f^{(b)}(x_i)$ at the RCT profiles and the residual variance; the draws are cut into $B$ consecutive blocks, and each block gives one value $V^{(b)}$ of the estimand variance, rescaled so that the block mean equals the whole-chain variance $V_\mu^f$. The RCT residual variance $\sigma_1^2$ is the posterior mean from a standard BART fitted to the RCT controls alone, which puts $\mathrm{ESS}_0$ in RCT units; before RCT outcomes exist, $\sigma_2^2$ or a design value is substituted. Stage 2 evaluates \eqref{eq:ess0} on a grid $\mathcal S$ of candidate scales for each block and selects by the Pr-rule
+\eqref{eq:prrule}
+with $q=0.95$: the most informative spike whose prior ESS respects the target in at least a fraction $q$ of the Stage-1 blocks. Stage 1 does not depend on $s_0^2$, so the same draws serve any target, grid, or level $q$. When $N_{\rm target}$ is at or above the ceiling the rule returns the smallest grid value, the point-mass limit that is BART-CP, and the target is flagged as capped. In the two-arm analysis $\tau_0^2$ is then updated from the spike leaves, so the calibrated prior is informative but not fixed, and we report both the prior $\mathrm{ESS}_0$ and the realized ESS, $\E_{\rm post}[\sigma_1^2/\{V_\mu^f+c_g\sum_h\tau^2_{z_h}\}]$ with the indicators and $\tau_0^2$ drawn from the posterior. A pointwise version, $\mathrm{ESS}(x)=\sigma_1^2/\{V_f(x)+H_g\tau_0^2\}$ with $V_f(x)$ the RWD posterior variance of $f$ at $x$, gives the local ESS map of Section~\ref{sec:application}.
+
+\end{remark}
+
+\section*{Web Appendix E: Identifiability of $f$ and $g$}
+
+\begin{propA}[Population identification]\label{prop:ident}
+Let $\mathcal X_1$ and $\mathcal X_2$ be the supports of the covariate distributions of the RCT controls and of the RWD, and suppose the regression functions $x\mapsto\E[y\given x,D=0]$ on $\mathcal X_2$ and $x\mapsto\E[y\given x,D=1]$ on $\mathcal X_1$ are known (the infinite-data limit). Under model \eqref{eqA:model}:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item $f$ is identified on $\mathcal X_2$ and $f+g$ is identified on $\mathcal X_1$.
+\item $g$ is identified on $\mathcal X_1\cap\mathcal X_2$, as $g=(f+g)-f$.
+\item On $\mathcal X_1\setminus\mathcal X_2$ only the sum $f+g$ is identified; the split between $f$ and $g$ is determined by the prior, with $f$ the BART extrapolation of the RWD surface and $g$ the remainder.
+\item On $\mathcal X_2\setminus\mathcal X_1$, $f$ is identified and $g$ is not constrained by the data at all: its law there is the prior \eqref{eqA:leafprior} propagated through the tree prior, with hyperparameters $(\tau_0^2,w)$ learned from the leaves in $\mathcal X_1$. This region does not enter the RCT-standardized estimand $\mu$, whose profiles lie in the RCT support.
+\end{enumerate}
+The single-arm case is $\mathcal X_1=\emptyset$: $f$ is the RWD surface, $g$ is a prior draw everywhere, and $f_1=f+g$ is the RWD surface plus a zero-mean discrepancy process of pointwise variance $H_g\{w\tau_0^2+(1-w)\tau_1^2\}$ (at a profile covered by $H_g$ distinct leaves).
+\end{propA}
+
+\begin{proof}
+(a) is the model: $\E[y\given x,D=0]=f(x)$ on $\mathcal X_2$ and $\E[y\given x,D=1]=f(x)+g(x)$ on $\mathcal X_1$. (b), (c), (d) are immediate from (a) and from the fact that no other moment of the data involves $f$ or $g$. For the single-arm variance, $g(x)=\sum_h\theta_{h,\ell_h(x)}$ is a sum of $H_g$ independent draws from \eqref{eqA:leafprior}, each with variance $w\tau_0^2+(1-w)\tau_1^2$.
+\end{proof}
+
+\begin{remA}[Finite samples]\label{rem:identfinite}
+In finite samples the statement is leaf-wise. A $g$ leaf with no RCT controls has $M_g=1$ (Lemma~\ref{lem:marg}(b)) and its $(z,\theta)$ is drawn from the prior at the current $(\tau_0^2,w)$; a $g$ leaf that straddles the RCT support extends the RCT-informed discrepancy as a constant into the region without RCT controls, which is a piecewise-constant extrapolation and not a prior draw. On $\mathcal X_1\cap\mathcal X_2$ the separation of $f$ and $g$ rests on the two priors: $f$ is pinned by the RWD, whose observations do not involve $g$, and the spike shrinks $g$ toward zero, so a shift common to both sources is attributed to $f$ and a shift of the RCT controls alone to $g$. The mixture \eqref{eqA:leafprior} is identifiable as a two-component scale mixture as long as $\tau_0^2\ne\tau_1^2$, and Assumption~\ref{ass:A1} fixes which component is the spike, so the label of $z$ is well defined.
+\end{remA}
+
+\section*{Web Appendix F: What is dropped from the previous version}
+
+The previous supplement contained, besides the results replaced above, four items that supported the moment-matched Student-$t$ surrogate for the tree moves: Lemma~S2.1 (the exact node marginal as a one-dimensional $\tau^2$ integral with no closed form), Definition~S2.2 (the moment-matched Student-$t$ node marginal), Assumption~S2.4 (finite tree space and bounded leaf statistics), and Theorem~2 (the bound on the surrogate's log-error and the total-variation perturbation of the stationary law). All four are dropped, for one reason: the leaf marginals of the present model are exact (Lemma~\ref{lem:marg}), so the tree kernels target the exact posterior (Proposition~\ref{prop:exact}) and there is no approximation whose error would need to be bounded. The compactness assumption S2.4 was needed only to make the surrogate's worst-case error finite and to invoke uniform ergodicity on a finite tree space; neither is needed for a kernel with the exact acceptance ratio, whose invariance holds on the full state space. The old Lemma~S2.1 explains why the previous model needed a surrogate (the leaf-specific $\tau^2$ enters additively in $v_g+\tau^2$ and is integrated inside the leaf), and Remark~\ref{rem:nosurrogate} records why the present one does not (the scale is global and conditioned on; locality is carried by the indicator). Theorem~1 of the paper (location invariance of the exchangeable prior) is replaced by Theorem~\ref{thm:T1}, whose Remark~S1.2 survives as the $w=1$ contrast in Theorem~\ref{thm:T1}(e) and Corollary~\ref{cor:estimand}(d). Theorem~3 of the paper is replaced by Theorem~\ref{thm:T3}; parts (b) and (c) of its proof carry over with the changes stated there, and Lemma~S3.x (monotonicity of the data-informed predictive ELIR) is no longer needed because the calibration target \eqref{eqA:ess0} has the closed monotone form of Theorem~\ref{thm:T3}(a).

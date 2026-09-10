@@ -1,0 +1,10 @@
+useDynLib(lrcbart, .registration = TRUE)
+importFrom(Rcpp, evalCpp)
+export(lrc_bart, lrc_bart_aft, bart_fit, lrc_discrepancy, lrc_borrowing_map,
+       lrc_cg, lrc_ess_calibrate, lrc_ess_prior, lrc_ess_realized, lrc_ess_map,
+       lrc_ate, make_cutpoints, lrc_g_init_greedy)
+export(f_leaf_logmarg_cpp, g_leaf_logmarg_cpp, g_leaf_pspike_cpp, g_leaf_draw_cpp,
+       update_tau0_cpp, update_tau1_cpp, update_w_cpp, rtnorm_lower_cpp,
+       predict_forest_cpp, cg_montecarlo_cpp, forest_gvar_cpp)
+S3method(predict, lrcbart)
+S3method(print, lrcbart)

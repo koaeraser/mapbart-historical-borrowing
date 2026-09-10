@@ -1,0 +1,42 @@
+\begin{table}[htbp]
+\centering
+\singlespacing
+\caption{EloKRd versus UCMM: standardized 5-year RMST ratio, posterior mean [posterior median] and 95\% credible interval, for progression-free survival (PFS) and overall survival (OS) at the 30 EloKRd profiles. The ESS ceilings are 63.7 (PFS) and 36.7 (OS). Reference rows are rerun under the harmonized covariate coding of Section~\ref{sec:app_data}; the Kaplan--Meier row is unadjusted and reports the estimate with its large-sample interval from the survRM2 package. The published rows are those of the earlier analysis under the original coding, reported there as posterior medians.}
+\label{tab:app}
+\small
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1}
+\begin{adjustbox}{max width=\textwidth,max totalheight=0.68\textheight}
+\begin{tabular}{lccc}
+\toprule
+Method & PFS & OS & $\mathrm{ESS}_0$ (PFS / OS) \\
+\midrule
+\multicolumn{4}{l}{\textit{Reference methods, harmonized coding}} \\
+Kaplan--Meier, unadjusted & 1.01 (0.84, 1.22) & 0.90 (0.79, 1.03) &  \\
+AFT, complete pooling & 0.87 [0.87] (0.69, 1.06) & 0.80 [0.80] (0.65, 0.94) &  \\
+AFT, hierarchical ($s^2=0.5$) & 1.23 [1.21] (0.74, 1.90) & 1.21 [1.19] (0.77, 1.70) &  \\
+AFT-BART on UCMM, no discrepancy & 0.97 [0.97] (0.79, 1.16) & 0.90 [0.91] (0.78, 1.02) &  \\
+\midrule
+\multicolumn{4}{l}{\textit{LRC-BART, single-arm mode, harmonized coding, $H_f=10$, $w=1$}} \\
+$N_{\rm target}=30$ & 0.97 [0.96] (0.77, 1.23) & 0.90 [0.90] (0.77, 1.04) & 28.1 / 24.4 \\
+$N_{\rm target}=22.5$ & 0.98 [0.96] (0.76, 1.29) & 0.91 [0.90] (0.76, 1.06) & 20.6 / 19.0 \\
+$N_{\rm target}=15$ & 0.99 [0.96] (0.75, 1.40) & 0.91 [0.90] (0.76, 1.11) & 14.2 / 12.7 \\
+$0.9\times$ ceiling & 0.97 [0.96] (0.79, 1.15) & 0.90 [0.90] (0.77, 1.04) & 52.4 / 26.8 \\
+$0.5\times$ ceiling & 0.97 [0.96] (0.78, 1.22) & 0.91 [0.90] (0.76, 1.09) & 29.6 / 15.3 \\
+$0.25\times$ ceiling & 0.99 [0.96] (0.75, 1.38) & 0.92 [0.91] (0.75, 1.16) & 15.4 / 8.2 \\
+\midrule
+\multicolumn{4}{l}{\textit{Sensitivity analyses at $N_{\rm target}=30$}} \\
+$w=0.9$ & 1.00 [0.97] (0.74, 1.48) & 0.91 [0.90] (0.76, 1.10) & 28.1 / 24.4 \\
+$H_f=50$ & 0.98 [0.97] (0.78, 1.23) & 0.91 [0.91] (0.77, 1.05) & 27.1 / 25.3 \\
+Original covariate coding & 1.04 [1.01] (0.79, 1.43) & 0.91 [0.90] (0.76, 1.07) & 12.9 / 15.0 \\
+\midrule
+\multicolumn{4}{l}{\textit{Published rows (original coding, posterior medians)}} \\
+AFT, complete pooling & 1.03 (0.71, 1.61) & 0.90 (0.71, 1.17) &  \\
+AFT, hierarchical ($s^2=0.5$) & 1.21 (0.73, 2.68) & 1.18 (0.77, 1.89) &  \\
+Standard BART & 1.06 (0.79, 1.51) & 0.90 (0.76, 1.08) &  \\
+MAP-AFT-BART, $N_{\rm target}=30$ & 1.08 (0.66, 16.40) & 0.97 (0.74, 4.77) &  \\
+MAP-AFT-BART, $N_{\rm target}=15$ & 1.10 (0.65, 32.80) & 1.00 (0.73, 7.22) &  \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\end{table}

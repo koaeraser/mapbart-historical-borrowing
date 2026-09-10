@@ -1,0 +1,33 @@
+\begin{table}[htbp]
+\centering
+\singlespacing
+\caption{Regional and global shifts, survival outcomes (median ratio), $R=500$: columns as in Table~\ref{tab:map}, with the surface RMSE, the map threshold $c=0.5$ and $g$ on the log-time scale.}
+\label{tab:map_surv}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{0.8}
+\begin{adjustbox}{max width=\textwidth,max totalheight=0.68\textheight}
+\begin{tabular}{llccccccccc}
+\toprule
+& & \multicolumn{2}{c}{ATE} & \multicolumn{2}{c}{Surface RMSE} & \multicolumn{2}{c}{$\bar{\mathcal B}_c$} & \multicolumn{2}{c}{Mean $\hat g$} & \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}\cmidrule(lr){7-8}\cmidrule(lr){9-10}
+Scenario & Method & Bias & Cov & $\mathcal R$ & $\mathcal R^c$ & $\mathcal R$ & $\mathcal R^c$ & $\mathcal R$ & $\mathcal R^c$ & ESS \\
+\midrule
+\multirow{4}{*}{Sc4 (0.5)} & BART-PP & 0.011 & 0.96 & 0.783 & 0.838 & --- & --- & --- & --- & --- \\
+& C-BART & $-$0.094 & 0.94 & 0.747 & 0.805 & 0.96 & 0.96 & $-$0.08 & $-$0.08 & 44.6 \\
+& LRC-BART ($w=0$) & 0.047 & 0.94 & 0.784 & 0.820 & 0.65 & 0.64 & $-$0.18 & $-$0.24 & 0.2 \\
+& LRC-BART (100) & 0.001 & 0.95 & 0.764 & 0.809 & 0.79 & 0.78 & $-$0.15 & $-$0.18 & 19.2 \\
+\midrule
+\multirow{4}{*}{Sc4 (1)} & BART-PP & $-$0.012 & 0.97 & 0.803 & 0.888 & --- & --- & --- & --- & --- \\
+& C-BART & $-$0.202 & 0.84 & 0.762 & 0.920 & 0.91 & 0.90 & $-$0.16 & $-$0.17 & 44.5 \\
+& LRC-BART ($w=0$) & 0.040 & 0.94 & 0.814 & 0.861 & 0.52 & 0.46 & $-$0.33 & $-$0.53 & 0.2 \\
+& LRC-BART (100) & $-$0.011 & 0.93 & 0.792 & 0.868 & 0.64 & 0.58 & $-$0.30 & $-$0.44 & 12.8 \\
+\midrule
+\multirow{4}{*}{Sc5 (1)} & BART-PP & $-$0.029 & 0.95 & --- & 0.827 & --- & --- & --- & --- & --- \\
+& C-BART & $-$0.233 & 0.77 & --- & 0.843 & --- & 0.43 & --- & $-$0.62 & 25.9 \\
+& LRC-BART ($w=0$) & 0.053 & 0.94 & --- & 0.810 & --- & 0.15 & --- & $-$0.96 & 0.3 \\
+& LRC-BART (100) & 0.032 & 0.93 & --- & 0.807 & --- & 0.16 & --- & $-$0.94 & 2.0 \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\end{table}

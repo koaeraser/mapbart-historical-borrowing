@@ -1,0 +1,15 @@
+build/
+*.o
+*.so
+*.dll
+*.rds
+*.RData
+*.Rhistory
+*.aux
+*.log
+*.fls
+*.fdb_latexmk
+*.bbl
+*.blg
+*.out
+.DS_Store

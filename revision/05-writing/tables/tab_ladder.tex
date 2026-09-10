@@ -1,0 +1,58 @@
+\begin{table}[htbp]
+\centering
+\singlespacing
+\caption{The ESS ladder, Gaussian outcomes, $R=500$: absolute targets $N_{\rm target}\in\{50,75,100\}$ and fractional targets $0.25$, $0.5$, $0.9$ of the ceiling $\sigma_1^2/V_\mu^f$. Prior ESS is $\mathrm{ESS}_0$ at the calibrated scale, realized ESS its posterior counterpart, ceiling the mean ceiling, and capped the fraction of replicates in which the target was at or above the ceiling and the calibration returned the point-mass limit. Prior ESS is a block average and can exceed the whole-chain ceiling by a few percent when capped (Section~\ref{sec:sim_design}).}
+\label{tab:ladder}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{0.8}
+\begin{adjustbox}{max width=\textwidth,max totalheight=0.68\textheight}
+\begin{tabular}{llccccccc}
+\toprule
+Scenario & Target & Bias & RMSE & Cov & Prior ESS & Realized ESS & Ceiling & Capped \\
+\midrule
+\multirow{6}{*}{Sc1} & LRC-BART (50) & 0.009 & 0.181 & 0.94 & 42.7 & 28.5 & 128 & 0.00 \\
+& LRC-BART (75) & 0.008 & 0.176 & 0.94 & 62.1 & 40.6 & 127 & 0.04 \\
+& LRC-BART (100) & 0.009 & 0.172 & 0.94 & 82.1 & 52.5 & 127 & 0.20 \\
+& LRC-BART (0.25) & 0.008 & 0.184 & 0.94 & 28.0 & 18.7 & 127 & 0.00 \\
+& LRC-BART (0.5) & 0.009 & 0.178 & 0.93 & 53.6 & 34.8 & 128 & 0.00 \\
+& LRC-BART (0.9) & 0.011 & 0.171 & 0.95 & 90.0 & 55.7 & 127 & 0.00 \\
+\midrule
+\multirow{6}{*}{Sc2} & LRC-BART (50) & 0.023 & 0.193 & 0.93 & 24.5 & 13.5 & 23 & 1.00 \\
+& LRC-BART (75) & 0.022 & 0.192 & 0.93 & 24.5 & 13.5 & 23 & 1.00 \\
+& LRC-BART (100) & 0.023 & 0.192 & 0.94 & 24.5 & 13.5 & 23 & 1.00 \\
+& LRC-BART (0.25) & 0.012 & 0.200 & 0.94 & 5.1 & 3.3 & 23 & 0.00 \\
+& LRC-BART (0.5) & 0.016 & 0.197 & 0.93 & 9.7 & 6.0 & 23 & 0.00 \\
+& LRC-BART (0.9) & 0.019 & 0.193 & 0.93 & 16.5 & 9.6 & 23 & 0.00 \\
+\midrule
+\multirow{6}{*}{Sc3, $\rho=0$} & LRC-BART (50) & 0.045 & 0.282 & 0.94 & 44.2 & 1.9 & 224 & 0.00 \\
+& LRC-BART (75) & 0.042 & 0.281 & 0.94 & 64.7 & 1.7 & 224 & 0.00 \\
+& LRC-BART (100) & 0.041 & 0.280 & 0.94 & 84.5 & 1.6 & 224 & 0.00 \\
+& LRC-BART (0.25) & 0.045 & 0.279 & 0.94 & 49.4 & 1.9 & 224 & 0.00 \\
+& LRC-BART (0.5) & 0.041 & 0.280 & 0.94 & 94.1 & 1.6 & 224 & 0.00 \\
+& LRC-BART (0.9) & 0.037 & 0.277 & 0.94 & 160.7 & 1.3 & 224 & 0.00 \\
+\midrule
+\multirow{6}{*}{Sc4, $X_5$, $\delta_2=1$} & LRC-BART (50) & $-$0.036 & 0.213 & 0.90 & 42.5 & 13.1 & 126 & 0.00 \\
+& LRC-BART (75) & $-$0.041 & 0.221 & 0.90 & 62.0 & 17.1 & 125 & 0.05 \\
+& LRC-BART (100) & $-$0.041 & 0.223 & 0.89 & 82.0 & 20.8 & 125 & 0.22 \\
+& LRC-BART (0.25) & $-$0.032 & 0.208 & 0.92 & 27.6 & 9.7 & 126 & 0.00 \\
+& LRC-BART (0.5) & $-$0.037 & 0.218 & 0.90 & 52.5 & 14.8 & 125 & 0.00 \\
+& LRC-BART (0.9) & $-$0.041 & 0.224 & 0.90 & 89.4 & 21.1 & 126 & 0.00 \\
+\midrule
+\multirow{6}{*}{Sc4, $X_5$, $\delta_2=2$} & LRC-BART (50) & $-$0.002 & 0.201 & 0.92 & 42.4 & 0.8 & 125 & 0.00 \\
+& LRC-BART (75) & 0.001 & 0.201 & 0.93 & 61.8 & 0.8 & 125 & 0.04 \\
+& LRC-BART (100) & 0.000 & 0.202 & 0.92 & 83.1 & 0.8 & 124 & 0.27 \\
+& LRC-BART (0.25) & $-$0.001 & 0.204 & 0.93 & 27.4 & 0.8 & 125 & 0.00 \\
+& LRC-BART (0.5) & $-$0.001 & 0.202 & 0.92 & 52.2 & 0.8 & 125 & 0.00 \\
+& LRC-BART (0.9) & $-$0.000 & 0.202 & 0.93 & 88.5 & 0.8 & 124 & 0.00 \\
+\midrule
+\multirow{6}{*}{Sc5, $\delta_2=2$} & LRC-BART (50) & $-$0.001 & 0.203 & 0.93 & 42.7 & 0.3 & 128 & 0.00 \\
+& LRC-BART (75) & $-$0.001 & 0.205 & 0.93 & 62.1 & 0.3 & 127 & 0.04 \\
+& LRC-BART (100) & $-$0.001 & 0.203 & 0.92 & 82.1 & 0.2 & 127 & 0.20 \\
+& LRC-BART (0.25) & 0.000 & 0.203 & 0.92 & 28.0 & 0.3 & 127 & 0.00 \\
+& LRC-BART (0.5) & $-$0.001 & 0.204 & 0.93 & 53.6 & 0.3 & 128 & 0.00 \\
+& LRC-BART (0.9) & $-$0.001 & 0.205 & 0.92 & 90.0 & 0.3 & 127 & 0.00 \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\end{table}

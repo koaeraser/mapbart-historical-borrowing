@@ -1,0 +1,14 @@
+Package: lrcbart
+Type: Package
+Title: Locally Robust Commensurate BART
+Version: 0.1.0
+Authors@R: person("MAP-BART revision", role = c("aut", "cre"), email = "koaeraser@gmail.com")
+Description: Bayesian additive regression trees with a sparse discrepancy
+    ensemble carrying a spike-and-slab commensurate prior, for borrowing
+    real-world control data into a randomized trial (method_spec.md v2).
+License: MIT
+Encoding: UTF-8
+Imports: Rcpp (>= 1.0.0), stats
+LinkingTo: Rcpp
+Suggests: testthat, BART, survival
+RoxygenNote: 7.3.0
