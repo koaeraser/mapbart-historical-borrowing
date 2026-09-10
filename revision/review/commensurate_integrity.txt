@@ -1,0 +1,123 @@
+AUDIT numbers changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.PKdK52WmBP/numbers.before	2026-09-10 09:30:12
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.PKdK52WmBP/numbers.after	2026-09-10 09:30:12
+@@ -1,15 +1,15 @@
+- 132 0
++ 135 0
+    4 0,1
+    5 0.5
+    2 0.95
+    1 03
+    2 05
+    2 09
+- 175 1
++ 184 1
+    1 1,1
+    1 1,2
+    5 12
+- 168 2
++ 172 2
+    1 2.1
+    2 2.2
+    1 2.3
+AUDIT number_words changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.PKdK52WmBP/number_words.before	2026-09-10 09:30:12
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.PKdK52WmBP/number_words.after	2026-09-10 09:30:12
+@@ -5,4 +5,4 @@
+    1 third
+    4 three
+    8 two
+-   3 zero
++   5 zero
+PASS  citations
+PASS  labels
+PASS  sections
+PASS  equations
+AUDIT inline_math changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.PKdK52WmBP/inline_math.before	2026-09-10 09:30:12
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.PKdK52WmBP/inline_math.after	2026-09-10 09:30:12
+@@ -35,6 +35,7 @@
+ $H_g$
+ $H_g$
+ $H_g$
++$H_g$
+ $H_g=5$
+ $H_g\{w\tau_0^2+(1-w)\tau_1^2\}$
+ $I(\bar y)=\E[\theta\given\bar y]-\hat\theta_1=-(1-p)(\rho_1-\rho_0)\bar y$
+@@ -55,6 +56,8 @@
+ $P(z=1\given\bar y)=\{1+\exp(a+\kappa\bar y^2)\}^{-1}$
+ $S_0$
+ $S_g$
++$T_g$
++$T_g$
+ $T_h$
+ $V$
+ $V$
+@@ -120,6 +123,7 @@
+ $\sigma_2^2$
+ $\sum_\ell a_\ell^2/\pi_\ell$
+ $\sum_{h=1}^H m(x;T_h,\theta_h)$
++$\sum_{h=1}^{H_g}\{z_{h,\ell_h(x)}\tau_0^2+(1-z_{h,\ell_h(x)})\tau_1^2\}$
+ $\tau$
+ $\tau_0$
+ $\tau_0^2$
+@@ -182,14 +186,21 @@
+ $f$
+ $f$
+ $f$
++$f$
++$f(x)$
++$f(x)$
++$f(x)$
++$f(x)$
+ $f+g$
+ $f\given\text{RWD}$
+ $f_1$
+ $f_1(x)$
++$f_1(x)$
++$f_1(x)$
+ $f_1(x)=f(x)+\sum_he_h$
++$f_1(x)=f(x)+g(x)$
+ $f_1=f+g$
+ $f_1=f+g$
+-$f_1=f+g$
+ $f_T$
+ $f_T(x)$
+ $g$
+@@ -223,6 +234,7 @@
+ $g$
+ $g(x)$
+ $g(x)=f_1(x)-f(x)$
++$g(x)=f_1(x)-f(x)$
+ $g_i=1$
+ $g_i=2$
+ $g_i\in\{1,2\}$
+@@ -291,6 +303,7 @@
+ $x$
+ $x$
+ $x$
++$x$
+ $x_i\in\mathbb R^p$
+ $y_i$
+ $y_i$
+@@ -305,3 +318,4 @@
+ \[\n\mathrm{ESS}(w,s_0^2)=\sum_{k=0}^{H_g}\binom{H_g}kw^k(1-w)^{H_g-k}\,\sigma_1^2\,\E\bigl[\{V_\mu^f+c_g(k\tau_0^2+(H_g-k)\tau_1^2)\}^{-1}\bigr].\n\]
+ \[\n\sup_{\bar y}|I(\bar y)|\le\sqrt{2v\max\{\log C,\tfrac12\}},\qquad 1-p\le Ce^{-\kappa\bar y^2},\n\]
+ \[\nd_{1/2}=\Bigl[\frac{2(\tau_0^2+v)(\tau_1^2+v)}{\tau_1^2-\tau_0^2}\Bigl\{\log\frac w{1-w}+\frac12\log\frac{\tau_1^2+v}{\tau_0^2+v}\Bigr\}\Bigr]^{1/2},\n\]
++\[\nf_1(x)\given f,T_g,\{z_{h,\ell_h(x)}=1\}_{h=1}^{H_g},\tau_0^2\n\sim\Normal\!\left(f(x),H_g\tau_0^2\right).\n\]
+PASS  protected_blocks (no changes)
+PASS  graphics
+FAIL  references
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.PKdK52WmBP/references.before	2026-09-10 09:30:12
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.PKdK52WmBP/references.after	2026-09-10 09:30:12
+@@ -1,6 +1,6 @@
+    2 \eqref{eq:ess0}
+    1 \eqref{eq:leafprior}
+-   1 \eqref{eq:model}
++   2 \eqref{eq:model}
+    1 \ref{sec:application}
+    1 \ref{sec:discussion}
+    2 \ref{sec:ess}
+PASS  structure
+
+1 hard integrity check(s) failed.

@@ -1,0 +1,151 @@
+AUDIT numbers changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.431DO00on2/numbers.before	2026-09-10 09:30:12
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.431DO00on2/numbers.after	2026-09-10 09:30:12
+@@ -1,4 +1,4 @@
+-  48 0
++  53 0
+    1 0,0
+    1 0,1
+    1 0,80
+@@ -55,7 +55,7 @@
+    1 0.46
+   12 0.48
+    2 0.49
+-   9 0.5
++  10 0.5
+    1 0.51
+    2 0.55
+    1 0.56
+@@ -103,7 +103,7 @@
+    1 04
+    3 05
+    2 09
+-  77 1
++  87 1
+    1 1,1
+    1 1,2
+    1 1.00
+@@ -144,7 +144,7 @@
+    1 169
+    2 17
+    1 176,125
+-  86 2
++  90 2
+    2 2.25
+    1 2.3
+    1 2.31
+AUDIT number_words changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.431DO00on2/number_words.before	2026-09-10 09:30:12
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.431DO00on2/number_words.after	2026-09-10 09:30:12
+@@ -7,3 +7,4 @@
+    1 third
+    2 three
+    4 two
++   4 zero
+PASS  citations
+PASS  labels
+PASS  sections
+PASS  equations
+AUDIT inline_math changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.431DO00on2/inline_math.before	2026-09-10 09:30:12
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.431DO00on2/inline_math.after	2026-09-10 09:30:12
+@@ -124,10 +124,12 @@
+ $H=50$
+ $H_f=50$
+ $H_g$
++$H_g$
+ $H_g=5$
+ $H_g\tau_0^2\approx0.07$
+ $P(\text{ratio}>1)$
+ $R=500$
++$T_g$
+ $X_5$
+ $X_7$
+ $\bar y$
+@@ -135,6 +137,7 @@
+ $\bm U$
+ $\bm{-0.00}$
+ $\bm{-0.04}$
++$\bx$
+ $\bx_i$
+ $\delta$
+ $\delta/H$
+@@ -196,7 +199,12 @@
+ $f$
+ $f$
+ $f$
++$f(\bx)$
++$f(\bx)$
++$f(\bx)$
+ $f\mid\text{RWD}$
++$f_1$
++$f_1(\bx)$
+ $f_1=f+g$
+ $f_1=f+g$
+ $g$
+@@ -208,10 +216,10 @@
+ $g$
+ $g$
+ $g$
+-$g$
+-$g$
+-$g$
++$g(\bx)=f_1(\bx)-f(\bx)$
+ $g(x)$
++$g=f_1-f$
++$g=f_1-f$
+ $n$
+ $n=253$
+ $n=30$
+@@ -247,3 +255,5 @@
+ \[\n    \mathcal B_c(x)=P\bigl(|g(x)|<c\given\text{data}\bigr),\n  \]
+ \[\n    \mathrm{ESS}_0(s_0^2)=\sigma_1^2\,\E_{\tau_0^2}\Bigl[\frac{1}{V_\mu^f+c_gH_g\tau_0^2}\Bigr],\n    \qquad V_\mu^f=\mathrm{Var}\bigl(N^{-1}\textstyle\sum_i f(\bx_i)\given\text{RWD}\bigr).\n  \]
+ \[\n    \theta_{h\ell}\mid z_{h\ell}\sim z_{h\ell}\,\Normal(0,\tau_0^2)+(1-z_{h\ell})\,\Normal(0,\tau_1^2),\n    \qquad z_{h\ell}\sim\Ber(w),\quad w\sim\mathrm{Beta}(1,1),\n  \]
++\[\n  \boxed{f_1(\bx)\given f,T_g,\{z_{h,\ell_h(\bx)}=1\}_{h=1}^{H_g},\tau_0^2\n  \sim\Normal\!\left(\underbrace{f(\bx)}_{\text{external mean}},\ H_g\tau_0^2\right).}\n  \]
++\[g(\bx)\given T_g,\{z_{h,\ell_h(\bx)}=1\}_{h=1}^{H_g},\tau_0^2\n       \sim\Normal(0,H_g\tau_0^2).\]
+PASS  protected_blocks (no changes)
+PASS  graphics
+PASS  references
+AUDIT frame_titles changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.431DO00on2/frame_titles.before	2026-09-10 09:30:12
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.431DO00on2/frame_titles.after	2026-09-10 09:30:12
+@@ -2,6 +2,7 @@
+ External controls and transportability
+ Where the established priors make the decision
+ The model in one line
++The commensurate component is centered at $f(\bx)$
+ The leaf prior of the discrepancy ensemble
+ Why a separate discrepancy ensemble
+ Every leaf marginal is exact
+AUDIT block_titles changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.431DO00on2/block_titles.before	2026-09-10 09:30:12
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.431DO00on2/block_titles.after	2026-09-10 09:30:12
+@@ -4,8 +4,9 @@
+ block	Commensurate prior \citep{Hobbs2011,Hobbs2012
+ block	Power prior \citep{IbrahimChen2000
+ alertblock	Common feature
+-block	$f$: pooled surface
++block	$f$: external-control response mean
+ block	$g$: discrepancy ensemble
++block	The same prior, expressed as a difference
+ block	Spike, $z=1$: the commensurate component
+ block	Slab, $z=0$: the vague component
+ block	Special cases
+AUDIT structure changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.431DO00on2/structure.before	2026-09-10 09:30:12
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.431DO00on2/structure.after	2026-09-10 09:30:12
+@@ -44,6 +44,12 @@
+ \end{itemize}
+ \end{frame}
+ \begin{frame}
++\begin{itemize}
++\end{itemize}
++\begin{block}
++\end{block}
++\end{frame}
++\begin{frame}
+ \begin{columns}
+ \begin{block}
+ \end{block}
+
+Hard integrity checks passed. Audit deltas and authorized exceptions manually.
