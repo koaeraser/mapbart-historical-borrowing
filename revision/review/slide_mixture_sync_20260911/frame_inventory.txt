@@ -1,0 +1,23 @@
+Overview}
+External controls and transportability}
+Where the established priors make the decision}
+The model in one line}
+The leaf prior of the discrepancy ensemble}
+The induced prior is centered at $f(\bx)$}
+Why a separate discrepancy ensemble}
+Every leaf marginal is exact}
+Prior effective sample size at the estimand}
+Three results}
+The borrowing map}
+Simulation design}
+Gaussian outcomes: ATE bias, RMSE, coverage}
+The borrowing map under a regional shift}
+What the Gaussian study shows}
+Survival outcomes}
+The single-arm design}
+EloKRd and UCMM data}
+EloKRd results: 5-year RMST ratio, posterior mean and 95\% interval}
+The local ESS map at the 30 trial profiles}
+Summary}
+Limitations and next steps}
+References}

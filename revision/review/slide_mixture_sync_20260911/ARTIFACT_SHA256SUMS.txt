@@ -1,0 +1,2 @@
+ff8fa6ec5607c044b7af0d549ed0c67bd5008b12b8678499b65874ed1b52971f  06-slides/main_lrcbart.tex
+43acbf1be16779d396887deb77a7b9a7a6983466a1c002cf8733a2e90df4768d  06-slides/main_lrcbart.pdf

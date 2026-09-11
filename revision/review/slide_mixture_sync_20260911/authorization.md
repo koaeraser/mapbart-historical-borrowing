@@ -1,0 +1,5 @@
+# Slide synchronization
+
+User asks to update slides to the latest manuscript prior presentation and then open them. Replace the all-spike-only prior slide with the induced pointwise mixture, present the leaf mixture before it, and retain the indicator variance tau_{1-z}^2 in supporting text. Reorder only the three-slide prior/diagram sequence: leaf prior, induced prior, model diagram. Keep 25 slides, the diagram content, all other frames, values, citations, tables and figures unchanged. Keep existing slide author credits; the blank-author instruction concerns the manuscript. The pointwise binomial mixture is conditional on w and the scales and does not alter standardized-mean leaf weighting. Sync the existing authorized PR.
+
+Coverage: prior frames = revise; diagram = move with content retained; every other frame = review-retain. New mixture mathematics is copied from the current paper, with bold x as the deck convention. Frame title/order changes and replacement of component displays are authorized exceptions to the rewrite guardrails.

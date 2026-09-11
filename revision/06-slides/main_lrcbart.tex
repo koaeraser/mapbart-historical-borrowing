@@ -167,36 +167,15 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{The commensurate component is centered at $f(\bx)$}
-  \small
-  \begin{itemize}
-    \item $f(\bx)$ is the external-control response mean; $f_1(\bx)$ is the RCT-control response mean.
-    \item \textbf{All-spike case:} fix every reached indicator $z_{h,\ell_h(\bx)}=1$, conditional on $f$, $T_g$ and the scale:
-  \end{itemize}
-  \[
-  \boxed{f_1(\bx)\given f,T_g,\{z_{h,\ell_h(\bx)}=1\}_{h=1}^{H_g},\tau_0^2
-  \sim\Normal\!\left(\underbrace{f(\bx)}_{\text{external mean}},\ H_g\tau_0^2\right).}
-  \]
-  \begin{block}{The same prior, expressed as a difference}
-    Since $g(\bx)=f_1(\bx)-f(\bx)$, the corresponding discrepancy is centered at zero:
-    \[g(\bx)\given T_g,\{z_{h,\ell_h(\bx)}=1\}_{h=1}^{H_g},\tau_0^2
-       \sim\Normal(0,H_g\tau_0^2).\]
-  \end{block}
-  \footnotesize
-  Each $z$ selects a variance: $z=1$ gives $\tau_0^2$; $z=0$ gives $\tau_1^2$. The display fixes all $z=1$, giving $H_g\tau_0^2$. Observation variance is separate.
-\end{frame}
-
-\input{inserts/lrc_model_diagram.tex}
-
 \begin{frame}{The leaf prior of the discrepancy ensemble}
   \footnotesize
   The zero-centered mixture is on a leaf contribution to $g=f_1-f$:\par\vspace{-0.5em}
   $\theta_{h\ell}$ is the contribution of leaf $(h,\ell)$ to $g$:
   \[
-    \theta_{h\ell}\mid z_{h\ell},\tau_0^2,\tau_1^2\sim\Normal\!\left(0,\tau_{1-z_{h\ell}}^2\right),
-    \qquad z_{h\ell}\mid w\sim\Ber(w),\quad w\sim\mathrm{Beta}(1,1),
+    \theta_{h\ell}\given w,\tau_0^2,\tau_1^2
+    \stackrel{\mathrm{iid}}{\sim} w\,\Normal(0,\tau_0^2)+(1-w)\,\Normal(0,\tau_1^2).
   \]
-  Here $1-z=0$ selects the spike variance; $1-z=1$ selects the slab variance. We use $\tau_0^2\sim\text{scaled-Inv-}\chi^2(\nu_0,s_0^2)$ truncated to $(0,\tau_1^2)$ and $\tau_1^2$ fixed by the range rule.
+  Equivalently, $z_{h\ell}\given w\stackrel{\mathrm{iid}}{\sim}\Ber(w)$ selects a zero-mean normal with variance $\tau_{1-z_{h\ell}}^2$. We use $w\sim\mathrm{Beta}(1,1)$, $\tau_0^2\sim\text{scaled-Inv-}\chi^2(\nu_0,s_0^2)$ truncated to $(0,\tau_1^2)$, and $\tau_1^2$ fixed by the range rule.
   \begin{columns}[T,onlytextwidth]
     \column{0.48\textwidth}
       \begin{block}{Spike, $z=1$: the commensurate component}
@@ -212,6 +191,37 @@
     $w=1$: commensurate BART (C-BART), one learned scale. \quad $w=1,\ \tau_0^2\to0$: BART on the pooled controls (BART-CP). \quad $w=0$: a free source offset, the tree analogue of BART with the source indicator (BART-PP).
   \end{block}
 \end{frame}
+
+\begin{frame}{The induced prior is centered at $f(\bx)$}
+  \small
+  \begin{itemize}
+    \item At a fixed profile $\bx$, each discrepancy tree contributes one leaf:
+      $g(\bx)=\sum_{h=1}^{H_g}\theta_{h,\ell_h(\bx)}$, where $\ell_h(\bx)$ is the reached leaf.
+    \item Integrating the leaf indicators gives a mixture over the number $m$ of reached spike leaves:
+  \end{itemize}
+  \[
+  f_1(\bx)\given f,T_g,w,\tau_0^2,\tau_1^2
+  \sim\sum_{m=0}^{H_g}\binom{H_g}{m}w^m(1-w)^{H_g-m}
+  \Normal\!\left(f(\bx),m\tau_0^2+(H_g-m)\tau_1^2\right).
+  \]
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+      \begin{block}{All spike: $m=H_g$}
+        Variance $H_g\tau_0^2$: the commensurate component shrinks $f_1(\bx)$ toward $f(\bx)$.
+      \end{block}
+    \column{0.48\textwidth}
+      \begin{block}{All slab: $m=0$}
+        Variance $H_g\tau_1^2$: a larger departure is permitted, with the same center $f(\bx)$.
+      \end{block}
+  \end{columns}
+  \vspace{0.3em}
+  \begin{itemize}\footnotesize
+    \item $T_g$ denotes the discrepancy partitions; every component is centered at the external mean $f(\bx)$.
+    \item This is a prior for the latent control mean. Observation variance is separate.
+  \end{itemize}
+\end{frame}
+
+\input{inserts/lrc_model_diagram.tex}
 
 \begin{frame}{Why a separate discrepancy ensemble}
   \small

@@ -1,0 +1,9 @@
+# Slides synchronized with the manuscript prior mixtures
+
+September 11, 2026. The live JSM deck and repository copy now present the leaf mixture on slide 6, the induced pointwise f_1 mixture on slide 7, and the unchanged model diagram on slide 8. This replaces the former all-spike-only slide and places the leaf prior before the induced prior. The deck remains 25 slides.
+
+The leaf slide retains theta's definition, the z=1 spike/z=0 slab convention, variance tau_{1-z}^2, hyperpriors, truncation, range rule and special cases. The induced mixture is conditional on f, partitions, w and both scales. It has H_g+1 components, with binomial weights over the reached-spike count m and variance m tau_0^2+(H_g-m) tau_1^2. All-spike and all-slab components are explained beneath it. Every component is centered at f; observation variance remains separate. This is the manuscript's pointwise law, not a replacement for standardized-mean leaf weighting.
+
+All content outside the prior/diagram sequence is byte-identical to the baseline. The diagram content, scientific results, tables, citations and slide credits are unchanged. No manuscript, code or result files were edited. Blank authorship remains the manuscript preference.
+
+Validation: latexmk with recorder succeeds; no overfull boxes or unresolved references/citations. Existing Metropolis/font substitution warnings remain. Slides 6-8 were inspected at full size and all 25 slides in a contact sheet. The rewrite checker passes all hard checks; its authorized title/block/order and inline-math deltas were audited against the manuscript formula. The unnumbered equation comparison alone does not establish mathematical identity; the source diff and the explicit conditioning/weight/variance check do. Baseline TEX/PDF, full audit, raw build output and source diff are retained under `05-writing/humanize_logs/slide_mixture_sync_20260911/`.
