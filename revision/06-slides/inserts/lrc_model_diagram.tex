@@ -1,14 +1,14 @@
-% Diagram: one illustrative discrepancy tree; not a fitted partition.
-\begin{frame}{A shared surface with local discrepancies}
+% Diagram: one illustrative discrepancy tree, not a fitted partition.
+\begin{frame}{The discrepancy changes across patient profiles}
 \centering
 \begin{tikzpicture}[
   x=1cm,y=1cm,
   split/.style={draw,rounded corners=1pt,fill=white,minimum size=7pt,inner sep=1pt},
-  spike/.style={draw=BayesGreen,rounded corners=2pt,fill=BayesLight,inner sep=5pt,font=\small},
-  slab/.style={draw=BayesGold,rounded corners=2pt,fill=BayesGold!12,inner sep=5pt,font=\small},
+  spike/.style={draw=UChicagoMaroon,rounded corners=2pt,fill=UChicagoMaroon!8,inner sep=5pt,font=\small},
+  slab/.style={draw=AccentBlue,rounded corners=2pt,fill=AccentBlue!8,inner sep=5pt,font=\small},
   edge label/.style={font=\scriptsize,fill=white,inner sep=2pt},
   note/.style={font=\footnotesize,align=left},
-  callout/.style={draw=BayesGreen,dashed,thick,rounded corners=3pt,fill=white,inner sep=7pt,align=left,font=\footnotesize}]
+  callout/.style={draw=UChicagoMaroon,dashed,thick,rounded corners=3pt,fill=white,inner sep=7pt,align=left,font=\footnotesize}]
 \path[use as bounding box] (0,0) rectangle (14.5,5.65);
 \node[anchor=west,font=\small] at (0.15,5.3)
   {\textbf{RWD controls:} $f(\bx)$ \qquad \textbf{RCT controls:} $f(\bx)+g(\bx)$};
@@ -25,20 +25,19 @@
 \node[callout,anchor=north west,text width=6.45cm] (sum) at (0.15,0.85)
   {Each profile reaches one leaf per tree.\\
    Add those contributions: $g(\bx)=\sum_{h=1}^{H_g}\theta_{h,\ell_h(\bx)}$.};
-\draw[BayesGold,dashed,thick,-{Stealth}] (sum.north) -- (middle.south);
+\draw[AccentBlue,dashed,thick,-{Stealth}] (sum.north) -- (middle.south);
 \node[note,anchor=north west,text width=6.05cm] at (8.05,4.7)
   {\textbf{$f$: the external response mean}\\
    Fitted jointly to both control sources.};
 \node[spike,anchor=north west,text width=5.8cm,align=left,font=\footnotesize] at (8.05,3.70)
   {\textbf{Spike: $z_{h\ell}=1$}\\
    $\theta_{h\ell}\sim\Normal(0,\tau_0^2)$\\
-   Draws the RCT mean toward $f(\bx)$.};
+   Keeps the RCT mean close to $f(\bx)$.};
 \node[slab,anchor=north west,text width=5.8cm,align=left,font=\footnotesize] at (8.05,2.02)
   {\textbf{Slab: $z_{h\ell}=0$}\\
    $\theta_{h\ell}\sim\Normal(0,\tau_1^2)$,\quad $\tau_1^2>\tau_0^2$\\
-   Allows departures from $f(\bx)$.};
+   Allows a local departure from $f(\bx)$.};
 \node[note,anchor=north west,text width=6cm,font=\scriptsize] at (8.05,0.45)
-  {$z_{h\ell}\sim\Ber(w)$. Leaf indicators vary; $w,\tau_0^2,\tau_1^2$ are shared.};
+  {$z_{h\ell}\sim\Ber(w)$. Leaf indicators vary. The parameters $w,\tau_0^2,\tau_1^2$ are shared.};
 \end{tikzpicture}
 \end{frame}
-
