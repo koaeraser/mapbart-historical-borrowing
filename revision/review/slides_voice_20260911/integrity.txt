@@ -1,0 +1,101 @@
+PASS  numbers
+AUDIT number_words changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.5XAomYhcoa/number_words.before	2026-09-11 02:07:23
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.5XAomYhcoa/number_words.after	2026-09-11 02:07:23
+@@ -1,8 +1,8 @@
+    3 first
+    3 five
+    1 four
+-  11 one
++  10 one
+    1 third
+-   2 three
+-   2 two
++   1 three
++   1 two
+    7 zero
+PASS  citations
+PASS  labels
+PASS  sections
+PASS  equations
+PASS  inline_math (no changes)
+PASS  protected_blocks
+PASS  graphics
+PASS  references
+AUDIT frame_titles changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.5XAomYhcoa/frame_titles.before	2026-09-11 02:07:23
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.5XAomYhcoa/frame_titles.after	2026-09-11 02:07:23
+@@ -1,23 +1,23 @@
+ Overview
+ External controls and transportability
+-Where the established priors make the decision
+-The model in one line
+-The leaf prior of the discrepancy ensemble
++Established priors use a study-level borrowing parameter
++The trial-control mean adds a discrepancy to the external mean
++Each discrepancy leaf has a spike-and-slab prior
+ The induced prior is centered at $f(\bx)$
+-Why a separate discrepancy ensemble
+-Every leaf marginal is exact
++Separate ensembles allow different shrinkage priors
++Tree moves use exact leaf marginals
+ Prior effective sample size at the estimand
+-Three results
++Conditional theoretical guarantees
+ The borrowing map
+ Simulation design
+ Gaussian outcomes: ATE bias, RMSE, coverage
+ The borrowing map under a regional shift
+-What the Gaussian study shows
++Regional conflict remains difficult
+ Survival outcomes
+-The single-arm design
++Single-arm trials cannot learn a control discrepancy
+ EloKRd and UCMM data
+ EloKRd results: 5-year RMST ratio, posterior mean and 95\% interval
+ The local ESS map at the 30 trial profiles
+-Summary
++Main findings
+ Limitations and next steps
+ References
+AUDIT block_titles changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.5XAomYhcoa/block_titles.before	2026-09-11 02:07:23
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.5XAomYhcoa/block_titles.after	2026-09-11 02:07:23
+@@ -11,23 +11,23 @@
+ block	Special cases
+ block	All spike: $m=H_g$
+ block	All slab: $m=0$
+-block	Scope of the prior-cost calculation
+-block	Realized information diagnostic
++block	What the prior-density comparison establishes
++block	Realized ESS diagnostic
+ block	Theorem 1: bounded local influence
+-block	Theorem 2: detection and the map
++block	Theorem 2: local detection and map consistency
+ block	Theorem 3: the working calibration
+-alertblock	What is proved and what is not
+-block	Reading the table
++alertblock	Conditions for the map result
++block	Agreement, global conflict and regional shifts
+ block	LRC-BART at target 100, first 40 replicates
+ block	Agreement and global conflict
+-alertblock	Regional conflict remains difficult
+-block	Compatibility and realized regional ESS are distinct
+-block	Two readings
++alertblock	Surface error under regional shifts
++block	Regional ESS depends on the standardized mean
++block	Median and RMST ratios
+ block	No confounding
+ alertblock	Measured confounding
+ block	EloKRd phase II trial
+ block	UCMM registry control
+-alertblock	Coding and interpretation
++alertblock	Harmonization and the scope of the comparison
+ block	Descriptive comparison conditional on recorded profiles
+-block	Reading the map
+-block	Reported summaries
++block	Registry support at the trial profiles
++block	How to interpret the borrowing summaries
+PASS  structure
+
+Hard integrity checks passed. Audit deltas and authorized exceptions manually.

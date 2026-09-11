@@ -72,3 +72,9 @@ The cumulative redline compares the original pre-Codex baseline in `05-writing/h
 The revision root is not Git. Work from `../yunxuan-repo`, branch `revision/lrc-bart-20260910`, fork remote `koaeraser/mapbart-historical-borrowing`, upstream `oliviazhang0416/mapbart-historical-borrowing`. Existing PR: https://github.com/oliviazhang0416/mapbart-historical-borrowing/pull/1 . Recheck live state before asserting head/review status.
 
 The user previously authorized upload and asking Yunxuan to review. Continue syncing the corrected manuscript/slides and curated review record, committing and pushing the same fork branch without asking again. Preserve the portable LRC_REVISION_ROOT edits in distribution R scripts. Do not copy local caches, compiled libraries, patient data or the large protected-file manifest into Git. Do not send a separate note to Yunxuan; note_to_yunxuan.md remains untouched. Formal reviewer assignment previously failed because the authenticated account lacks upstream permission.
+
+## September 11 presentation prose pass and discussant decks
+
+The 25-slide author presentation has been humanized with the humanize-prose slide workflow. Mathematical expressions, numbers, tables, citations, figures, order and slide count are unchanged. The prior mixture remains on slides 6–7. The live deck keeps its original JSM credits. The source diff and hard-integrity report are in the live deck's `humanize_logs/voice_20260911/` and the repository's `revision/review/slides_voice_20260911/`.
+
+Two new editable PowerPoint discussant decks, industry and hypothetical FDA perspective, each have six core slides for 5–7 minutes plus two backup slides. Final local files are in `06-discussant-decks/output/`; repository copies are under `revision/06-slides/discussants/`. FDA draft guidance is explicitly distinguished from final guidance. The user requested a copy of the main paper and all three presentations in `presentation/invited/RISW-2026/`.

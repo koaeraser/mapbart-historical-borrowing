@@ -1,0 +1,2 @@
+LRC-BART_Industry_Discussion: PASS: 8 slides, all slide numeric tokens, native table XML and chart XML unchanged. Speaker notes present for every slide. All 6 core scripts approximately 670 words total.
+LRC-BART_FDA_Perspective_Discussion: PASS: 8 slides, all slide numeric tokens, native table XML and chart XML unchanged. Speaker notes present for every slide. All 6 core scripts approximately 670 words total.
