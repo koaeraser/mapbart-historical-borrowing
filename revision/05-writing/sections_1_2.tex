@@ -84,7 +84,7 @@ f(x)=\sum_{h=1}^{H_f}\mu^f_{h,\ell_h^f(x)},\qquad
 \]
 where $T_h^f$ is the $h$th tree, $\ell_h^f(x)$ is its leaf containing $x$, and $\mu^f_{h\ell}$ is that leaf's contribution to the mean. The trees have independent split priors with $(\alpha_f,\beta_f)=(0.95,2)$. We use $H_f=50$ in the simulations; the application uses $H_f=10$. Observations sharing leaves contribute to estimating $f(x)$, so its precision depends on information across profiles.
 
-The discrepancy surface $g$ has $H_g=5$ trees with split prior $(\alpha_g,\beta_g)=(0.5,3)$: a tree is a stump a priori with probability one half and rarely deeper than two levels. Let $\theta_{h\ell}$ denote the constant discrepancy contribution in leaf $\ell$ of tree $h$. The leaf contributions have the independent mixture prior
+The discrepancy surface $g$ has $H_g=5$ trees with split prior $(\alpha_g,\beta_g)=(0.5,3)$: a tree is a stump a priori with probability one half and rarely deeper than two levels. Let $\theta_{h\ell}$ denote the constant discrepancy contribution in leaf $\ell$ of tree $h$. Let $T_g$ denote the discrepancy partitions and $\ell_h(x)$ the leaf reached by $x$ in tree $h$, so that $g(x)=\sum_{h=1}^{H_g}\theta_{h,\ell_h(x)}$. The leaf contributions have the independent mixture prior
 \begin{equation}
 \theta_{h\ell}\given w,\tau_0^2,\tau_1^2
 \iid w\,\Normal(0,\tau_0^2)+(1-w)\,\Normal(0,\tau_1^2).
@@ -92,7 +92,7 @@ The discrepancy surface $g$ has $H_g=5$ trees with split prior $(\alpha_g,\beta_
 \end{equation}
 Equivalently, let $z_{h\ell}\given w\iid\Ber(w)$. Given these indicators and the scales, the leaf contributions are independent normals with mean zero and variance $\tau_{1-z_{h\ell}}^2$: $z=1$ selects the narrow spike $\tau_0^2$ and $z=0$ the wider slab $\tau_1^2$.
 
-Let $T_g$ denote the discrepancy partitions and $\ell_h(x)$ the leaf reached by $x$ in tree $h$, so that $g(x)=\sum_{h=1}^{H_g}\theta_{h,\ell_h(x)}$. At a fixed $x$, summing these contributions and integrating their indicators induces the mixture prior
+At a fixed $x$, summing these contributions and integrating their indicators induces the mixture prior
 \[
 f_1(x)\given f,T_g,w,\tau_0^2,\tau_1^2
 \sim\sum_{m=0}^{H_g}\binom{H_g}{m}w^m(1-w)^{H_g-m}

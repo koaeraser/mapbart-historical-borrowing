@@ -1,0 +1,13 @@
+PASS  numbers
+PASS  number_words (no changes)
+PASS  citations
+PASS  labels
+PASS  sections
+PASS  equations
+PASS  inline_math (no changes)
+PASS  protected_blocks
+PASS  graphics
+PASS  references
+PASS  structure
+
+Hard integrity checks passed. Audit deltas and authorized exceptions manually.
