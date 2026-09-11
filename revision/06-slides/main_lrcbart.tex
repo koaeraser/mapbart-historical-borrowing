@@ -326,7 +326,7 @@
         \item \textbf{Sc5} global shift: raised by $\delta_2$ everywhere; borrowing should be suppressed
       \end{itemize}
       \vspace{0.2em}
-      {\scriptsize Illustrative leaf threshold: $d_{1/2}\approx0.5$. Comparators: regression/BART pooling variants, PSCL, MAP, hierarchies, C-BART and LRC-BART ($w=0$). CAHB \citep{Jin2023CAHB}: transferred analysis, first $200$ paired Gaussian replicates; variants in the supplement.}
+      {\scriptsize Illustrative leaf threshold: $d_{1/2}\approx0.5$. Comparators: regression/BART pooling variants (PP includes a source indicator), PSCL, MAP, hierarchies, C-BART and LRC-BART ($w=0$). CAHB \citep{Jin2023CAHB}: transferred analysis, first $200$ paired Gaussian replicates; variants in the supplement.}
   \end{columns}
 \end{frame}
 
@@ -378,28 +378,33 @@
   \footnotesize The CAHB comparison assesses our transfer of kernel-local estimation; it does not establish a general method ranking. Sc2's ceiling falls from $127$ to $23$, so absolute targets are capped.
 \end{frame}
 
-\begin{frame}{Survival outcomes}
+\begin{frame}{Survival outcomes: efficiency under agreement}
   \centering
-  \scriptsize
-  \setlength{\tabcolsep}{4pt}
-  \renewcommand{\arraystretch}{0.95}
-  \begin{tabular}{lrrr|rrr|rrr}
+  \footnotesize
+  RMST ratio at $t^\ast=3$; $R=500$ simulated trials
+  \vspace{0.1em}
+
+  \setlength{\tabcolsep}{6pt}
+  \renewcommand{\arraystretch}{0.9}
+  \begin{tabular}{lrrr|rrr}
     \toprule
-    & \multicolumn{3}{c|}{Sc1, median ratio} & \multicolumn{3}{c|}{Sc3 $\rho=0$, median ratio} & \multicolumn{3}{c}{Sc3 $\rho=0$, RMST ratio} \\
-    Method & Bias & RMSE & Pow & Bias & RMSE & Cov & Bias & RMSE & Cov \\
+    & \multicolumn{3}{c|}{LRC-BART (100)} & \multicolumn{3}{c}{BART-PP} \\
+    Scenario & Bias & RMSE & Cov & Bias & RMSE & Cov \\
     \midrule
-    AFT-NP  & 0.18 & 0.67 & 0.12 & 0.23 & 0.83 & 0.94 & $-$0.03 & 0.15 & 0.92 \\
-    BART-NP & 0.26 & 0.51 & 0.46 & 0.19 & 0.57 & 0.90 & 0.06 & 0.17 & 0.92 \\
-    BART-CP & 0.06 & 0.23 & 0.63 & 2.31 & 2.41 & 0.00 & 0.59 & 0.61 & 0.01 \\
-    BART-PP & 0.03 & 0.35 & 0.25 & 0.04 & 0.45 & 0.91 & $-$0.01 & 0.14 & 0.92 \\
-    C-BART  & 0.03 & 0.25 & 0.42 & 0.58 & 0.91 & 0.88 & 0.14 & 0.22 & 0.85 \\
-    \textbf{LRC-BART (100)} & \textbf{0.05} & \textbf{0.31} & \textbf{0.34} & \textbf{0.15} & \textbf{0.56} & \textbf{0.94} & \textbf{0.03} & \textbf{0.15} & \textbf{0.94} \\
+    Sc1: agreement & 0.003 & 0.097 & 0.94 & $-$0.023 & 0.106 & 0.94 \\
+    Sc2: measured confounding & 0.018 & 0.100 & 0.93 & $-$0.002 & 0.097 & 0.95 \\
+    Sc3: unmeasured confounding & 0.031 & 0.146 & 0.94 & $-$0.005 & 0.137 & 0.92 \\
+    Sc4: regional shift & $-$0.037 & 0.108 & 0.90 & $-$0.059 & 0.113 & 0.91 \\
+    Sc5: global shift & 0.001 & 0.112 & 0.93 & $-$0.041 & 0.110 & 0.93 \\
     \bottomrule
   \end{tabular}
-  \vspace{0.3em}
-  \begin{block}{Median and RMST ratios}
-    With $75$ controls and censoring, the median ratio has a wide, skewed posterior. Its posterior mean has upward bias in Sc1. Borrowing reduces RMSE (Sc1: RMSE $0.312$ against $0.345$, power $0.34$ against $0.25$ for BART-PP). Under unmeasured confounding LRC-BART suppresses borrowing (realized ESS $2.3$) and has $0.11$ more median-ratio bias than BART-PP, alongside its wider posterior and the nonlinear ratio transformation. On the RMST ratio the biases are $0.03$ and $-0.005$.
+  \vspace{0.2em}
+
+  {\scriptsize BART-PP: pooled trial and external controls, with a source indicator as a predictor.}
+  \begin{block}{Efficiency and robustness}
+    Under agreement, LRC-BART improves RMST precision and power ($0.28$ versus $0.17$ for BART-PP). RMST RMSE remains close to BART-PP across the studied conflict scenarios.
   \end{block}
+  {\scriptsize Median-ratio estimation is less favorable under unmeasured confounding; regional RMST coverage is $0.90$. Sc3: $\rho=0$; Sc4--5: $\delta_2=1$. Full results: paper and Web Table S2.}
 \end{frame}
 
 \begin{frame}[t]{Single-arm trials cannot learn a control discrepancy}

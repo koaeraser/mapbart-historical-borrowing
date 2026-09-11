@@ -7,3 +7,5 @@ Build the author deck here with `latexmk -pdf -recorder -interaction=nonstopmode
 `discussants/` contains two editable PowerPoint decks: an industry discussion and a hypothetical FDA-perspective discussion. Each has six core slides for 5–7 minutes, two backup slides, speaker notes and sources. The FDA deck represents a hypothetical discussant view, not FDA policy or endorsement. It distinguishes the January 2026 Bayesian draft and February 2023 external-control draft from final ICH E9(R1) guidance.
 
 The prose-pass audit is in `../review/slides_voice_20260911/`.
+
+The survival follow-up defines BART-PP as pooled-control BART with a source indicator on slides 14 and 18. Slide 18 presents RMST results across all five main scenarios, with a concise median-ratio caveat. See `../review/survival_balance_20260911/`.
