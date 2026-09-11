@@ -1,5 +1,7 @@
 # Handoff after the next LRC-BART revision
 
+Latest follow-up, September 11: the clean paper is now 80 pages and the cumulative tracked paper is 101 pages. Section 2.2 explicitly displays the BART expansion and prior for f on page 5; Section 2.4 explains local ESS and its uncensored log-time reference on page 9. See `05-writing/humanize_logs/f_model_20260911/report.md` locally or `revision/review/f_model_20260911/report.md` in the repository. The author deck is now 46 pages after the ENAR-2022 style rewrite and presentation clarifications. Earlier artifact counts below describe historical checkpoints. The repository and RISW copies include these follow-ups.
+
 September 10, 2026. This is the current restart note. The previous handoff is preserved in `05-writing/critical_revisor_logs/run_20260910_094551/round_0/`. Earlier editing reports and their verdicts remain historical assessments of earlier versions.
 
 ## Current state

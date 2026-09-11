@@ -1,0 +1,147 @@
+AUDIT numbers changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.jpFIhFcenM/numbers.before	2026-09-11 15:52:12
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.jpFIhFcenM/numbers.after	2026-09-11 15:52:12
+@@ -5,11 +5,12 @@
+    1 03
+    2 05
+    2 09
+- 188 1
++ 191 1
+    1 1,1
+    1 1,2
++   1 10
+    5 12
+- 168 2
++ 172 2
+    1 2.1
+    2 2.2
+    1 2.3
+PASS  number_words (no changes)
+PASS  citations
+PASS  labels
+PASS  sections
+PASS  equations
+AUDIT inline_math changed; inspect every delta in context:
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.jpFIhFcenM/inline_math.before	2026-09-11 15:52:12
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.jpFIhFcenM/inline_math.after	2026-09-11 15:52:12
+@@ -27,6 +27,7 @@
+ $G(s)=P\{s^\dagger(V)\le s\}$
+ $H$
+ $H$
++$H_f=10$
+ $H_f=50$
+ $H_g$
+ $H_g=5$
+@@ -52,6 +53,7 @@
+ $S_g$
+ $T_g$
+ $T_h$
++$T_h^f$
+ $V$
+ $V$
+ $V>0$
+@@ -59,12 +61,11 @@
+ $V_\mu^f$
+ $V_\mu^f=V$
+ $V_\mu^f=\Var(N^{-1}\sum_i f(x_i)\given\text{RWD})$
+-$V_f(x)$
++$V_f(x)=\Var\{f(x)\given\mathrm{RWD}\}$
+ $V_g$
+ $[s^\dagger(V),\infty)$
+ $\E_{\rm post}[\sigma_1^2/\{V_\mu^f+V_g(\mathcal T,z,\tau_0^2)\}]$
+ $\Normal(0,\lambda^2)$
+-$\Normal(0,\lambda_f^2)$
+ $\Normal(\mu,\sigma_1^2)$
+ $\Normal(f(x_i)+D_ig(x_i),\sigma_{g_i}^2)$
+ $\Psi_j(c)=P\{|\Normal(\rho_j\bar y,\rho_jv)|<c\}$
+@@ -79,13 +80,15 @@
+ $\ell$
+ $\ell=1,\dots,L_h$
+ $\ell_h(x)$
++$\ell_h^f(x)$
+ $\epsilon_i\iid\Normal(0,\sigma_1^2)$
+ $\frac{w\tau_1}{(1-w)\tau_0}\exp\{-\frac{d^2}2(\tau_0^{-2}-\tau_1^{-2})\}$
++$\hat\sigma_1^2$
++$\hat\sigma_1^2/m$
+ $\hat\theta_0=\rho_0\bar y$
+ $\hat\theta_1=\rho_1\bar y$
+ $\int_0^{t^\ast}\bar S_T(t)\,\dd t/\int_0^{t^\ast}\bar S_1(t)\,\dd t$
+ $\lambda=(\max y-\min y)/(2k\sqrt H)$
+-$\lambda_f$
+ $\log\frac w{1-w}+\frac12\log\frac{\tau_1^2+v}{\tau_0^2+v}>0$
+ $\logit p=a+\kappa\bar y^2$
+ $\mathcal B_c$
+@@ -98,6 +101,8 @@
+ $\mathrm{ESS}(x)=\hat\sigma_1^2/\{V_f(x)+H_g\bar\tau_0^2\}$
+ $\mathrm{ESS}_0(V;s)$
+ $\mu=N^{-1}\sum_{i\le N}f_1(x_i)$
++$\mu^f_{h\ell}$
++$\mu^f_{h\ell}\sim\Normal\bigl(\lambda_f^2B/(1+\lambda_f^2A),\ \lambda_f^2/(1+\lambda_f^2A)\bigr)$
+ $\mu_g$
+ $\nu_0=3$
+ $\pi_\ell>0$
+@@ -137,7 +142,6 @@
+ $\theta\given z\sim\Normal\bigl(\tau_{1-z}^2\bar y_1/(\tau_{1-z}^2+v_1),\ \tau_{1-z}^2v_1/(\tau_{1-z}^2+v_1)\bigr)$
+ $\theta\given\bar y$
+ $\theta\given\theta_0\sim\Normal(\theta_0,1/\tau)$
+-$\theta\sim\Normal\bigl(\lambda_f^2B/(1+\lambda_f^2A),\ \lambda_f^2/(1+\lambda_f^2A)\bigr)$
+ $\theta_{h\ell}$
+ $\theta_{h\ell}$
+ $\{s:G(s)\ge q\}=[s_\star,\infty)$
+@@ -176,9 +180,9 @@
+ $f$
+ $f$
+ $f$
+-$f$
+ $f(x)$
+ $f(x)$
++$f(x)$
+ $f+g$
+ $f+g$
+ $f_1$
+@@ -216,10 +220,13 @@
+ $h$
+ $h$
+ $h$
++$h$
+ $i$
+ $j\in\{0,1\}$
+ $k=2$
+ $m$
++$m$
++$m$
+ $m(x;T_h,\theta_h)$
+ $m=0$
+ $m=H_g$
+@@ -279,6 +286,9 @@
+ $x$
+ $x$
+ $x$
++$x$
++$x$
++$x$
+ $x_i\in\mathbb R^p$
+ $y_i$
+ $y_i$
+@@ -297,4 +307,5 @@
+ \[\n\mu_g=\sum_{h,\ell}a_{h\ell}\theta_{h\ell},\qquad\nV_g(\mathcal T,z,\tau_0^2)=\sum_{h,\ell}a_{h\ell}^2\n \{z_{h\ell}\tau_0^2+(1-z_{h\ell})\tau_1^2\}.\n\]
+ \[\n\sup_{\bar y}|I(\bar y)|\le\sqrt{2v\max\{\log C,\tfrac12\}},\qquad 1-p\le Ce^{-\kappa\bar y^2},\n\]
+ \[\nd_{1/2}=\Bigl[\frac{2(\tau_0^2+v)(\tau_1^2+v)}{\tau_1^2-\tau_0^2}\Bigl\{\log\frac w{1-w}+\frac12\log\frac{\tau_1^2+v}{\tau_0^2+v}\Bigr\}\Bigr]^{1/2},\n\]
++\[\nf(x)=\sum_{h=1}^{H_f}\mu^f_{h,\ell_h^f(x)},\qquad\n\mu^f_{h\ell}\given T_h^f\indep\Normal(0,\lambda_f^2),\qquad\n\lambda_f=\frac{\max y-\min y}{2k\sqrt{H_f}},\quad k=2,\n\]
+ \[\nf_1(x)\given f,T_g,w,\tau_0^2,\tau_1^2\n\sim\sum_{m=0}^{H_g}\binom{H_g}{m}w^m(1-w)^{H_g-m}\n\Normal\!\left(f(x),m\tau_0^2+(H_g-m)\tau_1^2\right),\n\]
+PASS  protected_blocks (no changes)
+PASS  graphics
+FAIL  references
+--- /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.jpFIhFcenM/references.before	2026-09-11 15:52:12
++++ /var/folders/q4/l3y9rnh936n07fzy0bw_5yg40000gn/T/tmp.jpFIhFcenM/references.after	2026-09-11 15:52:12
+@@ -1,6 +1,6 @@
+    4 \eqref{eq:ess0}
+    1 \eqref{eq:leafprior}
+-   1 \eqref{eq:model}
++   2 \eqref{eq:model}
+    2 \eqref{eq:prrule}
+    1 \ref{sec:application}
+    1 \ref{sec:discussion}
+PASS  structure
+
+1 hard integrity check(s) failed.

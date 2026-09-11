@@ -1,0 +1,43 @@
+--- 05-writing/humanize_logs/f_model_20260911/sections_1_2_before.tex	2026-09-11 15:51:09
++++ 05-writing/sections_1_2.tex	2026-09-11 15:52:00
+@@ -74,9 +74,17 @@
+ y_i=f(x_i)+D_i\,g(x_i)+\varepsilon_i,\qquad \varepsilon_i\sim\Normal(0,\sigma^2_{g_i}),
+ \label{eq:model}
+ \end{equation}
+-Here $f(x)$ is the external-control response mean and $f_1(x)=f(x)+g(x)$ is the RCT-control response mean, with a separate residual variance for each source. Both surfaces are estimated jointly.
++Here $f(x)$ is the external-control response mean and $f_1(x)=f(x)+g(x)$ is the RCT-control response mean, with a separate residual variance for each source. A profile $x$ is a vector of patient characteristics. The surfaces describe conditional means at that profile; individual outcomes also contain the residual variation in \eqref{eq:model}. For survival outcomes these are means of log survival time. Both surfaces are estimated jointly.
+ 
+-The pooled surface $f$ is a standard BART ensemble of $H_f=50$ trees with split prior $(\alpha_f,\beta_f)=(0.95,2)$ and leaf prior $\Normal(0,\lambda_f^2)$, with $\lambda_f$ from the range rule. The discrepancy surface $g$ has $H_g=5$ trees with split prior $(\alpha_g,\beta_g)=(0.5,3)$: a tree is a stump a priori with probability one half and rarely deeper than two levels. Let $\theta_{h\ell}$ denote the constant discrepancy contribution in leaf $\ell$ of tree $h$. The leaf contributions have the independent mixture prior
++We write the pooled BART surface explicitly as
++\[
++f(x)=\sum_{h=1}^{H_f}\mu^f_{h,\ell_h^f(x)},\qquad
++\mu^f_{h\ell}\given T_h^f\indep\Normal(0,\lambda_f^2),\qquad
++\lambda_f=\frac{\max y-\min y}{2k\sqrt{H_f}},\quad k=2,
++\]
++where $T_h^f$ is the $h$th tree, $\ell_h^f(x)$ is its leaf containing $x$, and $\mu^f_{h\ell}$ is that leaf's contribution to the mean. The trees have independent split priors with $(\alpha_f,\beta_f)=(0.95,2)$. We use $H_f=50$ in the simulations; the application uses $H_f=10$. Observations sharing leaves contribute to estimating $f(x)$, so its precision depends on information across profiles.
++
++The discrepancy surface $g$ has $H_g=5$ trees with split prior $(\alpha_g,\beta_g)=(0.5,3)$: a tree is a stump a priori with probability one half and rarely deeper than two levels. Let $\theta_{h\ell}$ denote the constant discrepancy contribution in leaf $\ell$ of tree $h$. The leaf contributions have the independent mixture prior
+ \begin{equation}
+ \theta_{h\ell}\given w,\tau_0^2,\tau_1^2
+ \iid w\,\Normal(0,\tau_0^2)+(1-w)\,\Normal(0,\tau_1^2).
+@@ -117,7 +125,7 @@
+ \end{equation}
+ with $M_g=1$ for a leaf with no RCT controls. Grow, prune and change moves multiply the tree-prior and proposal ratios by the affected leaf factors; a grow move contributes $M_LM_R/M_P$. Each collapsed tree move is followed immediately by conditional leaf and indicator draws. This ordering preserves the joint posterior (Lemma A1 and Proposition A1 of Web Appendix~A).
+ 
+-Conditional on the trees, we update the leaf parameters conjugately. An $f$ leaf draws $\theta\sim\Normal\bigl(\lambda_f^2B/(1+\lambda_f^2A),\ \lambda_f^2/(1+\lambda_f^2A)\bigr)$. A $g$ leaf is updated as a block: first
++Conditional on the trees, we update the leaf parameters conjugately. An $f$ leaf draws $\mu^f_{h\ell}\sim\Normal\bigl(\lambda_f^2B/(1+\lambda_f^2A),\ \lambda_f^2/(1+\lambda_f^2A)\bigr)$. A $g$ leaf is updated as a block: first
+ \begin{equation}
+ P(z=1\given\bar y_1)=\frac{w\,\phi(\bar y_1;0,\tau_0^2+v_1)}{w\,\phi(\bar y_1;0,\tau_0^2+v_1)+(1-w)\,\phi(\bar y_1;0,\tau_1^2+v_1)},
+ \label{eq:zpost}
+@@ -156,8 +164,10 @@
+ \end{equation}
+ with $q=0.95$. If the requested target is at or above the whole-chain ceiling, the implementation instead returns the smallest grid scale and flags the fit as capped; this is a separate override of \eqref{eq:prrule}. If no grid value satisfies the rule, it returns and flags the largest scale.
+ 
+-The reported realized ESS is $\E_{\rm post}[\sigma_1^2/\{V_\mu^f+V_g(\mathcal T,z,\tau_0^2)\}]$, with exact squared leaf proportions at each posterior state. Here $V_g$ is a prior variance evaluated at learned states, not the posterior variance of $\mu_g$ or a measured reduction in posterior uncertainty. Regional summaries standardize separately within each region and are not additive. The application uses the pointwise summary $\mathrm{ESS}(x)=\hat\sigma_1^2/\{V_f(x)+H_g\bar\tau_0^2\}$, where $V_f(x)$ is the Stage-1 variance and $\bar\tau_0^2$ is the fitted mean spike variance. Appendix~D distinguishes this plug-in from averaging pointwise precision over the scale prior.
++The reported realized ESS is $\E_{\rm post}[\sigma_1^2/\{V_\mu^f+V_g(\mathcal T,z,\tau_0^2)\}]$, with exact squared leaf proportions at each posterior state. Here $V_g$ is a prior variance evaluated at learned states, not the posterior variance of $\mu_g$ or a measured reduction in posterior uncertainty. Regional summaries standardize separately within each region and are not additive.
+ 
++The application uses the pointwise summary $\mathrm{ESS}(x)=\hat\sigma_1^2/\{V_f(x)+H_g\bar\tau_0^2\}$, where $V_f(x)=\Var\{f(x)\given\mathrm{RWD}\}$ is the Stage-1 uncertainty in the conditional mean and $\bar\tau_0^2$ is the fitted mean spike variance. The denominator combines uncertainty in that mean with the allowed source discrepancy. An ESS of $m$ equates this working variance to $\hat\sigma_1^2/m$, the variance of a mean of $m$ independent reference controls with the same profile and residual variance $\hat\sigma_1^2$. For survival these reference observations are uncensored log times. This expresses precision in estimating a mean at $x$, rather than uncertainty in an individual outcome or a count of matched registry patients. In the single-arm application it describes prior external support; compatibility cannot be checked against concurrent trial controls. Appendix~D distinguishes this plug-in from averaging pointwise precision over the scale prior.
++
+ \subsection{The borrowing map and its guarantees}
+ \label{sec:map}
+ 
